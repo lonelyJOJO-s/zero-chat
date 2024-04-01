@@ -1,0 +1,119 @@
+syntax = "v1"
+
+info (
+	titie:   "user service"
+	desc:    "service of user/group/casbin/tweets"
+	author:  "joey.zhu"
+	email:   "1207833477@qq.com"
+	version: "v1"
+)
+
+import (
+	"user/user.api"
+	"group/group.api"
+)
+
+// user 注册和登录
+@server (
+	prefix:  usercenter/api/v1
+	group:   user
+	timeout: 3s
+)
+service user {
+	@doc "register"
+	@handler register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@doc "login_with_phone"
+	@handler loginWithPhone
+	post /user/login/phone (PhoneLoginReq) returns (LoginResp)
+
+	@doc "login_with_email"
+	@handler logWithEmail
+	post /user/login/email (EmailLoginReq) returns (LoginResp)
+}
+
+// user curd
+@server (
+	prefix:  usercenter/api/v1
+	group:   user
+	jwt:     Auth
+	timeout: 3s
+)
+service user {
+	@doc "user information"
+	@handler Detail
+	get /user/detail (UserInfoReq) returns (UserInfoResp)
+
+	@doc "delete user"
+	@handler Delete
+	get /user/delete (Null) returns (Null)
+
+	@doc "update user"
+	@handler Update
+	post /user/update (UserUpdateReq) returns (UserUpdateResp)
+
+	@doc "user login out"
+	@handler loginOut
+	post /user/loginOut (Null) returns (Null)
+
+	@doc "post user avatar"
+	@handler Avatar
+	post /user/avatar (Null) returns (Null)
+}
+
+@server (
+	prefix:  usercenter/api/v1
+	group:   friend
+	jwt:     Auth
+	timeout: 3s
+)
+service user {
+	@doc "friend list"
+	@handler FriendList
+	get /user/friends (Null) returns (FriendsResp)
+
+	@doc "delete friend"
+	@handler FriendDel
+	delete /user/friend/:id (FriendIdReq) returns (Null)
+
+	@doc "delete friend"
+	@handler FriendAdd
+	post /user/friend/:id (FriendIdReq) returns (Null)
+
+	@handler Search
+	get /user/friend/search (FriendSearchReq) returns (FriendSearchResp)
+}
+
+@server (
+	prefix:  usercenter/api/v1
+	group:   group
+	jwt:     Auth
+	timeout: 3s
+)
+service user {
+	@doc "create a group"
+	@handler CreateGroup
+	post /group/create (GroupCreateReq) returns (GroupResp)
+
+	@doc "join a group"
+	@handler JoinGroup
+	post /group/join/:id (GroupId) returns (GroupResp)
+
+	@doc "update a group"
+	@handler UpdateGroup
+	post /group/update (GroupUpdateReq) returns (Null)
+
+	@doc "get group info"
+	@handler GroupInfo
+	get /group/:id (GroupId) returns (GroupResp)
+
+	@doc "quit a group"
+	@handler QuitGroup
+	post /group/quit/ (GroupQuitReq) returns (Null)
+
+	@doc "dismiss a group"
+	@handler DismissGroup
+	delete /group/:id (GroupId) returns (Null)
+}
+

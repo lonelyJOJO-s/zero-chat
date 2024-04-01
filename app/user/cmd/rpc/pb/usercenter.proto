@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+
+//model
+message User {
+  int64 id = 1;
+  string phone = 2;
+  string username = 3;
+  string email = 4;
+  string status = 5;
+  int32 sex = 6;
+  string desc = 7;
+  string addr = 8;
+  int64 loginInTime = 9;
+  int64 createAt = 10;
+  int64 updateAt = 11;
+}
+
+message UserWithPwd {
+  int64 id = 1;
+  string phone = 2;
+  string username = 3;
+  string email = 4;
+  string status = 5;
+  int32 sex = 6;
+  string desc = 7;
+  string addr = 8;
+  int64 loginInTime = 9;
+  int64 createAt = 10;
+  int64 updateAt = 11;
+  string password = 12;
+}
+
+//req 、resp
+message RegisterReq {
+  UserWithPwd userInfo = 1;
+}
+
+message Group {
+  int64 id = 1;
+  int64 createAt = 2;
+  string name = 3;
+  string desc = 4;
+  string avatar = 5;
+  int64 ownerId = 6;
+}
+
+message RegisterResp {
+  string accessToken = 1;
+  int64  accessExpire = 2;
+  int64  refreshAfter = 3;
+}
+
+// can be phone with password and email with captcha
+message LoginReq {
+  int32 type = 1;
+  string account = 2;
+  string  password = 3;
+}
+
+message LoginResp {
+  string accessToken = 1;
+  int64  accessExpire = 2;
+  int64  refreshAfter = 3;
+}
+
+message GetCaptchaReq {
+  string email = 1;
+}
+
+message GetCaptchaResp {
+  string code = 1;
+}
+
+message GetUserInfoReq {
+  int64  id = 1;
+}
+message GetUserInfoResp {
+   User user = 1;
+}
+
+message GenerateTokenReq {
+  int64 userId = 1;
+}
+message GenerateTokenResp {
+  string accessToken = 1;
+  int64  accessExpire = 2;
+  int64  refreshAfter = 3;
+}
+
+message DelUserInfoReq {
+  int64 userId = 1;
+}
+
+message DelUserInfoResp {
+  int32 code = 1;
+}
+
+message UpdateUserInfoReq {
+  UserWithPwd user = 1;
+}
+
+message UpdateUserInfoResp {
+  int32 code = 1;
+}
+
+message SearchUserFuzzyReq {
+  string keyword = 1;
+}
+
+message SearchUserFuzzyResp {
+  repeated User users = 1;
+}
+
+message GetFriendsReq {
+  int64 id = 1;
+}
+
+message GetFriendsResp {
+  repeated User users = 1;
+}
+
+message AddFriendsReq {
+  int64 id = 1;
+}
+
+message AddFriendsResp {
+  User users = 1;
+}
+
+message DelFriendsReq {
+  int64 id = 1;
+}
+
+message DelFriendsResp {
+  int32 code = 1;
+}
+
+message SearchFriendFuzzyReq {
+  string keyword = 1;
+}
+
+message SearchFriendFuzzyResp {
+  repeated User users = 1;
+}
+
+message CreateGroupReq {
+  Group keyword = 1;
+}
+
+message CreateGroupResp {
+  repeated User users = 1;
+}
+
+message JoinGroupReq {
+  int64 id = 1;
+}
+
+message JoinGroupResp {
+  Group group = 1;
+}
+
+message QuitGroupReq {
+  int64 heirId = 1;
+  int64 groupId = 2;
+}
+
+message QuitGroupResp {
+  int32 code = 1;
+}
+
+message DismissGroupReq {
+  int64 id = 1;
+}
+
+message DismissGroupResp {
+  int32 code = 1;
+}
+
+message UpdateGroupReq {
+  Group group = 1;
+}
+
+message UpdateGroupResp {
+  int32 code = 1;
+}
+
+message GetGroupInfoReq {
+  int64 id = 1;
+}
+
+message GetGroupInfoResp {
+  Group group = 1;
+}
+
+message SearchGroupReq {
+  int64 user_id = 1;
+  string keyword = 2;
+}
+
+message SearchGroupResp {
+  Group group = 1;
+}
+
+//service
+service UserService {
+
+  rpc login(LoginReq) returns(LoginResp);
+  rpc register(RegisterReq) returns(RegisterResp);
+  rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
+  // user basic
+  rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
+  rpc softDelUser(DelUserInfoReq) returns (DelUserInfoResp);
+  rpc updateUserInfo(UpdateUserInfoReq) returns (UpdateUserInfoResp);
+  rpc searchUserFuzzy(SearchUserFuzzyReq) returns (SearchUserFuzzyResp); 
+  rpc getCaptcha(GetCaptchaReq) returns (GetCaptchaResp);
+}
+
+service FriendService {
+  // friend basic
+  rpc getFriends(GetFriendsReq) returns (GetFriendsResp);
+  rpc addFriends(AddFriendsReq) returns (AddFriendsResp);
+  rpc delFrineds(DelFriendsReq) returns (DelFriendsResp); // soft del
+  rpc searchFriendFuzzy(SearchUserFuzzyReq) returns (SearchUserFuzzyResp); 
+}
+
+service GroupService {
+  // group 
+  rpc createGroup(CreateGroupReq) returns (CreateGroupResp);
+  rpc joinGroup(JoinGroupReq) returns (JoinGroupResp);
+  rpc quitGroup(QuitGroupReq) returns (QuitGroupResp);
+  rpc dismissGroup(DismissGroupReq) returns (DismissGroupResp);
+  rpc updateGroupInfo(UpdateGroupReq) returns (UpdateGroupResp);
+  rpc getGroupInfo(GetGroupInfoReq) returns (GetGroupInfoResp);
+  rpc searchGroup(SearchGroupReq) returns (SearchGroupResp);
+}

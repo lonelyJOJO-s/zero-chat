@@ -1,0 +1,40 @@
+syntax = "v1"
+
+info(
+    title: "group entity"
+    desc: "group entity"
+    author: "joey.zhu"
+    email: "1207833477@qq.com"
+    version: "v1"
+)
+
+type Group {
+    Name string `json:"name"`
+    Desc string `json:"desc"`
+    Avatar string `json:"avatar"`
+    CreatorId int64 `json:"creator_id"`
+}
+
+type GroupWithId {
+    Group
+    Id int64 `json:"id"`
+}
+
+type (
+    GroupCreateReq {
+        GroupInfo Group `json:"group_info"`
+    }
+    GroupResp {
+        group GroupWithId `json:"group"`
+    }
+    GroupId {
+        Id int64 `json:"id"`
+    }
+    GroupUpdateReq {
+        group GroupWithId `json:"group"`
+    }
+    GroupQuitReq {
+        GroupId int64 `json:"group_id"`
+        HeirId int64 `json:"heir_id"`
+    }
+)
