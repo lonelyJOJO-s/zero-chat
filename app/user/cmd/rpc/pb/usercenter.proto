@@ -126,6 +126,7 @@ message GetFriendsResp {
 
 message AddFriendsReq {
   int64 id = 1;
+  int64 friendId = 2;
 }
 
 message AddFriendsResp {
@@ -134,14 +135,15 @@ message AddFriendsResp {
 
 message DelFriendsReq {
   int64 id = 1;
+  int64 friendId = 2;
 }
 
 message DelFriendsResp {
-  int32 code = 1;
 }
 
 message SearchFriendFuzzyReq {
-  string keyword = 1;
+  int64 id = 1;
+  string keyword = 2;
 }
 
 message SearchFriendFuzzyResp {

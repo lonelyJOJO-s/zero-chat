@@ -19,7 +19,7 @@ import (
 var (
 	userFriendFieldNames          = builder.RawFieldNames(&UserFriend{})
 	userFriendRows                = strings.Join(userFriendFieldNames, ",")
-	userFriendRowsExpectAutoSet   = strings.Join(stringx.Remove(userFriendFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	userFriendRowsExpectAutoSet   = strings.Join(stringx.Remove(userFriendFieldNames, "`id`", "`create_time`", "`deleted_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	userFriendRowsWithPlaceHolder = strings.Join(stringx.Remove(userFriendFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheUsercenterUserFriendIdPrefix             = "cache:usercenter:userFriend:id:"
@@ -28,7 +28,7 @@ var (
 
 type (
 	userFriendModel interface {
-		Insert(ctx context.Context, data *UserFriend) (sql.Result, error)
+		Insert(ctx context.Context, data *UserFriend) (error)
 		FindOne(ctx context.Context, id int64) (*UserFriend, error)
 		FindOneByUserIdFriendId(ctx context.Context, userId int64, friendId int64) (*UserFriend, error)
 		Update(ctx context.Context, data *UserFriend) error
@@ -48,6 +48,8 @@ type (
 		DeletedAt sql.NullTime `db:"deleted_at"`
 	}
 )
+
+var _ userFriendModel = (*defaultUserFriendModel)(nil)
 
 func newUserFriendModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *defaultUserFriendModel {
 	return &defaultUserFriendModel{
@@ -108,14 +110,19 @@ func (m *defaultUserFriendModel) FindOneByUserIdFriendId(ctx context.Context, us
 	}
 }
 
-func (m *defaultUserFriendModel) Insert(ctx context.Context, data *UserFriend) (sql.Result, error) {
-	usercenterUserFriendIdKey := fmt.Sprintf("%s%v", cacheUsercenterUserFriendIdPrefix, data.Id)
-	usercenterUserFriendUserIdFriendIdKey := fmt.Sprintf("%s%v:%v", cacheUsercenterUserFriendUserIdFriendIdPrefix, data.UserId, data.FriendId)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.FriendId, data.DeletedAt)
-	}, usercenterUserFriendIdKey, usercenterUserFriendUserIdFriendIdKey)
-	return ret, err
+func (m *defaultUserFriendModel) Insert(ctx context.Context, data *UserFriend) (error) {
+	fmt.Println(userFriendRowsExpectAutoSet)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
+	now := time.Now()
+	_, err := m.ExecNoCacheCtx(ctx, query, data.UserId, data.FriendId, now)
+	if err != nil {
+		return  err
+	}
+	_, err = m.ExecNoCacheCtx(ctx, query, data.FriendId, data.UserId , now)
+	if err != nil {
+		return  err
+	}
+	return  nil
 }
 
 func (m *defaultUserFriendModel) Update(ctx context.Context, newData *UserFriend) error {

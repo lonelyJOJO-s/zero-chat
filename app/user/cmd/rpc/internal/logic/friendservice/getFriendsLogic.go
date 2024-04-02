@@ -26,6 +26,5 @@ func NewGetFriendsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFri
 // friend basic
 func (l *GetFriendsLogic) GetFriends(in *pb.GetFriendsReq) (*pb.GetFriendsResp, error) {
 	// todo: add your logic here and delete this line
-
 	return &pb.GetFriendsResp{}, nil
 }
