@@ -5,7 +5,10 @@ import (
 
 	"zero-chat/app/user/cmd/rpc/internal/svc"
 	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/xerr"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,6 +28,17 @@ func NewGetFriendsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFri
 
 // friend basic
 func (l *GetFriendsLogic) GetFriends(in *pb.GetFriendsReq) (*pb.GetFriendsResp, error) {
-	// todo: add your logic here and delete this line
-	return &pb.GetFriendsResp{}, nil
+	friendIds, err := l.svcCtx.UserFriend.GetFriendIds(l.ctx, in.Id)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "user_id:%d get friend ids error:%s", in.Id, err.Error())
+	}
+	whereBuilder := l.svcCtx.UserModel.SelectBuilder().Where(
+		"`id` in (?)", friendIds)
+	users, err := l.svcCtx.UserModel.FindAll(l.ctx, whereBuilder, "")
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "user_id:%d get friend error:%s", in.Id, err.Error())
+	}
+	var resp pb.GetFriendsResp
+	copier.Copy(&users, &resp.Users)
+	return &resp, nil
 }

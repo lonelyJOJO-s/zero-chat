@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
+	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -37,6 +37,8 @@ type (
 		FuzzyFindByUsername(ctx context.Context, partUsername string) ([]*Users, error)
 		FuzzyFindByPhone(ctx context.Context, partPhone string) ([]*Users, error)
 		FuzzyFindByEmail(ctx context.Context, partEmail string) ([]*Users, error)
+		SelectBuilder() squirrel.SelectBuilder
+		FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*Users, error)
 		// transaction submit
 		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
 	}
@@ -122,6 +124,11 @@ func (m *defaultUsersModel) FuzzyFindByEmail(ctx context.Context, partEmail stri
 	default:
 		return nil, err
 	}
+}
+
+
+func (m *defaultUsersModel) SelectBuilder() squirrel.SelectBuilder {
+	return squirrel.Select().From(m.table)
 }
 
 func (m *defaultUsersModel) Delete(ctx context.Context, id int64) error {
@@ -229,6 +236,30 @@ func (m *defaultUsersModel) Update(ctx context.Context, newData *Users) error {
 		return conn.ExecCtx(ctx, query, newData.Username, newData.Password, newData.Email, newData.Phone, newData.Status, newData.Sex, newData.Addr, newData.Desc, newData.Avatar, time.Now(), newData.Id)
 	}, usercenterUsersIdKey, usercenterUsersUsernameKey)
 	return err
+}
+
+func (m *defaultUsersModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*Users, error) {
+	builder = builder.Columns(usersRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	query, values, err := builder.Where(squirrel.Eq{"deleted_at": nil}).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*Users
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultUsersModel) formatPrimary(primary any) string {

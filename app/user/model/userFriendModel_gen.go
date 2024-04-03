@@ -33,6 +33,7 @@ type (
 		FindOneByUserIdFriendId(ctx context.Context, userId int64, friendId int64) (*UserFriend, error)
 		Update(ctx context.Context, data *UserFriend) error
 		Delete(ctx context.Context, id int64) error
+		GetFriendIds(ctx context.Context, id int64) ([]int, error)
 	}
 
 	defaultUserFriendModel struct {
@@ -71,6 +72,15 @@ func (m *defaultUserFriendModel) Delete(ctx context.Context, id int64) error {
 		return conn.ExecCtx(ctx, query, id)
 	}, usercenterUserFriendIdKey, usercenterUserFriendUserIdFriendIdKey)
 	return err
+}
+
+func (m *defaultUserFriendModel) GetFriendIds(ctx context.Context, id int64) (ids []int, err error) {
+	query := fmt.Sprintf("select friend_id from %s where `id` = ?", m.table)
+	err = m.QueryRowsNoCacheCtx(ctx, &ids, query, id)
+	if err != nil {
+		return nil, err
+	}
+	return 
 }
 
 func (m *defaultUserFriendModel) FindOne(ctx context.Context, id int64) (*UserFriend, error) {
