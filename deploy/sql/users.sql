@@ -59,8 +59,8 @@ CREATE TABLE `user_friend`  (
   `friend_id` bigint UNSIGNED NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime NULL DEFAULT NULL,
-  UNIQUE INDEX `uni_user_friend` (`user_id`, `friend_id`) USING BTREE,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE
+  INDEX `idx_friend_id`(`friend_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 

@@ -227,7 +227,7 @@ service FriendService {
   rpc getFriends(GetFriendsReq) returns (GetFriendsResp);
   rpc addFriends(AddFriendsReq) returns (AddFriendsResp);
   rpc delFrineds(DelFriendsReq) returns (DelFriendsResp); // soft del
-  rpc searchFriendFuzzy(SearchUserFuzzyReq) returns (SearchUserFuzzyResp); 
+  rpc searchFriendFuzzy(SearchFriendFuzzyReq) returns (SearchFriendFuzzyResp); 
 }
 
 service GroupService {

@@ -38,7 +38,7 @@ func (s *FriendServiceServer) DelFrineds(ctx context.Context, in *pb.DelFriendsR
 	return l.DelFrineds(in)
 }
 
-func (s *FriendServiceServer) SearchFriendFuzzy(ctx context.Context, in *pb.SearchUserFuzzyReq) (*pb.SearchUserFuzzyResp, error) {
+func (s *FriendServiceServer) SearchFriendFuzzy(ctx context.Context, in *pb.SearchFriendFuzzyReq) (*pb.SearchFriendFuzzyResp, error) {
 	l := friendservicelogic.NewSearchFriendFuzzyLogic(ctx, s.svcCtx)
 	return l.SearchFriendFuzzy(in)
 }

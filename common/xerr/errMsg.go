@@ -13,6 +13,7 @@ func init() {
 	message[REDIS_ERROR] = "redis数据库错误"
 	message[DB_UPDATE_AFFECTED_ZERO_ERROR] = "更新数据影响行数为0"
 	message[NO_ACCESS_TO_RESOURCE] = "no access to the current resources"
+	message[RELATIONSHIP_ALREADY_EXSIT] = "好友关系已存在，请勿重复添加"
 }
 
 func MapErrMsg(errcode uint32) string {

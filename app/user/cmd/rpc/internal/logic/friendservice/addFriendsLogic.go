@@ -31,7 +31,7 @@ func (l *AddFriendsLogic) AddFriends(in *pb.AddFriendsReq) (*pb.AddFriendsResp, 
 
 	err := l.svcCtx.UserFriend.Insert(l.ctx, &model.UserFriend{UserId: in.Id, FriendId: in.FriendId})
 	if err != nil {
-		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "insert db error:%s", err)
+		return nil, err
 	}
 	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.FriendId)
 	if err != nil {

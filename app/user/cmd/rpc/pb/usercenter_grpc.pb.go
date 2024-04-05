@@ -384,7 +384,7 @@ type FriendServiceClient interface {
 	GetFriends(ctx context.Context, in *GetFriendsReq, opts ...grpc.CallOption) (*GetFriendsResp, error)
 	AddFriends(ctx context.Context, in *AddFriendsReq, opts ...grpc.CallOption) (*AddFriendsResp, error)
 	DelFrineds(ctx context.Context, in *DelFriendsReq, opts ...grpc.CallOption) (*DelFriendsResp, error)
-	SearchFriendFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
+	SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error)
 }
 
 type friendServiceClient struct {
@@ -422,8 +422,8 @@ func (c *friendServiceClient) DelFrineds(ctx context.Context, in *DelFriendsReq,
 	return out, nil
 }
 
-func (c *friendServiceClient) SearchFriendFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error) {
-	out := new(SearchUserFuzzyResp)
+func (c *friendServiceClient) SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error) {
+	out := new(SearchFriendFuzzyResp)
 	err := c.cc.Invoke(ctx, FriendService_SearchFriendFuzzy_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -439,7 +439,7 @@ type FriendServiceServer interface {
 	GetFriends(context.Context, *GetFriendsReq) (*GetFriendsResp, error)
 	AddFriends(context.Context, *AddFriendsReq) (*AddFriendsResp, error)
 	DelFrineds(context.Context, *DelFriendsReq) (*DelFriendsResp, error)
-	SearchFriendFuzzy(context.Context, *SearchUserFuzzyReq) (*SearchUserFuzzyResp, error)
+	SearchFriendFuzzy(context.Context, *SearchFriendFuzzyReq) (*SearchFriendFuzzyResp, error)
 	mustEmbedUnimplementedFriendServiceServer()
 }
 
@@ -456,7 +456,7 @@ func (UnimplementedFriendServiceServer) AddFriends(context.Context, *AddFriendsR
 func (UnimplementedFriendServiceServer) DelFrineds(context.Context, *DelFriendsReq) (*DelFriendsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelFrineds not implemented")
 }
-func (UnimplementedFriendServiceServer) SearchFriendFuzzy(context.Context, *SearchUserFuzzyReq) (*SearchUserFuzzyResp, error) {
+func (UnimplementedFriendServiceServer) SearchFriendFuzzy(context.Context, *SearchFriendFuzzyReq) (*SearchFriendFuzzyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchFriendFuzzy not implemented")
 }
 func (UnimplementedFriendServiceServer) mustEmbedUnimplementedFriendServiceServer() {}
@@ -527,7 +527,7 @@ func _FriendService_DelFrineds_Handler(srv interface{}, ctx context.Context, dec
 }
 
 func _FriendService_SearchFriendFuzzy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchUserFuzzyReq)
+	in := new(SearchFriendFuzzyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -539,7 +539,7 @@ func _FriendService_SearchFriendFuzzy_Handler(srv interface{}, ctx context.Conte
 		FullMethod: FriendService_SearchFriendFuzzy_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FriendServiceServer).SearchFriendFuzzy(ctx, req.(*SearchUserFuzzyReq))
+		return srv.(FriendServiceServer).SearchFriendFuzzy(ctx, req.(*SearchFriendFuzzyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -60,7 +60,7 @@ type (
 		GetFriends(ctx context.Context, in *GetFriendsReq, opts ...grpc.CallOption) (*GetFriendsResp, error)
 		AddFriends(ctx context.Context, in *AddFriendsReq, opts ...grpc.CallOption) (*AddFriendsResp, error)
 		DelFrineds(ctx context.Context, in *DelFriendsReq, opts ...grpc.CallOption) (*DelFriendsResp, error)
-		SearchFriendFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
+		SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error)
 	}
 
 	defaultFriendService struct {
@@ -90,7 +90,7 @@ func (m *defaultFriendService) DelFrineds(ctx context.Context, in *DelFriendsReq
 	return client.DelFrineds(ctx, in, opts...)
 }
 
-func (m *defaultFriendService) SearchFriendFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error) {
+func (m *defaultFriendService) SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error) {
 	client := pb.NewFriendServiceClient(m.cli.Conn())
 	return client.SearchFriendFuzzy(ctx, in, opts...)
 }
