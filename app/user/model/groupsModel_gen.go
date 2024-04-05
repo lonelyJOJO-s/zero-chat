@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -18,8 +19,8 @@ import (
 var (
 	groupsFieldNames          = builder.RawFieldNames(&Groups{})
 	groupsRows                = strings.Join(groupsFieldNames, ",")
-	groupsRowsExpectAutoSet   = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	groupsRowsWithPlaceHolder = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	groupsRowsExpectAutoSet   = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`deleted_at`"), ",")
+	groupsRowsWithPlaceHolder = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`, `deleted_at`"), "=?,") + "=?"
 
 	cacheUsercenterGroupsIdPrefix = "cache:usercenter:groups:id:"
 )
@@ -30,6 +31,12 @@ type (
 		FindOne(ctx context.Context, id int64) (*Groups, error)
 		Update(ctx context.Context, data *Groups) error
 		Delete(ctx context.Context, id int64) error
+		DeleteSoft(ctx context.Context, id int64) error
+		// all id 
+		FindAllByUserId(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]int64, error)
+		// all struct
+		FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*Groups, error)
+		SelectBuilder() squirrel.SelectBuilder
 	}
 
 	defaultGroupsModel struct {
@@ -49,6 +56,8 @@ type (
 	}
 )
 
+var _ groupsModel = (*defaultGroupsModel)(nil)
+
 func newGroupsModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *defaultGroupsModel {
 	return &defaultGroupsModel{
 		CachedConn: sqlc.NewConn(conn, c, opts...),
@@ -65,11 +74,21 @@ func (m *defaultGroupsModel) Delete(ctx context.Context, id int64) error {
 	return err
 }
 
+func (m *defaultGroupsModel) DeleteSoft(ctx context.Context, id int64) error {
+	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set deleted_at = ? where `id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, time.Now(), id)
+	}, usercenterGroupsIdKey)
+	return err
+}
+
 func (m *defaultGroupsModel) FindOne(ctx context.Context, id int64) (*Groups, error) {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, id)
 	var resp Groups
 	err := m.QueryRowCtx(ctx, &resp, usercenterGroupsIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", groupsRows, m.table)
+		query := fmt.Sprintf("select %s from %s where `id` = ? and owner_id != 0 limit 1", groupsRows, m.table)
+		fmt.Println(query)
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
 	switch err {
@@ -82,11 +101,59 @@ func (m *defaultGroupsModel) FindOne(ctx context.Context, id int64) (*Groups, er
 	}
 }
 
+func (m *defaultGroupsModel) FindAllByUserId(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]int64, error) {
+	rowBuilder = rowBuilder.Columns("`id`")
+
+	if orderBy == "" {
+		rowBuilder = rowBuilder.OrderBy("id DESC")
+	} else {
+		rowBuilder = rowBuilder.OrderBy(orderBy)
+	}
+
+	query, values, err := rowBuilder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []int64
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultGroupsModel) FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*Groups, error) {
+rowBuilder = rowBuilder.Columns(groupsRows)
+
+	if orderBy == "" {
+		rowBuilder = rowBuilder.OrderBy("id DESC")
+	} else {
+		rowBuilder = rowBuilder.OrderBy(orderBy)
+	}
+
+	query, values, err := rowBuilder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*Groups
+	err = m.QueryRowsNoCacheCtx(ctx, &resp, query, values...)
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
 func (m *defaultGroupsModel) Insert(ctx context.Context, data *Groups) (sql.Result, error) {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, groupsRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.DeletedAt, data.Name, data.Desc, data.Avatar, data.OwnerId)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?)", m.table, groupsRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.CreatedAt, data.UpdatedAt, data.Name, data.Desc, data.Avatar, data.OwnerId)
 	}, usercenterGroupsIdKey)
 	return ret, err
 }
@@ -95,7 +162,7 @@ func (m *defaultGroupsModel) Update(ctx context.Context, data *Groups) error {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, groupsRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.DeletedAt, data.Name, data.Desc, data.Avatar, data.OwnerId, data.Id)
+		return conn.ExecCtx(ctx, query, data.UpdatedAt, data.Name, data.Desc, data.Avatar, data.OwnerId, data.Id)
 	}, usercenterGroupsIdKey)
 	return err
 }
@@ -105,10 +172,16 @@ func (m *defaultGroupsModel) formatPrimary(primary any) string {
 }
 
 func (m *defaultGroupsModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", groupsRows, m.table)
+	query := fmt.Sprintf("select %s from %s where `id` = ? and owner_id != 0 limit 1", groupsRows, m.table)
 	return conn.QueryRowCtx(ctx, v, query, primary)
 }
 
 func (m *defaultGroupsModel) tableName() string {
 	return m.table
 }
+
+
+func (m *defaultGroupsModel) SelectBuilder() squirrel.SelectBuilder {
+	return squirrel.Select().From(m.table)
+}
+

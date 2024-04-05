@@ -29,8 +29,12 @@ type (
 	GetCaptchaResp        = pb.GetCaptchaResp
 	GetFriendsReq         = pb.GetFriendsReq
 	GetFriendsResp        = pb.GetFriendsResp
+	GetGroupIdsReq        = pb.GetGroupIdsReq
+	GetGroupIdsResp       = pb.GetGroupIdsResp
 	GetGroupInfoReq       = pb.GetGroupInfoReq
 	GetGroupInfoResp      = pb.GetGroupInfoResp
+	GetMemberIdsReq       = pb.GetMemberIdsReq
+	GetMemberIdsResp      = pb.GetMemberIdsResp
 	GetUserInfoReq        = pb.GetUserInfoReq
 	GetUserInfoResp       = pb.GetUserInfoResp
 	Group                 = pb.Group

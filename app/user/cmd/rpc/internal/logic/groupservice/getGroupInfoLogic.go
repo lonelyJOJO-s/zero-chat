@@ -3,8 +3,12 @@ package groupservicelogic
 import (
 	"context"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
+
 	"zero-chat/app/user/cmd/rpc/internal/svc"
 	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +28,11 @@ func NewGetGroupInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetG
 }
 
 func (l *GetGroupInfoLogic) GetGroupInfo(in *pb.GetGroupInfoReq) (*pb.GetGroupInfoResp, error) {
-	// todo: add your logic here and delete this line
-
-	return &pb.GetGroupInfoResp{}, nil
+	group, err := l.svcCtx.GroupModel.FindOne(l.ctx, in.Id)
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "find group error:%s", err.Error())
+	}
+	var groupPb pb.Group
+	copier.Copy(&groupPb, group)
+	return &pb.GetGroupInfoResp{Group: &groupPb}, nil
 }

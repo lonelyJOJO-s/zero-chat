@@ -140,7 +140,7 @@ func (m *defaultUserFriendModel) Insert(ctx context.Context, data *UserFriend) (
 		return err
 	}
 	if uf != nil {
-		return xerr.NewErrCodeMsg(xerr.RELATIONSHIP_ALREADY_EXSIT, xerr.MapErrMsg(xerr.RELATIONSHIP_ALREADY_EXSIT))
+		return xerr.NewErrCodeMsg(xerr.INSERT_ALREADY_EXSIT, xerr.MapErrMsg(xerr.INSERT_ALREADY_EXSIT))
 	}
 	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
 	now := time.Now()

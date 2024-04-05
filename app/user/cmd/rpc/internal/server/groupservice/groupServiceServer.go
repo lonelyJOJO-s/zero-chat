@@ -57,3 +57,13 @@ func (s *GroupServiceServer) SearchGroup(ctx context.Context, in *pb.SearchGroup
 	l := groupservicelogic.NewSearchGroupLogic(ctx, s.svcCtx)
 	return l.SearchGroup(in)
 }
+
+func (s *GroupServiceServer) GetMemberIds(ctx context.Context, in *pb.GetMemberIdsReq) (*pb.GetMemberIdsResp, error) {
+	l := groupservicelogic.NewGetMemberIdsLogic(ctx, s.svcCtx)
+	return l.GetMemberIds(in)
+}
+
+func (s *GroupServiceServer) GetGroupIds(ctx context.Context, in *pb.GetGroupIdsReq) (*pb.GetGroupIdsResp, error) {
+	l := groupservicelogic.NewGetGroupIdsLogic(ctx, s.svcCtx)
+	return l.GetGroupIds(in)
+}

@@ -35,7 +35,7 @@ func (l *UpdateUserInfoLogic) UpdateUserInfo(in *pb.UpdateUserInfoReq) (*pb.Upda
 	if data == nil {
 		return nil, errors.Wrapf(ErrUserNoExistsError, "user_id:%d not found", in.User.Id)
 	}
-	_ = copier.CopyWithOption(data, in.User, copier.Option{IgnoreEmpty: true})
+	copier.CopyWithOption(data, in.User, copier.Option{IgnoreEmpty: true})
 	err = l.svcCtx.UserModel.Update(l.ctx, data)
 	if err != nil {
 		return nil, err

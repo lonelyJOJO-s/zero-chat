@@ -29,8 +29,12 @@ type (
 	GetCaptchaResp        = pb.GetCaptchaResp
 	GetFriendsReq         = pb.GetFriendsReq
 	GetFriendsResp        = pb.GetFriendsResp
+	GetGroupIdsReq        = pb.GetGroupIdsReq
+	GetGroupIdsResp       = pb.GetGroupIdsResp
 	GetGroupInfoReq       = pb.GetGroupInfoReq
 	GetGroupInfoResp      = pb.GetGroupInfoResp
+	GetMemberIdsReq       = pb.GetMemberIdsReq
+	GetMemberIdsResp      = pb.GetMemberIdsResp
 	GetUserInfoReq        = pb.GetUserInfoReq
 	GetUserInfoResp       = pb.GetUserInfoResp
 	Group                 = pb.Group
@@ -64,6 +68,8 @@ type (
 		UpdateGroupInfo(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*UpdateGroupResp, error)
 		GetGroupInfo(ctx context.Context, in *GetGroupInfoReq, opts ...grpc.CallOption) (*GetGroupInfoResp, error)
 		SearchGroup(ctx context.Context, in *SearchGroupReq, opts ...grpc.CallOption) (*SearchGroupResp, error)
+		GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
+		GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error)
 	}
 
 	defaultGroupService struct {
@@ -111,4 +117,14 @@ func (m *defaultGroupService) GetGroupInfo(ctx context.Context, in *GetGroupInfo
 func (m *defaultGroupService) SearchGroup(ctx context.Context, in *SearchGroupReq, opts ...grpc.CallOption) (*SearchGroupResp, error) {
 	client := pb.NewGroupServiceClient(m.cli.Conn())
 	return client.SearchGroup(ctx, in, opts...)
+}
+
+func (m *defaultGroupService) GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error) {
+	client := pb.NewGroupServiceClient(m.cli.Conn())
+	return client.GetMemberIds(ctx, in, opts...)
+}
+
+func (m *defaultGroupService) GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error) {
+	client := pb.NewGroupServiceClient(m.cli.Conn())
+	return client.GetGroupIds(ctx, in, opts...)
 }

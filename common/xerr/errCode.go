@@ -16,4 +16,5 @@ const REDIS_ERROR uint32 = 100007
 
 // 用户模块
 const NO_ACCESS_TO_RESOURCE uint32 = 200001
-const RELATIONSHIP_ALREADY_EXSIT uint32 = 200002
+const INSERT_ALREADY_EXSIT uint32 = 200002
+const UserNotInGroup uint32 = 200003

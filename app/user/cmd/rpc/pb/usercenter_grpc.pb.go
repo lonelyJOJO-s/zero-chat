@@ -580,6 +580,8 @@ const (
 	GroupService_UpdateGroupInfo_FullMethodName = "/pb.GroupService/updateGroupInfo"
 	GroupService_GetGroupInfo_FullMethodName    = "/pb.GroupService/getGroupInfo"
 	GroupService_SearchGroup_FullMethodName     = "/pb.GroupService/searchGroup"
+	GroupService_GetMemberIds_FullMethodName    = "/pb.GroupService/GetMemberIds"
+	GroupService_GetGroupIds_FullMethodName     = "/pb.GroupService/GetGroupIds"
 )
 
 // GroupServiceClient is the client API for GroupService service.
@@ -594,6 +596,8 @@ type GroupServiceClient interface {
 	UpdateGroupInfo(ctx context.Context, in *UpdateGroupReq, opts ...grpc.CallOption) (*UpdateGroupResp, error)
 	GetGroupInfo(ctx context.Context, in *GetGroupInfoReq, opts ...grpc.CallOption) (*GetGroupInfoResp, error)
 	SearchGroup(ctx context.Context, in *SearchGroupReq, opts ...grpc.CallOption) (*SearchGroupResp, error)
+	GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
+	GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error)
 }
 
 type groupServiceClient struct {
@@ -667,6 +671,24 @@ func (c *groupServiceClient) SearchGroup(ctx context.Context, in *SearchGroupReq
 	return out, nil
 }
 
+func (c *groupServiceClient) GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error) {
+	out := new(GetMemberIdsResp)
+	err := c.cc.Invoke(ctx, GroupService_GetMemberIds_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *groupServiceClient) GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error) {
+	out := new(GetGroupIdsResp)
+	err := c.cc.Invoke(ctx, GroupService_GetGroupIds_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GroupServiceServer is the server API for GroupService service.
 // All implementations must embed UnimplementedGroupServiceServer
 // for forward compatibility
@@ -679,6 +701,8 @@ type GroupServiceServer interface {
 	UpdateGroupInfo(context.Context, *UpdateGroupReq) (*UpdateGroupResp, error)
 	GetGroupInfo(context.Context, *GetGroupInfoReq) (*GetGroupInfoResp, error)
 	SearchGroup(context.Context, *SearchGroupReq) (*SearchGroupResp, error)
+	GetMemberIds(context.Context, *GetMemberIdsReq) (*GetMemberIdsResp, error)
+	GetGroupIds(context.Context, *GetGroupIdsReq) (*GetGroupIdsResp, error)
 	mustEmbedUnimplementedGroupServiceServer()
 }
 
@@ -706,6 +730,12 @@ func (UnimplementedGroupServiceServer) GetGroupInfo(context.Context, *GetGroupIn
 }
 func (UnimplementedGroupServiceServer) SearchGroup(context.Context, *SearchGroupReq) (*SearchGroupResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchGroup not implemented")
+}
+func (UnimplementedGroupServiceServer) GetMemberIds(context.Context, *GetMemberIdsReq) (*GetMemberIdsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMemberIds not implemented")
+}
+func (UnimplementedGroupServiceServer) GetGroupIds(context.Context, *GetGroupIdsReq) (*GetGroupIdsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupIds not implemented")
 }
 func (UnimplementedGroupServiceServer) mustEmbedUnimplementedGroupServiceServer() {}
 
@@ -846,6 +876,42 @@ func _GroupService_SearchGroup_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GroupService_GetMemberIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMemberIdsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).GetMemberIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GroupService_GetMemberIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).GetMemberIds(ctx, req.(*GetMemberIdsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GroupService_GetGroupIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupIdsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).GetGroupIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GroupService_GetGroupIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).GetGroupIds(ctx, req.(*GetGroupIdsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GroupService_ServiceDesc is the grpc.ServiceDesc for GroupService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -880,6 +946,14 @@ var GroupService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "searchGroup",
 			Handler:    _GroupService_SearchGroup_Handler,
+		},
+		{
+			MethodName: "GetMemberIds",
+			Handler:    _GroupService_GetMemberIds_Handler,
+		},
+		{
+			MethodName: "GetGroupIds",
+			Handler:    _GroupService_GetGroupIds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
