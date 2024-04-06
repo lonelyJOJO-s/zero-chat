@@ -15,14 +15,15 @@ JwtAuth:
 #   Path: /metrics
 
 # Telemetry:
-#   Name: usercenter-rpc
-#   Endpoint: http://jaeger:14268/api/traces
-#   Sampler: 1.0
-#   Batcher: jaeger
+  Name: usercenter-rpc
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
 
 Log:
   ServiceName: usercenter-rpc
-  Level: error
+  Level: info # error
+  Encoding: plain # default: json 利于收集日志  plain利于查看日志
 
 Redis:
   Host: localhost:36379 # 124.221.101.169:36379 # used to be redis:36379

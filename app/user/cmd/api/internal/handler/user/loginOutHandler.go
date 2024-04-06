@@ -1,12 +1,13 @@
 package user
 
 import (
-	"net/http"
-
+	"github.com/go-playground/validator/v10"
 	"github.com/zeromicro/go-zero/rest/httpx"
+	"net/http"
 	"zero-chat/app/user/cmd/api/internal/logic/user"
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
+	"zero-chat/common/result"
 )
 
 func LoginOutHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -16,13 +17,16 @@ func LoginOutHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
+		// validator
+		validate := validator.New()
+		if err := validate.StructCtx(r.Context(), req); err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+			return
+		}
 
 		l := user.NewLoginOutLogic(r.Context(), svcCtx)
 		resp, err := l.LoginOut(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		// uniform return
+		result.HttpResult(r, w, resp, err)
 	}
 }

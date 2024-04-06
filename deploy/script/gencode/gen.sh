@@ -20,7 +20,7 @@
 # 格式化api文件
 # goctl api format --dir user.api
 
-
+# --home 可以设置模板路径 具体到tpl即可
 
 # 创建kafka的topic
 # kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic {topic}
