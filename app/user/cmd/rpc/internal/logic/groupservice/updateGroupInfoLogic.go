@@ -31,8 +31,11 @@ func (l *UpdateGroupInfoLogic) UpdateGroupInfo(in *pb.UpdateGroupReq) (*pb.Updat
 	if err != nil {
 		return nil, err
 	}
+	if update.OwnerId != in.Group.OwnerId {
+		return nil, xerr.NewErrCode(xerr.NO_ACCESS_TO_RESOURCE)
+	}
 	copier.CopyWithOption(&update, in.Group, copier.Option{IgnoreEmpty: true})
-	err = l.svcCtx.GroupModel.Update(l.ctx, update)
+	err = l.svcCtx.GroupModel.Update(l.ctx, update, nil)
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "update group info error:%s", err.Error())
 	}

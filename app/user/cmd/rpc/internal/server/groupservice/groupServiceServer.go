@@ -63,7 +63,12 @@ func (s *GroupServiceServer) GetMemberIds(ctx context.Context, in *pb.GetMemberI
 	return l.GetMemberIds(in)
 }
 
-func (s *GroupServiceServer) GetGroupIds(ctx context.Context, in *pb.GetGroupIdsReq) (*pb.GetGroupIdsResp, error) {
-	l := groupservicelogic.NewGetGroupIdsLogic(ctx, s.svcCtx)
-	return l.GetGroupIds(in)
+func (s *GroupServiceServer) GetManagedGroupIds(ctx context.Context, in *pb.GetManagedGroupIdsReq) (*pb.GetManagedGroupIdsResp, error) {
+	l := groupservicelogic.NewGetManagedGroupIdsLogic(ctx, s.svcCtx)
+	return l.GetManagedGroupIds(in)
+}
+
+func (s *GroupServiceServer) GetJoinedGroupIds(ctx context.Context, in *pb.GetJoinedGroupIdsReq) (*pb.GetJoinedGroupIdsResp, error) {
+	l := groupservicelogic.NewGetJoinedGroupIdsLogic(ctx, s.svcCtx)
+	return l.GetJoinedGroupIds(in)
 }

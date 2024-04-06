@@ -31,8 +31,8 @@ func NewSearchGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Searc
 func (l *SearchGroupLogic) SearchGroup(in *pb.SearchGroupReq) (*pb.SearchGroupResp, error) {
 	// todo: search all groups belong to user_id by keyword
 	// 1. 找到所有的groups， 然后对比keyword和group name
-	getGroupsLogic := NewGetGroupIdsLogic(l.ctx, l.svcCtx)
-	idsResp, err := getGroupsLogic.GetGroupIds(&pb.GetGroupIdsReq{UserId: in.UserId})
+	getGroupsLogic := NewGetJoinedGroupIdsLogic(l.ctx, l.svcCtx)
+	idsResp, err := getGroupsLogic.GetJoinedGroupIds(&pb.GetJoinedGroupIdsReq{UserId: in.UserId})
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get group ids error:%s", err.Error())
 	}

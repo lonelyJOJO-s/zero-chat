@@ -573,15 +573,16 @@ var FriendService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	GroupService_CreateGroup_FullMethodName     = "/pb.GroupService/createGroup"
-	GroupService_JoinGroup_FullMethodName       = "/pb.GroupService/joinGroup"
-	GroupService_QuitGroup_FullMethodName       = "/pb.GroupService/quitGroup"
-	GroupService_DismissGroup_FullMethodName    = "/pb.GroupService/dismissGroup"
-	GroupService_UpdateGroupInfo_FullMethodName = "/pb.GroupService/updateGroupInfo"
-	GroupService_GetGroupInfo_FullMethodName    = "/pb.GroupService/getGroupInfo"
-	GroupService_SearchGroup_FullMethodName     = "/pb.GroupService/searchGroup"
-	GroupService_GetMemberIds_FullMethodName    = "/pb.GroupService/GetMemberIds"
-	GroupService_GetGroupIds_FullMethodName     = "/pb.GroupService/GetGroupIds"
+	GroupService_CreateGroup_FullMethodName        = "/pb.GroupService/createGroup"
+	GroupService_JoinGroup_FullMethodName          = "/pb.GroupService/joinGroup"
+	GroupService_QuitGroup_FullMethodName          = "/pb.GroupService/quitGroup"
+	GroupService_DismissGroup_FullMethodName       = "/pb.GroupService/dismissGroup"
+	GroupService_UpdateGroupInfo_FullMethodName    = "/pb.GroupService/updateGroupInfo"
+	GroupService_GetGroupInfo_FullMethodName       = "/pb.GroupService/getGroupInfo"
+	GroupService_SearchGroup_FullMethodName        = "/pb.GroupService/searchGroup"
+	GroupService_GetMemberIds_FullMethodName       = "/pb.GroupService/GetMemberIds"
+	GroupService_GetManagedGroupIds_FullMethodName = "/pb.GroupService/GetManagedGroupIds"
+	GroupService_GetJoinedGroupIds_FullMethodName  = "/pb.GroupService/GetJoinedGroupIds"
 )
 
 // GroupServiceClient is the client API for GroupService service.
@@ -597,7 +598,8 @@ type GroupServiceClient interface {
 	GetGroupInfo(ctx context.Context, in *GetGroupInfoReq, opts ...grpc.CallOption) (*GetGroupInfoResp, error)
 	SearchGroup(ctx context.Context, in *SearchGroupReq, opts ...grpc.CallOption) (*SearchGroupResp, error)
 	GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
-	GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error)
+	GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
+	GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
 }
 
 type groupServiceClient struct {
@@ -680,9 +682,18 @@ func (c *groupServiceClient) GetMemberIds(ctx context.Context, in *GetMemberIdsR
 	return out, nil
 }
 
-func (c *groupServiceClient) GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error) {
-	out := new(GetGroupIdsResp)
-	err := c.cc.Invoke(ctx, GroupService_GetGroupIds_FullMethodName, in, out, opts...)
+func (c *groupServiceClient) GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error) {
+	out := new(GetManagedGroupIdsResp)
+	err := c.cc.Invoke(ctx, GroupService_GetManagedGroupIds_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *groupServiceClient) GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error) {
+	out := new(GetJoinedGroupIdsResp)
+	err := c.cc.Invoke(ctx, GroupService_GetJoinedGroupIds_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -702,7 +713,8 @@ type GroupServiceServer interface {
 	GetGroupInfo(context.Context, *GetGroupInfoReq) (*GetGroupInfoResp, error)
 	SearchGroup(context.Context, *SearchGroupReq) (*SearchGroupResp, error)
 	GetMemberIds(context.Context, *GetMemberIdsReq) (*GetMemberIdsResp, error)
-	GetGroupIds(context.Context, *GetGroupIdsReq) (*GetGroupIdsResp, error)
+	GetManagedGroupIds(context.Context, *GetManagedGroupIdsReq) (*GetManagedGroupIdsResp, error)
+	GetJoinedGroupIds(context.Context, *GetJoinedGroupIdsReq) (*GetJoinedGroupIdsResp, error)
 	mustEmbedUnimplementedGroupServiceServer()
 }
 
@@ -734,8 +746,11 @@ func (UnimplementedGroupServiceServer) SearchGroup(context.Context, *SearchGroup
 func (UnimplementedGroupServiceServer) GetMemberIds(context.Context, *GetMemberIdsReq) (*GetMemberIdsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMemberIds not implemented")
 }
-func (UnimplementedGroupServiceServer) GetGroupIds(context.Context, *GetGroupIdsReq) (*GetGroupIdsResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetGroupIds not implemented")
+func (UnimplementedGroupServiceServer) GetManagedGroupIds(context.Context, *GetManagedGroupIdsReq) (*GetManagedGroupIdsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetManagedGroupIds not implemented")
+}
+func (UnimplementedGroupServiceServer) GetJoinedGroupIds(context.Context, *GetJoinedGroupIdsReq) (*GetJoinedGroupIdsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJoinedGroupIds not implemented")
 }
 func (UnimplementedGroupServiceServer) mustEmbedUnimplementedGroupServiceServer() {}
 
@@ -894,20 +909,38 @@ func _GroupService_GetMemberIds_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GroupService_GetGroupIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetGroupIdsReq)
+func _GroupService_GetManagedGroupIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetManagedGroupIdsReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GroupServiceServer).GetGroupIds(ctx, in)
+		return srv.(GroupServiceServer).GetManagedGroupIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GroupService_GetGroupIds_FullMethodName,
+		FullMethod: GroupService_GetManagedGroupIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GroupServiceServer).GetGroupIds(ctx, req.(*GetGroupIdsReq))
+		return srv.(GroupServiceServer).GetManagedGroupIds(ctx, req.(*GetManagedGroupIdsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GroupService_GetJoinedGroupIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJoinedGroupIdsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).GetJoinedGroupIds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GroupService_GetJoinedGroupIds_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).GetJoinedGroupIds(ctx, req.(*GetJoinedGroupIdsReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -952,8 +985,12 @@ var GroupService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GroupService_GetMemberIds_Handler,
 		},
 		{
-			MethodName: "GetGroupIds",
-			Handler:    _GroupService_GetGroupIds_Handler,
+			MethodName: "GetManagedGroupIds",
+			Handler:    _GroupService_GetManagedGroupIds_Handler,
+		},
+		{
+			MethodName: "GetJoinedGroupIds",
+			Handler:    _GroupService_GetJoinedGroupIds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

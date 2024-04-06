@@ -20,7 +20,7 @@ var (
 	groupsFieldNames          = builder.RawFieldNames(&Groups{})
 	groupsRows                = strings.Join(groupsFieldNames, ",")
 	groupsRowsExpectAutoSet   = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`deleted_at`"), ",")
-	groupsRowsWithPlaceHolder = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`, `deleted_at`"), "=?,") + "=?"
+	groupsRowsWithPlaceHolder = strings.Join(stringx.Remove(groupsFieldNames, "`id`", "`created_at`, `deleted_at`"), "=?,") + "=?"
 
 	cacheUsercenterGroupsIdPrefix = "cache:usercenter:groups:id:"
 )
@@ -29,7 +29,7 @@ type (
 	groupsModel interface {
 		Insert(ctx context.Context, data *Groups) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Groups, error)
-		Update(ctx context.Context, data *Groups) error
+		Update(ctx context.Context, data *Groups, session sqlx.Session) error
 		Delete(ctx context.Context, id int64) error
 		DeleteSoft(ctx context.Context, id int64) error
 		// all id 
@@ -77,9 +77,10 @@ func (m *defaultGroupsModel) Delete(ctx context.Context, id int64) error {
 func (m *defaultGroupsModel) DeleteSoft(ctx context.Context, id int64) error {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set deleted_at = ? where `id` = ?", m.table)
+		query := fmt.Sprintf("update %s set deleted_at= ?, owner_id= 0 where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, time.Now(), id)
 	}, usercenterGroupsIdKey)
+	fmt.Println(fmt.Sprintf("update %s set deleted_at= ?, owner_id= 0 where `id` = ?", m.table))
 	return err
 }
 
@@ -88,7 +89,6 @@ func (m *defaultGroupsModel) FindOne(ctx context.Context, id int64) (*Groups, er
 	var resp Groups
 	err := m.QueryRowCtx(ctx, &resp, usercenterGroupsIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
 		query := fmt.Sprintf("select %s from %s where `id` = ? and owner_id != 0 limit 1", groupsRows, m.table)
-		fmt.Println(query)
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
 	switch err {
@@ -158,11 +158,14 @@ func (m *defaultGroupsModel) Insert(ctx context.Context, data *Groups) (sql.Resu
 	return ret, err
 }
 
-func (m *defaultGroupsModel) Update(ctx context.Context, data *Groups) error {
+func (m *defaultGroupsModel) Update(ctx context.Context, data *Groups, session sqlx.Session) error {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, groupsRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UpdatedAt, data.Name, data.Desc, data.Avatar, data.OwnerId, data.Id)
+		query := fmt.Sprintf("update %s set updated_at =?, `name` =?, `desc` =?, avatar=?, owner_id=? where `id` = ?", m.table)
+		if session != nil {
+			return session.ExecCtx(ctx, query, data.UpdatedAt, data.Name.String, data.Desc.String, data.Avatar.String, data.OwnerId, data.Id)
+		}
+		return conn.ExecCtx(ctx, query, data.UpdatedAt, data.Name.String, data.Desc.String, data.Avatar.String, data.OwnerId, data.Id)
 	}, usercenterGroupsIdKey)
 	return err
 }

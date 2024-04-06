@@ -17,12 +17,14 @@ type ServiceContext struct {
 	UserModel   model.UsersModel
 	UserFriend  model.UserFriendModel
 	UserGroup   model.UserGroupModel
+	SqlConn     sqlx.SqlConn
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 	return &ServiceContext{
-		Config: c,
+		SqlConn: sqlConn,
+		Config:  c,
 		RedisClient: redis.New(c.Redis.Host, func(r *redis.Redis) {
 			r.Type = c.Redis.Type
 			r.Pass = c.Redis.Pass

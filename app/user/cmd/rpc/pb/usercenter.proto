@@ -216,11 +216,19 @@ message GetMemberIdsResp{
   repeated int64 Ids = 1;
 }
 
-message GetGroupIdsReq {
+message GetManagedGroupIdsReq {
   int64 userId = 1;
 }
 
-message GetGroupIdsResp {
+message GetManagedGroupIdsResp {
+  repeated int64 groupIds = 1;
+}
+
+message GetJoinedGroupIdsReq {
+  int64 userId = 1;
+}
+
+message GetJoinedGroupIdsResp {
   repeated int64 groupIds = 1;
 }
 
@@ -256,5 +264,6 @@ service GroupService {
   rpc getGroupInfo(GetGroupInfoReq) returns (GetGroupInfoResp);
   rpc searchGroup(SearchGroupReq) returns (SearchGroupResp);
   rpc GetMemberIds(GetMemberIdsReq) returns (GetMemberIdsResp);
-  rpc GetGroupIds(GetGroupIdsReq) returns (GetGroupIdsResp);
+  rpc GetManagedGroupIds(GetManagedGroupIdsReq) returns (GetManagedGroupIdsResp);
+  rpc GetJoinedGroupIds(GetJoinedGroupIdsReq) returns (GetJoinedGroupIdsResp);
 }

@@ -8,6 +8,7 @@ import (
 
 	"zero-chat/app/user/cmd/rpc/internal/svc"
 	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/tool"
 	"zero-chat/common/xerr"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,5 +35,6 @@ func (l *GetGroupInfoLogic) GetGroupInfo(in *pb.GetGroupInfoReq) (*pb.GetGroupIn
 	}
 	var groupPb pb.Group
 	copier.Copy(&groupPb, group)
+	groupPb.CreateAt = tool.Time2TimeStamp(group.CreatedAt)
 	return &pb.GetGroupInfoResp{Group: &groupPb}, nil
 }

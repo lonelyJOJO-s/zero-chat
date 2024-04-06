@@ -12,26 +12,26 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetGroupIdsLogic struct {
+type GetManagedGroupIdsLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetGroupIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetGroupIdsLogic {
-	return &GetGroupIdsLogic{
+func NewGetManagedGroupIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetManagedGroupIdsLogic {
+	return &GetManagedGroupIdsLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetGroupIdsLogic) GetGroupIds(in *pb.GetGroupIdsReq) (*pb.GetGroupIdsResp, error) {
-	// todo: add your logic here and delete this line
+func (l *GetManagedGroupIdsLogic) GetManagedGroupIds(in *pb.GetManagedGroupIdsReq) (*pb.GetManagedGroupIdsResp, error) {
+
 	selectBuild := l.svcCtx.GroupModel.SelectBuilder().Where(squirrel.Eq{"`owner_id`": in.UserId})
 	ids, err := l.svcCtx.GroupModel.FindAllByUserId(l.ctx, selectBuild, "")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "find groups error:%s", err.Error())
 	}
-	return &pb.GetGroupIdsResp{GroupIds: ids}, nil
+	return &pb.GetManagedGroupIdsResp{GroupIds: ids}, nil
 }

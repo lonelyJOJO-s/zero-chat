@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+
 	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -33,11 +34,12 @@ type (
 		FindOneByUserIdGroupId(ctx context.Context, userId int64, groupId int64) (*UserGroup, error)
 		Update(ctx context.Context, data *UserGroup) error
 		Delete(ctx context.Context, id int64) error
-		DeleteSoft(ctx context.Context, id int64) error
+		DeleteSoft(ctx context.Context, id int64, session sqlx.Session) error
 		GetUserIdsByGroupId(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]int64, error)
 		DelAllRelationByGroupId(ctx context.Context, builder squirrel.UpdateBuilder, orderBy string) error
 		SelectBuilder() squirrel.SelectBuilder
-		UpdateBuiler() squirrel.UpdateBuilder
+		UpdateBuilder() squirrel.UpdateBuilder
+		FindAllByUserId(ctx context.Context, id int64) ([]int64, error)
 	}
 
 	defaultUserGroupModel struct {
@@ -65,8 +67,22 @@ func (m *defaultUserGroupModel) SelectBuilder() squirrel.SelectBuilder {
 	return squirrel.Select().From(m.table)
 }
 
-func (m *defaultUserGroupModel) UpdateBuiler() squirrel.UpdateBuilder {
+func (m *defaultUserGroupModel) UpdateBuilder() squirrel.UpdateBuilder {
 	return squirrel.Update(m.table)
+}
+
+func (m *defaultUserGroupModel) FindAllByUserId(ctx context.Context, id int64) (ids []int64, err error) {
+	query := fmt.Sprintf("select `group_id` from %s where `user_id`= ? and deleted_at is null", m.table)
+	
+	err = m.QueryRowsNoCacheCtx(ctx, &ids, query, id)
+	switch err {
+	case nil:
+		return ids, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultUserGroupModel) Delete(ctx context.Context, id int64) error {
@@ -84,7 +100,7 @@ func (m *defaultUserGroupModel) Delete(ctx context.Context, id int64) error {
 	return err
 }
 
-func (m *defaultUserGroupModel) DeleteSoft(ctx context.Context, id int64) error {
+func (m *defaultUserGroupModel) DeleteSoft(ctx context.Context, id int64, session sqlx.Session) error {
 	data, err := m.FindOne(ctx, id)
 	if err != nil {
 		return err
@@ -94,6 +110,9 @@ func (m *defaultUserGroupModel) DeleteSoft(ctx context.Context, id int64) error 
 	usercenterUserGroupUserIdGroupIdKey := fmt.Sprintf("%s%v:%v", cacheUsercenterUserGroupUserIdGroupIdPrefix, data.UserId, data.GroupId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set deleted_at = ? where `id` = ? and deleted_at is null", m.table)
+		if session != nil {
+			return session.ExecCtx(ctx, query, time.Now(), id)
+		}
 		return conn.ExecCtx(ctx, query, time.Now(), id)
 	}, usercenterUserGroupIdKey, usercenterUserGroupUserIdGroupIdKey)
 	return err
@@ -137,7 +156,7 @@ func (m *defaultUserGroupModel) FindOneByUserIdGroupId(ctx context.Context, user
 }
 
 func (m *defaultUserGroupModel) GetUserIdsByGroupId(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]int64, error) {
-	builder = builder.Columns("`id`")
+	builder = builder.Columns("`user_id`")
 
 	if orderBy == "" {
 		builder = builder.OrderBy("id DESC")
@@ -145,7 +164,7 @@ func (m *defaultUserGroupModel) GetUserIdsByGroupId(ctx context.Context, builder
 		builder = builder.OrderBy(orderBy)
 	}
 
-	query, values, err := builder.Where(squirrel.NotEq{"owner_id": 0}).ToSql()
+	query, values, err := builder.Where(squirrel.Eq{"deleted_at": nil}).ToSql()
 	if err != nil {
 		return nil, err
 	}
@@ -161,18 +180,18 @@ func (m *defaultUserGroupModel) GetUserIdsByGroupId(ctx context.Context, builder
 }
 
 func (m *defaultUserGroupModel) DelAllRelationByGroupId(ctx context.Context, builder squirrel.UpdateBuilder, orderBy string)  error {
-	builder.Set(`deleted_at`, time.Now())
+	
+	builder = builder.Set("`deleted_at`", time.Now())
 	if orderBy == "" {
 		builder = builder.OrderBy("id DESC")
 	} else {
 		builder = builder.OrderBy(orderBy)
 	}
-
-	query, values, err := builder.Where(squirrel.NotEq{"deleted_at": nil}).ToSql()
+	query, values, err := builder.Where(squirrel.Eq{"deleted_at": nil}).ToSql()
+	fmt.Println(query)
 	if err != nil {
 		return  err
 	}
-
 	_, err = m.ExecNoCacheCtx(ctx, query, values...)
 	if err != nil {
 		return  err

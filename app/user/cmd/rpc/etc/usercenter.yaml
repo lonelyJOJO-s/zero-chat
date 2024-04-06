@@ -2,7 +2,7 @@ Name: usercenter.rpc
 ListenOn: 0.0.0.0:2001
 Etcd:
   Hosts:
-  - 124.221.101.169:2379
+  - 127.0.0.1:2379
   Key: usercenter.rpc
 
 JwtAuth:
@@ -25,14 +25,14 @@ Log:
   Level: error
 
 Redis:
-  Host: 124.221.101.169:36379 # used to be redis:36379
+  Host: localhost:36379 # 124.221.101.169:36379 # used to be redis:36379
   Type: node
   Pass: G62m50oigInC30sf
   Key: usercenter-rpc
 
 DB:
-  DataSource: root:PXDN93VRKUm8TeE7@tcp(124.221.101.169:33061)/usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai # used to be mysql
+  DataSource: root:PXDN93VRKUm8TeE7@tcp(127.0.0.1:33061)/usercenter?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai # used to be mysql
 
 Cache:
-  - Host: 124.221.101.169:36379
+  - Host: localhost:36379
     Pass: G62m50oigInC30sf

@@ -15,6 +15,8 @@ func init() {
 	message[NO_ACCESS_TO_RESOURCE] = "no access to the current resources"
 	message[INSERT_ALREADY_EXSIT] = "插入对象已存在，请勿重复添加"
 	message[UserNotInGroup] = "用户不在当前的群组中"
+	message[USER_NOT_FOUND] = "当前用户不存在"
+	message[MUST_CHOOSE_HEIR] = "必须选择一个候选人"
 }
 
 func MapErrMsg(errcode uint32) string {

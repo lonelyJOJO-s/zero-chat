@@ -13,51 +13,53 @@ import (
 )
 
 type (
-	AddFriendsReq         = pb.AddFriendsReq
-	AddFriendsResp        = pb.AddFriendsResp
-	CreateGroupReq        = pb.CreateGroupReq
-	CreateGroupResp       = pb.CreateGroupResp
-	DelFriendsReq         = pb.DelFriendsReq
-	DelFriendsResp        = pb.DelFriendsResp
-	DelUserInfoReq        = pb.DelUserInfoReq
-	DelUserInfoResp       = pb.DelUserInfoResp
-	DismissGroupReq       = pb.DismissGroupReq
-	DismissGroupResp      = pb.DismissGroupResp
-	GenerateTokenReq      = pb.GenerateTokenReq
-	GenerateTokenResp     = pb.GenerateTokenResp
-	GetCaptchaReq         = pb.GetCaptchaReq
-	GetCaptchaResp        = pb.GetCaptchaResp
-	GetFriendsReq         = pb.GetFriendsReq
-	GetFriendsResp        = pb.GetFriendsResp
-	GetGroupIdsReq        = pb.GetGroupIdsReq
-	GetGroupIdsResp       = pb.GetGroupIdsResp
-	GetGroupInfoReq       = pb.GetGroupInfoReq
-	GetGroupInfoResp      = pb.GetGroupInfoResp
-	GetMemberIdsReq       = pb.GetMemberIdsReq
-	GetMemberIdsResp      = pb.GetMemberIdsResp
-	GetUserInfoReq        = pb.GetUserInfoReq
-	GetUserInfoResp       = pb.GetUserInfoResp
-	Group                 = pb.Group
-	JoinGroupReq          = pb.JoinGroupReq
-	JoinGroupResp         = pb.JoinGroupResp
-	LoginReq              = pb.LoginReq
-	LoginResp             = pb.LoginResp
-	QuitGroupReq          = pb.QuitGroupReq
-	QuitGroupResp         = pb.QuitGroupResp
-	RegisterReq           = pb.RegisterReq
-	RegisterResp          = pb.RegisterResp
-	SearchFriendFuzzyReq  = pb.SearchFriendFuzzyReq
-	SearchFriendFuzzyResp = pb.SearchFriendFuzzyResp
-	SearchGroupReq        = pb.SearchGroupReq
-	SearchGroupResp       = pb.SearchGroupResp
-	SearchUserFuzzyReq    = pb.SearchUserFuzzyReq
-	SearchUserFuzzyResp   = pb.SearchUserFuzzyResp
-	UpdateGroupReq        = pb.UpdateGroupReq
-	UpdateGroupResp       = pb.UpdateGroupResp
-	UpdateUserInfoReq     = pb.UpdateUserInfoReq
-	UpdateUserInfoResp    = pb.UpdateUserInfoResp
-	User                  = pb.User
-	UserWithPwd           = pb.UserWithPwd
+	AddFriendsReq          = pb.AddFriendsReq
+	AddFriendsResp         = pb.AddFriendsResp
+	CreateGroupReq         = pb.CreateGroupReq
+	CreateGroupResp        = pb.CreateGroupResp
+	DelFriendsReq          = pb.DelFriendsReq
+	DelFriendsResp         = pb.DelFriendsResp
+	DelUserInfoReq         = pb.DelUserInfoReq
+	DelUserInfoResp        = pb.DelUserInfoResp
+	DismissGroupReq        = pb.DismissGroupReq
+	DismissGroupResp       = pb.DismissGroupResp
+	GenerateTokenReq       = pb.GenerateTokenReq
+	GenerateTokenResp      = pb.GenerateTokenResp
+	GetCaptchaReq          = pb.GetCaptchaReq
+	GetCaptchaResp         = pb.GetCaptchaResp
+	GetFriendsReq          = pb.GetFriendsReq
+	GetFriendsResp         = pb.GetFriendsResp
+	GetGroupInfoReq        = pb.GetGroupInfoReq
+	GetGroupInfoResp       = pb.GetGroupInfoResp
+	GetJoinedGroupIdsReq   = pb.GetJoinedGroupIdsReq
+	GetJoinedGroupIdsResp  = pb.GetJoinedGroupIdsResp
+	GetManagedGroupIdsReq  = pb.GetManagedGroupIdsReq
+	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
+	GetMemberIdsReq        = pb.GetMemberIdsReq
+	GetMemberIdsResp       = pb.GetMemberIdsResp
+	GetUserInfoReq         = pb.GetUserInfoReq
+	GetUserInfoResp        = pb.GetUserInfoResp
+	Group                  = pb.Group
+	JoinGroupReq           = pb.JoinGroupReq
+	JoinGroupResp          = pb.JoinGroupResp
+	LoginReq               = pb.LoginReq
+	LoginResp              = pb.LoginResp
+	QuitGroupReq           = pb.QuitGroupReq
+	QuitGroupResp          = pb.QuitGroupResp
+	RegisterReq            = pb.RegisterReq
+	RegisterResp           = pb.RegisterResp
+	SearchFriendFuzzyReq   = pb.SearchFriendFuzzyReq
+	SearchFriendFuzzyResp  = pb.SearchFriendFuzzyResp
+	SearchGroupReq         = pb.SearchGroupReq
+	SearchGroupResp        = pb.SearchGroupResp
+	SearchUserFuzzyReq     = pb.SearchUserFuzzyReq
+	SearchUserFuzzyResp    = pb.SearchUserFuzzyResp
+	UpdateGroupReq         = pb.UpdateGroupReq
+	UpdateGroupResp        = pb.UpdateGroupResp
+	UpdateUserInfoReq      = pb.UpdateUserInfoReq
+	UpdateUserInfoResp     = pb.UpdateUserInfoResp
+	User                   = pb.User
+	UserWithPwd            = pb.UserWithPwd
 
 	GroupService interface {
 		// group
@@ -69,7 +71,8 @@ type (
 		GetGroupInfo(ctx context.Context, in *GetGroupInfoReq, opts ...grpc.CallOption) (*GetGroupInfoResp, error)
 		SearchGroup(ctx context.Context, in *SearchGroupReq, opts ...grpc.CallOption) (*SearchGroupResp, error)
 		GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
-		GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error)
+		GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
+		GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
 	}
 
 	defaultGroupService struct {
@@ -124,7 +127,12 @@ func (m *defaultGroupService) GetMemberIds(ctx context.Context, in *GetMemberIds
 	return client.GetMemberIds(ctx, in, opts...)
 }
 
-func (m *defaultGroupService) GetGroupIds(ctx context.Context, in *GetGroupIdsReq, opts ...grpc.CallOption) (*GetGroupIdsResp, error) {
+func (m *defaultGroupService) GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error) {
 	client := pb.NewGroupServiceClient(m.cli.Conn())
-	return client.GetGroupIds(ctx, in, opts...)
+	return client.GetManagedGroupIds(ctx, in, opts...)
+}
+
+func (m *defaultGroupService) GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error) {
+	client := pb.NewGroupServiceClient(m.cli.Conn())
+	return client.GetJoinedGroupIds(ctx, in, opts...)
 }

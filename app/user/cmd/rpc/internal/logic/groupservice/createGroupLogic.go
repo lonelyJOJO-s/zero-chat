@@ -31,6 +31,13 @@ func NewCreateGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 // group
 func (l *CreateGroupLogic) CreateGroup(in *pb.CreateGroupReq) (*pb.CreateGroupResp, error) {
 	// TODO: why use var g *model.Group can't work
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, in.Keyword.OwnerId)
+	if err != nil && err != model.ErrNotFound {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "find user error:%s", err.Error())
+	}
+	if user == nil {
+		return nil, xerr.NewErrCode(xerr.USER_NOT_FOUND)
+	}
 	var g model.Groups
 	copier.CopyWithOption(&g, in.Keyword, copier.Option{IgnoreEmpty: true})
 	now := time.Now()

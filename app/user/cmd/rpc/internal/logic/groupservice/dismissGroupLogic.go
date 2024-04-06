@@ -40,7 +40,10 @@ func (l *DismissGroupLogic) DismissGroup(in *pb.DismissGroupReq) (*pb.DismissGro
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "delete group error:%s", err.Error())
 	}
 	// del all the relation
-	builder := l.svcCtx.UserFriend.UpdateBuilder().Where(squirrel.Eq{"`group_id`": in.GroupId})
-	l.svcCtx.UserGroup.DelAllRelationByGroupId(l.ctx, builder, "")
+	builder := l.svcCtx.UserGroup.UpdateBuilder().Where(squirrel.Eq{"`group_id`": in.GroupId})
+	err = l.svcCtx.UserGroup.DelAllRelationByGroupId(l.ctx, builder, "")
+	if err != nil {
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "update usergorup(soft delete) error:%s", err.Error())
+	}
 	return &pb.DismissGroupResp{}, nil
 }
