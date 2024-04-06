@@ -14,9 +14,10 @@ JwtAuth:
 #   Port: 4009
 #   Path: /metrics
 
-# Telemetry:
+# 链路追踪
+Telemetry:
   Name: usercenter-rpc
-  Endpoint: http://jaeger:14268/api/traces
+  Endpoint: http://localhost:14268/api/traces
   Sampler: 1.0
   Batcher: jaeger
 

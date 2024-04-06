@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// log 拦截器，用于在处理完数据后对error进行grpc转型返回api层和原样输出
 func LoggerInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 
 	resp, err = handler(ctx, req)
@@ -24,7 +25,6 @@ func LoggerInterceptor(ctx context.Context, req interface{}, info *grpc.UnarySer
 		} else {
 			logx.WithContext(ctx).Errorf("【RPC-SRV-ERR】 %+v", err)
 		}
-
 	}
 
 	return resp, err
