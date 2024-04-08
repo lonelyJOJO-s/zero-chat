@@ -2,30 +2,32 @@ package user
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"zero-chat/app/user/cmd/api/internal/logic/user"
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
 	"zero-chat/common/result"
+	"zero-chat/common/xerr"
 )
 
-func LoginWithPhoneHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func LoginWithUsernameHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.PhoneLoginReq
+		var req types.UsernameLoginReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			result.HttpResult(r, w, nil, errors.Wrapf(xerr.NewErrCode(xerr.REUQEST_PARAM_ERROR), "params errors with:%s", err.Error()))
 			return
 		}
 		// validator
 		validate := validator.New()
 		if err := validate.StructCtx(r.Context(), req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			result.HttpResult(r, w, nil, errors.Wrapf(xerr.NewErrCode(xerr.REUQEST_PARAM_ERROR), "params errors with:%s", err.Error()))
 			return
 		}
 
-		l := user.NewLoginWithPhoneLogic(r.Context(), svcCtx)
-		resp, err := l.LoginWithPhone(&req)
+		l := user.NewLoginWithUsernameLogic(r.Context(), svcCtx)
+		resp, err := l.LoginWithUsername(&req)
 		// uniform return
 		result.HttpResult(r, w, resp, err)
 	}

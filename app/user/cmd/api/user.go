@@ -6,6 +6,7 @@ import (
 
 	"zero-chat/app/user/cmd/api/internal/config"
 	"zero-chat/app/user/cmd/api/internal/handler"
+
 	"zero-chat/app/user/cmd/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"

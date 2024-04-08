@@ -5,7 +5,9 @@ import (
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
+	"zero-chat/app/user/cmd/rpc/pb"
 
+	"github.com/jinzhu/copier"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,6 +27,11 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
 	// todo: add your logic here and delete this line
-
+	user, err := l.svcCtx.UserServiceRpc.GetUserInfo(l.ctx, &pb.GetUserInfoReq{Id: req.Id})
+	if err != nil {
+		return nil, err
+	}
+	resp = new(types.UserInfoResp)
+	copier.Copy(&resp.UserInfo, user.User)
 	return
 }

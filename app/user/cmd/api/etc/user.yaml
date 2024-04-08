@@ -4,7 +4,7 @@ Port: 1001
 Mode: dev
 
 #jwtAuth
-JwtAuth:
+Auth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
   AccessExpire: 172800
 
@@ -21,12 +21,14 @@ Telemetry:
   Sampler: 1.0
   Batcher: jaeger
 
+UsercenterRpcConf:
+  Etcd:
+    Hosts:
+    - 127.0.0.1:2379
+    Key: usercenter.rpc
+  NonBlock: true
+
 Log:
   ServiceName: usercenter-api
   Level: info
-
-#rpc service
-UsercenterRpcConf:
-  Endpoints:
-    - 127.0.0.1:2004
-  NonBlock: true
+  Encoding: plain

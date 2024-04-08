@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
@@ -11,30 +12,32 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type LogWithEmailLogic struct {
+type LoginWithUsernameLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewLogWithEmailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogWithEmailLogic {
-	return &LogWithEmailLogic{
+func NewLoginWithUsernameLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginWithUsernameLogic {
+	return &LoginWithUsernameLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *LogWithEmailLogic) LogWithEmail(req *types.EmailLoginReq) (resp *types.LoginResp, err error) {
+func (l *LoginWithUsernameLogic) LoginWithUsername(req *types.UsernameLoginReq) (resp *types.LoginResp, err error) {
+	// todo: add your logic here and delete this line
 	pbResp, err := l.svcCtx.UserServiceRpc.Login(l.ctx, &pb.LoginReq{
-		Type:     2,
-		Account:  req.Email,
-		Password: req.Captcha,
+		Type:     1,
+		Account:  req.Username,
+		Password: req.Password,
 	})
 	if err != nil {
 		return nil, err
 	}
 	resp = new(types.LoginResp)
 	copier.Copy(resp, pbResp)
+	fmt.Println(resp)
 	return
 }

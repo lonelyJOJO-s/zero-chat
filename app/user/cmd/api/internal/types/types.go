@@ -2,8 +2,12 @@
 package types
 
 type EmailLoginReq struct {
-	Email   string `json:"email"`
+	Email   string `json:"email" validate:"required,email"`
 	Captcha string `json:"captcha"`
+}
+
+type EmailSendReq struct {
+	Email string `json:"email" validate:"required,email"`
 }
 
 type FriendIdReq struct {
@@ -11,8 +15,7 @@ type FriendIdReq struct {
 }
 
 type FriendSearchReq struct {
-	Phone    string `json:"phone"`
-	Username string `json:"username"`
+	Keyword string `json:"keyword"`
 }
 
 type FriendSearchResp struct {
@@ -69,17 +72,13 @@ type LoginResp struct {
 type Null struct {
 }
 
-type PhoneLoginReq struct {
-	Phone    string `json:"Phone"`
-	Password string `json:"password"`
-}
-
 type RegisterReq struct {
-	Phone    string `json:"phone"`
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Sex      int8   `json:"sex"`
+	Phone           string `json:"phone" validate:"len=11"`
+	Email           string `json:"email" validate:"required,email"`
+	Username        string `json:"username" validate:"required,min=2,max=20"`
+	Password        string `json:"password" validate:"required,min=6,max=20"`
+	ConfirmPassword string `json:"confirm_password" validate:"required,eqfield=Password"`
+	Sex             int8   `json:"sex" validate:"oneof=0 1"`
 }
 
 type RegisterResp struct {
@@ -89,14 +88,23 @@ type RegisterResp struct {
 }
 
 type User struct {
-	Id       int64  `json:"id"`
-	Phone    string `json:"phone"`
-	Username string `json:"username"`
-	Sex      int64  `json:"sex"`
+	Id       int64  `json:"id" validate:"required"`
+	Phone    string `json:"phone" validate:"len=11"`
+	Username string `json:"username" validate:"required,min=2,max=20"`
+	Sex      int64  `json:"sex" validate:"oneof=0 1"`
 	Avatar   string `json:"avatar"`
-	Status   string `json:"status"`
+	Status   int    `json:"status"`
 	Desc     string `json:"desc"`
 	Email    string `json:"email"`
+}
+
+type UserBasic struct {
+	Id       int64  `json:"id" validate:"required"`
+	Username string `json:"username,optional" validate:"omitempty,min=2,max=20"`
+	Sex      int64  `json:"sex,optional" validate:"omitempty,oneof=0 1"`
+	Avatar   string `json:"avatar,optional" validate:"omitempty"`
+	Status   int    `json:"status,optional" validate:"omitempty"`
+	Desc     string `json:"desc,optional" validate:"omitempty"`
 }
 
 type UserInfoReq struct {
@@ -108,9 +116,14 @@ type UserInfoResp struct {
 }
 
 type UserUpdateReq struct {
-	UserUpdate User `json:"user_update"`
+	UserBasic
 }
 
 type UserUpdateResp struct {
-	UserUpdate User `json:"user_update"`
+	UserBasic
+}
+
+type UsernameLoginReq struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }

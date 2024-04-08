@@ -33,6 +33,7 @@ message UserWithPwd {
   int64 createAt = 10;
   int64 updateAt = 11;
   string password = 12;
+  string avatar = 13;
 }
 
 //req 、resp

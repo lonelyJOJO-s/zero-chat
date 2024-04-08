@@ -24,7 +24,6 @@ func NewLoginOutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginOut
 }
 
 func (l *LoginOutLogic) LoginOut(req *types.Null) (resp *types.Null, err error) {
-	// todo: add your logic here and delete this line
-
+	//  login out logic should be implemented in front end
 	return
 }

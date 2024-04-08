@@ -24,13 +24,17 @@ service user {
 	@handler register
 	post /user/register (RegisterReq) returns (RegisterResp)
 
-	@doc "login_with_phone"
-	@handler loginWithPhone
-	post /user/login/phone (PhoneLoginReq) returns (LoginResp)
+	@doc "login_with_username"
+	@handler loginWithUsername
+	post /user/login/username (UsernameLoginReq) returns (LoginResp)
 
 	@doc "login_with_email"
 	@handler logWithEmail
 	post /user/login/email (EmailLoginReq) returns (LoginResp)
+
+	@doc "summary: send email"
+	@handler SendEmail
+	post /user/email/send (EmailSendReq) returns (Null)
 }
 
 // user curd
@@ -59,7 +63,7 @@ service user {
 
 	@doc "post user avatar"
 	@handler Avatar
-	post /user/avatar (Null) returns (Null)
+	post /user/avatar (Null) returns (string)
 }
 
 @server (

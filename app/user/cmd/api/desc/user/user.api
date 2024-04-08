@@ -16,23 +16,34 @@ type(
 )  
 
 type User {
-	Id       int64  `json:"id"`
-	Phone    string `json:"phone"`
-	Username string `json:"username"`
-	Sex      int64  `json:"sex"`
+	Id       int64  `json:"id" validate:"required"`
+	Phone    string `json:"phone" validate:"len=11"`
+	Username string `json:"username" validate:"required,min=2,max=20"`
+	Sex      int64  `json:"sex" validate:"oneof=0 1"`
 	Avatar   string `json:"avatar"`
-	Status   string `json:"status"`
+	Status   int `json:"status"`
 	Desc     string `json:"desc"`
     Email string  `json:"email"`
 }
 
+// for update basic info
+type UserBasic {
+	Id       int64  `json:"id" validate:"required"`
+	Username string `json:"username,optional" validate:"omitempty,min=2,max=20"`
+	Sex      int64  `json:"sex,optional" validate:"omitempty,oneof=0 1"`
+	Avatar   string `json:"avatar,optional" validate:"omitempty"`
+	Status   int `json:"status,optional" validate:"omitempty"`
+	Desc     string `json:"desc,optional" validate:"omitempty"`
+}
+
 type (
 	RegisterReq {
-		Phone    string `json:"phone"`
-		Email    string `json:"email"`
-		Username string `json:"username"`
-		Password string `json:"password"`
-		Sex      int8   `json:"sex"`
+		Phone    string `json:"phone" validate:"len=11"`
+		Email    string `json:"email" validate:"required,email"`
+		Username string `json:"username" validate:"required,min=2,max=20"`
+		Password string `json:"password" validate:"required,min=6,max=20"`
+		ConfirmPassword string `json:"confirm_password" validate:"required,eqfield=Password"`
+		Sex      int8   `json:"sex" validate:"oneof=0 1"`
 	}
 	RegisterResp {
 		AccessToken  string `json:"accessToken"`
@@ -42,12 +53,12 @@ type (
 )
 
 type (
-	PhoneLoginReq {
-		Phone    string `json:"Phone"`
+	UsernameLoginReq {
+		username    string `json:"username"`
 		Password string `json:"password"`
 	}
 	EmailLoginReq {
-		email   string `json:"email"`
+		email   string `json:"email" validate:"required,email"`
 		Captcha string `json:"captcha"`
 	}
 	LoginResp {
@@ -65,11 +76,20 @@ type (
 		UserInfo User `json:"user_info"`
 	}
     UserUpdateReq {
-        UserUpdate User `json:"user_update"`
+        UserBasic `json:"user_update"`
     }
     UserUpdateResp {
-        UserUpdate User `json:"user_update"`
+        UserBasic `json:"user_update"`
     }
+)
+
+// 发送email
+// 验证email
+
+type (
+	EmailSendReq {
+		Email string `json:"email" validate:"required,email"` 
+	}
 )
 
 type (
@@ -77,8 +97,7 @@ type (
         Users []User  `json:"users"`
     }
     FriendSearchReq{
-        Phone string `json:"phone"`
-        Username string `json:"username"`
+        keyword string `json:"keyword"`
     }
     FriendSearchResp{
         users []User `json:"users"`

@@ -37,7 +37,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: friend.FriendListHandler(serverCtx),
 			},
 		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/usercenter/api/v1"),
 		rest.WithTimeout(3000*time.Millisecond),
 	)
@@ -75,7 +75,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: group.UpdateGroupHandler(serverCtx),
 			},
 		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/usercenter/api/v1"),
 		rest.WithTimeout(3000*time.Millisecond),
 	)
@@ -84,13 +84,18 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/user/email/send",
+				Handler: user.SendEmailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/user/login/email",
 				Handler: user.LogWithEmailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/user/login/phone",
-				Handler: user.LoginWithPhoneHandler(serverCtx),
+				Path:    "/user/login/username",
+				Handler: user.LoginWithUsernameHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
@@ -130,7 +135,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.UpdateHandler(serverCtx),
 			},
 		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/usercenter/api/v1"),
 		rest.WithTimeout(3000*time.Millisecond),
 	)

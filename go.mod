@@ -4,12 +4,16 @@ go 1.21.0
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
+	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/casbin/casbin/v2 v2.85.0
 	github.com/casbin/xorm-adapter v1.0.0
+	github.com/go-playground/validator/v10 v10.19.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jinzhu/copier v0.4.0
+	github.com/joho/godotenv v1.5.1
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/pkg/errors v0.9.1
+	github.com/sirupsen/logrus v1.6.0
 	github.com/zeromicro/go-zero v1.6.3
 	github.com/zeromicro/zero-contrib/auth/casbin v0.0.0-20231030135404-af9ae855016f
 	google.golang.org/grpc v1.62.1
@@ -36,7 +40,6 @@ require (
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.19.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/go-xorm/xorm v0.7.9 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
@@ -50,6 +53,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
