@@ -1,0 +1,28 @@
+Name: chat
+Host: 0.0.0.0
+Port: 1002
+
+UsercenterRpcConf:
+  Etcd:
+    Hosts:
+    - 127.0.0.1:2379
+    Key: usercenter.rpc
+  NonBlock: true
+
+Log:
+  ServiceName: chat-api
+  Level: info
+  Encoding: plain
+
+Telemetry:
+  Name: chat-api
+  Endpoint: http://localhost:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  AccessExpire: 172800
+
+
+# 定义redis等中间件

@@ -1,0 +1,27 @@
+syntax = "proto3";
+option go_package = "./pb";
+package pb;
+
+message Message {
+    int64 from = 1;
+    string content = 2;
+    int64 sendTime = 3;
+    int32 contentType =4; // text or audio or video
+    repeated int64 to = 5;
+    bytes file = 6;
+    int32 chatType = 7; // group or single
+    string type = 8; // transfer type: heatbeat or webrtc
+}
+
+message SendReq {
+    Message msg = 1;
+}
+
+message Null {
+
+}
+
+service ChatService {
+    rpc Send(SendReq) returns(Null);
+}
+

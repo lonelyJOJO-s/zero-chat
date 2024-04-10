@@ -57,6 +57,7 @@ CREATE TABLE `user_friend`  (
   PRIMARY KEY (`id`) USING BTREE,
   `user_id` bigint UNSIGNED NOT NULL,
   `friend_id` bigint UNSIGNED NOT NULL,
+  `uuid` BINARY(16) NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime NULL DEFAULT NULL,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE

@@ -17,6 +17,7 @@ func init() {
 	message[UserNotInGroup] = "用户不在当前的群组中"
 	message[USER_NOT_FOUND] = "当前用户不存在"
 	message[MUST_CHOOSE_HEIR] = "必须选择一个候选人"
+	message[WEBSOCKET_CONN_ERR] = "websocket链接失败"
 }
 
 func MapErrMsg(errcode uint32) string {

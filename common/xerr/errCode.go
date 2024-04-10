@@ -20,3 +20,6 @@ const INSERT_ALREADY_EXSIT uint32 = 200002
 const UserNotInGroup uint32 = 200003
 const USER_NOT_FOUND uint32 = 200004
 const MUST_CHOOSE_HEIR uint32 = 200005
+
+// chat 模块
+const WEBSOCKET_CONN_ERR uint32 = 300001
