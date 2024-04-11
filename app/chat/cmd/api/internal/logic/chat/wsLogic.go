@@ -48,7 +48,7 @@ func (l *WsLogic) Ws(w http.ResponseWriter, r *http.Request) error {
 	}
 	client := &ws.Client{
 		ClientId: userId,
-		Server:   l.svcCtx.WsServer,
+		Server:   ws.WsServer,
 		Conn:     conn,
 		Send:     make(chan []byte, bufSize),
 	}
@@ -56,7 +56,7 @@ func (l *WsLogic) Ws(w http.ResponseWriter, r *http.Request) error {
 	client.Server.Register <- client
 	logx.Infof("user:%d has been registered to wsServer", userId)
 	// listen to websocket conn
-	go client.WritePump()
-	go client.ReadPump()
+	go client.WritePump(l.svcCtx)
+	go client.ReadPump(l.svcCtx)
 	return nil
 }

@@ -9,22 +9,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type SendLogic struct {
+type SyncAddItemLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewSendLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendLogic {
-	return &SendLogic{
+func NewSyncAddItemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncAddItemLogic {
+	return &SyncAddItemLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *SendLogic) Send(in *pb.SendReq) (*pb.Null, error) {
+// sync table
+func (l *SyncAddItemLogic) SyncAddItem(in *pb.SyncAddItemReq) (*pb.SyncAddItemResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &pb.Null{}, nil
+	return &pb.SyncAddItemResp{}, nil
 }

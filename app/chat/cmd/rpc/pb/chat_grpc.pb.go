@@ -19,89 +19,204 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ChatService_Send_FullMethodName = "/pb.ChatService/Send"
+	TableService_StoreAddItem_FullMethodName         = "/pb.TableService/StoreAddItem"
+	TableService_GetStoreItemsBySlice_FullMethodName = "/pb.TableService/GetStoreItemsBySlice"
+	TableService_SyncAddItem_FullMethodName          = "/pb.TableService/SyncAddItem"
+	TableService_SyncGetUnreadItems_FullMethodName   = "/pb.TableService/SyncGetUnreadItems"
 )
 
-// ChatServiceClient is the client API for ChatService service.
+// TableServiceClient is the client API for TableService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ChatServiceClient interface {
-	Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*Null, error)
+type TableServiceClient interface {
+	// store table
+	StoreAddItem(ctx context.Context, in *StoreAddItemReq, opts ...grpc.CallOption) (*StoreAddItemResp, error)
+	GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error)
+	// sync table
+	SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error)
+	SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error)
 }
 
-type chatServiceClient struct {
+type tableServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewChatServiceClient(cc grpc.ClientConnInterface) ChatServiceClient {
-	return &chatServiceClient{cc}
+func NewTableServiceClient(cc grpc.ClientConnInterface) TableServiceClient {
+	return &tableServiceClient{cc}
 }
 
-func (c *chatServiceClient) Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*Null, error) {
-	out := new(Null)
-	err := c.cc.Invoke(ctx, ChatService_Send_FullMethodName, in, out, opts...)
+func (c *tableServiceClient) StoreAddItem(ctx context.Context, in *StoreAddItemReq, opts ...grpc.CallOption) (*StoreAddItemResp, error) {
+	out := new(StoreAddItemResp)
+	err := c.cc.Invoke(ctx, TableService_StoreAddItem_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ChatServiceServer is the server API for ChatService service.
-// All implementations must embed UnimplementedChatServiceServer
+func (c *tableServiceClient) GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error) {
+	out := new(GetStoreItemsBySliceResp)
+	err := c.cc.Invoke(ctx, TableService_GetStoreItemsBySlice_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tableServiceClient) SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error) {
+	out := new(SyncAddItemResp)
+	err := c.cc.Invoke(ctx, TableService_SyncAddItem_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tableServiceClient) SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error) {
+	out := new(SyncGetUnreadItemsResp)
+	err := c.cc.Invoke(ctx, TableService_SyncGetUnreadItems_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TableServiceServer is the server API for TableService service.
+// All implementations must embed UnimplementedTableServiceServer
 // for forward compatibility
-type ChatServiceServer interface {
-	Send(context.Context, *SendReq) (*Null, error)
-	mustEmbedUnimplementedChatServiceServer()
+type TableServiceServer interface {
+	// store table
+	StoreAddItem(context.Context, *StoreAddItemReq) (*StoreAddItemResp, error)
+	GetStoreItemsBySlice(context.Context, *GetStoreItemsBySliceReq) (*GetStoreItemsBySliceResp, error)
+	// sync table
+	SyncAddItem(context.Context, *SyncAddItemReq) (*SyncAddItemResp, error)
+	SyncGetUnreadItems(context.Context, *SyncGetUnreadItemsReq) (*SyncGetUnreadItemsResp, error)
+	mustEmbedUnimplementedTableServiceServer()
 }
 
-// UnimplementedChatServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedChatServiceServer struct {
+// UnimplementedTableServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedTableServiceServer struct {
 }
 
-func (UnimplementedChatServiceServer) Send(context.Context, *SendReq) (*Null, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
+func (UnimplementedTableServiceServer) StoreAddItem(context.Context, *StoreAddItemReq) (*StoreAddItemResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StoreAddItem not implemented")
 }
-func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
+func (UnimplementedTableServiceServer) GetStoreItemsBySlice(context.Context, *GetStoreItemsBySliceReq) (*GetStoreItemsBySliceResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStoreItemsBySlice not implemented")
+}
+func (UnimplementedTableServiceServer) SyncAddItem(context.Context, *SyncAddItemReq) (*SyncAddItemResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncAddItem not implemented")
+}
+func (UnimplementedTableServiceServer) SyncGetUnreadItems(context.Context, *SyncGetUnreadItemsReq) (*SyncGetUnreadItemsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SyncGetUnreadItems not implemented")
+}
+func (UnimplementedTableServiceServer) mustEmbedUnimplementedTableServiceServer() {}
 
-// UnsafeChatServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ChatServiceServer will
+// UnsafeTableServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TableServiceServer will
 // result in compilation errors.
-type UnsafeChatServiceServer interface {
-	mustEmbedUnimplementedChatServiceServer()
+type UnsafeTableServiceServer interface {
+	mustEmbedUnimplementedTableServiceServer()
 }
 
-func RegisterChatServiceServer(s grpc.ServiceRegistrar, srv ChatServiceServer) {
-	s.RegisterService(&ChatService_ServiceDesc, srv)
+func RegisterTableServiceServer(s grpc.ServiceRegistrar, srv TableServiceServer) {
+	s.RegisterService(&TableService_ServiceDesc, srv)
 }
 
-func _ChatService_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendReq)
+func _TableService_StoreAddItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StoreAddItemReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServiceServer).Send(ctx, in)
+		return srv.(TableServiceServer).StoreAddItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ChatService_Send_FullMethodName,
+		FullMethod: TableService_StoreAddItem_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServiceServer).Send(ctx, req.(*SendReq))
+		return srv.(TableServiceServer).StoreAddItem(ctx, req.(*StoreAddItemReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// ChatService_ServiceDesc is the grpc.ServiceDesc for ChatService service.
+func _TableService_GetStoreItemsBySlice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStoreItemsBySliceReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).GetStoreItemsBySlice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_GetStoreItemsBySlice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).GetStoreItemsBySlice(ctx, req.(*GetStoreItemsBySliceReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TableService_SyncAddItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncAddItemReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).SyncAddItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_SyncAddItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).SyncAddItem(ctx, req.(*SyncAddItemReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TableService_SyncGetUnreadItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SyncGetUnreadItemsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).SyncGetUnreadItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_SyncGetUnreadItems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).SyncGetUnreadItems(ctx, req.(*SyncGetUnreadItemsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TableService_ServiceDesc is the grpc.ServiceDesc for TableService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var ChatService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.ChatService",
-	HandlerType: (*ChatServiceServer)(nil),
+var TableService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "pb.TableService",
+	HandlerType: (*TableServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Send",
-			Handler:    _ChatService_Send_Handler,
+			MethodName: "StoreAddItem",
+			Handler:    _TableService_StoreAddItem_Handler,
+		},
+		{
+			MethodName: "GetStoreItemsBySlice",
+			Handler:    _TableService_GetStoreItemsBySlice_Handler,
+		},
+		{
+			MethodName: "SyncAddItem",
+			Handler:    _TableService_SyncAddItem_Handler,
+		},
+		{
+			MethodName: "SyncGetUnreadItems",
+			Handler:    _TableService_SyncGetUnreadItems_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -9,7 +9,6 @@ package ws
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
 	sync "sync"
 )
 
@@ -21,15 +20,12 @@ const (
 )
 
 type Message struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
 
 	From        int64   `protobuf:"varint,1,opt,name=from,proto3" json:"from,omitempty"`
 	Content     string  `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
 	SendTime    int64   `protobuf:"varint,3,opt,name=sendTime,proto3" json:"sendTime,omitempty"`
 	ContentType int32   `protobuf:"varint,4,opt,name=contentType,proto3" json:"contentType,omitempty"` // text or audio or video
-	To          []int64 `protobuf:"varint,5,rep,packed,name=to,proto3" json:"to,omitempty"`
+	To          int64 `protobuf:"varint,5,rep,packed,name=to,proto3" json:"to,omitempty"`
 	File        []byte  `protobuf:"bytes,6,opt,name=file,proto3" json:"file,omitempty"`
 	ChatType    int32   `protobuf:"varint,7,opt,name=chatType,proto3" json:"chatType,omitempty"` // group or single
 	Type        string  `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`          // transfer type: heatbeat or webrtc
@@ -95,11 +91,11 @@ func (x *Message) GetContentType() int32 {
 	return 0
 }
 
-func (x *Message) GetTo() []int64 {
+func (x *Message) GetTo() int64 {
 	if x != nil {
 		return x.To
 	}
-	return nil
+	return 0
 }
 
 func (x *Message) GetFile() []byte {
@@ -263,65 +259,3 @@ var file_chat_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_chat_proto_init() }
-func file_chat_proto_init() {
-	if File_chat_proto != nil {
-		return
-	}
-	if !protoimpl.UnsafeEnabled {
-		file_chat_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Message); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_chat_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SendReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_chat_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Null); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-	}
-	type x struct{}
-	out := protoimpl.TypeBuilder{
-		File: protoimpl.DescBuilder{
-			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_chat_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   3,
-			NumExtensions: 0,
-			NumServices:   1,
-		},
-		GoTypes:           file_chat_proto_goTypes,
-		DependencyIndexes: file_chat_proto_depIdxs,
-		MessageInfos:      file_chat_proto_msgTypes,
-	}.Build()
-	File_chat_proto = out.File
-	file_chat_proto_rawDesc = nil
-	file_chat_proto_goTypes = nil
-	file_chat_proto_depIdxs = nil
-}

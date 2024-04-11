@@ -32,7 +32,7 @@ type Message struct {
 	To          []int64 `protobuf:"varint,5,rep,packed,name=to,proto3" json:"to,omitempty"`
 	File        []byte  `protobuf:"bytes,6,opt,name=file,proto3" json:"file,omitempty"`
 	ChatType    int32   `protobuf:"varint,7,opt,name=chatType,proto3" json:"chatType,omitempty"` // group or single
-	Type        string  `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`          // transfer type: heatbeat or webrtc
+	Type        string  `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`          // transfer type: heartbeat or webrtc
 }
 
 func (x *Message) Reset() {
@@ -123,6 +123,228 @@ func (x *Message) GetType() string {
 	return ""
 }
 
+type StoreTableItem struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TimeLineId   string `protobuf:"bytes,1,opt,name=timeLineId,proto3" json:"timeLineId,omitempty"`
+	SequenceId   int64  `protobuf:"varint,2,opt,name=sequenceId,proto3" json:"sequenceId,omitempty"`
+	Conversation string `protobuf:"bytes,3,opt,name=conversation,proto3" json:"conversation,omitempty"`
+	MsgType      int32  `protobuf:"varint,4,opt,name=msgType,proto3" json:"msgType,omitempty"`         // group or signle
+	ContentType  int32  `protobuf:"varint,5,opt,name=contentType,proto3" json:"contentType,omitempty"` // text, pic or others
+	SendTime     int64  `protobuf:"varint,6,opt,name=sendTime,proto3" json:"sendTime,omitempty"`
+	Sender       int64  `protobuf:"varint,7,opt,name=sender,proto3" json:"sender,omitempty"`
+	Content      string `protobuf:"bytes,8,opt,name=content,proto3" json:"content,omitempty"`
+	File         []byte `protobuf:"bytes,9,opt,name=file,proto3" json:"file,omitempty"`
+}
+
+func (x *StoreTableItem) Reset() {
+	*x = StoreTableItem{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StoreTableItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StoreTableItem) ProtoMessage() {}
+
+func (x *StoreTableItem) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StoreTableItem.ProtoReflect.Descriptor instead.
+func (*StoreTableItem) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *StoreTableItem) GetTimeLineId() string {
+	if x != nil {
+		return x.TimeLineId
+	}
+	return ""
+}
+
+func (x *StoreTableItem) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+func (x *StoreTableItem) GetConversation() string {
+	if x != nil {
+		return x.Conversation
+	}
+	return ""
+}
+
+func (x *StoreTableItem) GetMsgType() int32 {
+	if x != nil {
+		return x.MsgType
+	}
+	return 0
+}
+
+func (x *StoreTableItem) GetContentType() int32 {
+	if x != nil {
+		return x.ContentType
+	}
+	return 0
+}
+
+func (x *StoreTableItem) GetSendTime() int64 {
+	if x != nil {
+		return x.SendTime
+	}
+	return 0
+}
+
+func (x *StoreTableItem) GetSender() int64 {
+	if x != nil {
+		return x.Sender
+	}
+	return 0
+}
+
+func (x *StoreTableItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *StoreTableItem) GetFile() []byte {
+	if x != nil {
+		return x.File
+	}
+	return nil
+}
+
+type SyncTableItem struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TimeLineId  string `protobuf:"bytes,1,opt,name=timeLineId,proto3" json:"timeLineId,omitempty"`
+	SequenceId  int64  `protobuf:"varint,2,opt,name=sequenceId,proto3" json:"sequenceId,omitempty"`
+	UserId      int64  `protobuf:"varint,3,opt,name=userId,proto3" json:"userId,omitempty"`
+	MsgType     int32  `protobuf:"varint,4,opt,name=msgType,proto3" json:"msgType,omitempty"`         // group or signle
+	ContentType int32  `protobuf:"varint,5,opt,name=contentType,proto3" json:"contentType,omitempty"` // text, pic or others
+	SendTime    int64  `protobuf:"varint,6,opt,name=sendTime,proto3" json:"sendTime,omitempty"`
+	Sender      int64  `protobuf:"varint,7,opt,name=sender,proto3" json:"sender,omitempty"`
+	Content     string `protobuf:"bytes,8,opt,name=content,proto3" json:"content,omitempty"`
+	File        []byte `protobuf:"bytes,9,opt,name=file,proto3" json:"file,omitempty"`
+}
+
+func (x *SyncTableItem) Reset() {
+	*x = SyncTableItem{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncTableItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncTableItem) ProtoMessage() {}
+
+func (x *SyncTableItem) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncTableItem.ProtoReflect.Descriptor instead.
+func (*SyncTableItem) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SyncTableItem) GetTimeLineId() string {
+	if x != nil {
+		return x.TimeLineId
+	}
+	return ""
+}
+
+func (x *SyncTableItem) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetMsgType() int32 {
+	if x != nil {
+		return x.MsgType
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetContentType() int32 {
+	if x != nil {
+		return x.ContentType
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetSendTime() int64 {
+	if x != nil {
+		return x.SendTime
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetSender() int64 {
+	if x != nil {
+		return x.Sender
+	}
+	return 0
+}
+
+func (x *SyncTableItem) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *SyncTableItem) GetFile() []byte {
+	if x != nil {
+		return x.File
+	}
+	return nil
+}
+
 type SendReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -134,7 +356,7 @@ type SendReq struct {
 func (x *SendReq) Reset() {
 	*x = SendReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_chat_proto_msgTypes[1]
+		mi := &file_chat_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -147,7 +369,7 @@ func (x *SendReq) String() string {
 func (*SendReq) ProtoMessage() {}
 
 func (x *SendReq) ProtoReflect() protoreflect.Message {
-	mi := &file_chat_proto_msgTypes[1]
+	mi := &file_chat_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -160,7 +382,7 @@ func (x *SendReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendReq.ProtoReflect.Descriptor instead.
 func (*SendReq) Descriptor() ([]byte, []int) {
-	return file_chat_proto_rawDescGZIP(), []int{1}
+	return file_chat_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SendReq) GetMsg() *Message {
@@ -179,7 +401,7 @@ type Null struct {
 func (x *Null) Reset() {
 	*x = Null{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_chat_proto_msgTypes[2]
+		mi := &file_chat_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -192,7 +414,7 @@ func (x *Null) String() string {
 func (*Null) ProtoMessage() {}
 
 func (x *Null) ProtoReflect() protoreflect.Message {
-	mi := &file_chat_proto_msgTypes[2]
+	mi := &file_chat_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -205,7 +427,470 @@ func (x *Null) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Null.ProtoReflect.Descriptor instead.
 func (*Null) Descriptor() ([]byte, []int) {
-	return file_chat_proto_rawDescGZIP(), []int{2}
+	return file_chat_proto_rawDescGZIP(), []int{4}
+}
+
+type StoreAddItemReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Msg *StoreTableItem `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *StoreAddItemReq) Reset() {
+	*x = StoreAddItemReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StoreAddItemReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StoreAddItemReq) ProtoMessage() {}
+
+func (x *StoreAddItemReq) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StoreAddItemReq.ProtoReflect.Descriptor instead.
+func (*StoreAddItemReq) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *StoreAddItemReq) GetMsg() *StoreTableItem {
+	if x != nil {
+		return x.Msg
+	}
+	return nil
+}
+
+type StoreAddItemResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TimeLineId string `protobuf:"bytes,1,opt,name=timeLineId,proto3" json:"timeLineId,omitempty"`
+}
+
+func (x *StoreAddItemResp) Reset() {
+	*x = StoreAddItemResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *StoreAddItemResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StoreAddItemResp) ProtoMessage() {}
+
+func (x *StoreAddItemResp) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StoreAddItemResp.ProtoReflect.Descriptor instead.
+func (*StoreAddItemResp) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *StoreAddItemResp) GetTimeLineId() string {
+	if x != nil {
+		return x.TimeLineId
+	}
+	return ""
+}
+
+type GetStoreItemsBySliceReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Page         int64  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	Type         int32  `protobuf:"varint,2,opt,name=type,proto3" json:"type,omitempty"`
+	Conversation string `protobuf:"bytes,3,opt,name=conversation,proto3" json:"conversation,omitempty"`
+	SequenceId   int64  `protobuf:"varint,4,opt,name=sequenceId,proto3" json:"sequenceId,omitempty"` // default: latest
+}
+
+func (x *GetStoreItemsBySliceReq) Reset() {
+	*x = GetStoreItemsBySliceReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetStoreItemsBySliceReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStoreItemsBySliceReq) ProtoMessage() {}
+
+func (x *GetStoreItemsBySliceReq) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStoreItemsBySliceReq.ProtoReflect.Descriptor instead.
+func (*GetStoreItemsBySliceReq) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetStoreItemsBySliceReq) GetPage() int64 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *GetStoreItemsBySliceReq) GetType() int32 {
+	if x != nil {
+		return x.Type
+	}
+	return 0
+}
+
+func (x *GetStoreItemsBySliceReq) GetConversation() string {
+	if x != nil {
+		return x.Conversation
+	}
+	return ""
+}
+
+func (x *GetStoreItemsBySliceReq) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+type GetStoreItemsBySliceResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Items []*StoreTableItem `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+}
+
+func (x *GetStoreItemsBySliceResp) Reset() {
+	*x = GetStoreItemsBySliceResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetStoreItemsBySliceResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetStoreItemsBySliceResp) ProtoMessage() {}
+
+func (x *GetStoreItemsBySliceResp) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetStoreItemsBySliceResp.ProtoReflect.Descriptor instead.
+func (*GetStoreItemsBySliceResp) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *GetStoreItemsBySliceResp) GetItems() []*StoreTableItem {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+type SyncAddItemReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Msg *SyncTableItem `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *SyncAddItemReq) Reset() {
+	*x = SyncAddItemReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncAddItemReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncAddItemReq) ProtoMessage() {}
+
+func (x *SyncAddItemReq) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncAddItemReq.ProtoReflect.Descriptor instead.
+func (*SyncAddItemReq) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *SyncAddItemReq) GetMsg() *SyncTableItem {
+	if x != nil {
+		return x.Msg
+	}
+	return nil
+}
+
+type SyncAddItemResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	TimeLineId string `protobuf:"bytes,1,opt,name=timeLineId,proto3" json:"timeLineId,omitempty"`
+}
+
+func (x *SyncAddItemResp) Reset() {
+	*x = SyncAddItemResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncAddItemResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncAddItemResp) ProtoMessage() {}
+
+func (x *SyncAddItemResp) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncAddItemResp.ProtoReflect.Descriptor instead.
+func (*SyncAddItemResp) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SyncAddItemResp) GetTimeLineId() string {
+	if x != nil {
+		return x.TimeLineId
+	}
+	return ""
+}
+
+type SyncGetUnreadItemsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SequenceId int64 `protobuf:"varint,1,opt,name=sequenceId,proto3" json:"sequenceId,omitempty"`
+}
+
+func (x *SyncGetUnreadItemsReq) Reset() {
+	*x = SyncGetUnreadItemsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncGetUnreadItemsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncGetUnreadItemsReq) ProtoMessage() {}
+
+func (x *SyncGetUnreadItemsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncGetUnreadItemsReq.ProtoReflect.Descriptor instead.
+func (*SyncGetUnreadItemsReq) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SyncGetUnreadItemsReq) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+type SyncReturnItem struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Conversion string         `protobuf:"bytes,1,opt,name=conversion,proto3" json:"conversion,omitempty"`
+	Shortcut   *SyncTableItem `protobuf:"bytes,2,opt,name=shortcut,proto3" json:"shortcut,omitempty"`
+	UnreadCnt  int64          `protobuf:"varint,3,opt,name=unreadCnt,proto3" json:"unreadCnt,omitempty"`
+}
+
+func (x *SyncReturnItem) Reset() {
+	*x = SyncReturnItem{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncReturnItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncReturnItem) ProtoMessage() {}
+
+func (x *SyncReturnItem) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncReturnItem.ProtoReflect.Descriptor instead.
+func (*SyncReturnItem) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SyncReturnItem) GetConversion() string {
+	if x != nil {
+		return x.Conversion
+	}
+	return ""
+}
+
+func (x *SyncReturnItem) GetShortcut() *SyncTableItem {
+	if x != nil {
+		return x.Shortcut
+	}
+	return nil
+}
+
+func (x *SyncReturnItem) GetUnreadCnt() int64 {
+	if x != nil {
+		return x.UnreadCnt
+	}
+	return 0
+}
+
+type SyncGetUnreadItemsResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Body []*SyncReturnItem `protobuf:"bytes,1,rep,name=body,proto3" json:"body,omitempty"`
+}
+
+func (x *SyncGetUnreadItemsResp) Reset() {
+	*x = SyncGetUnreadItemsResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_chat_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SyncGetUnreadItemsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SyncGetUnreadItemsResp) ProtoMessage() {}
+
+func (x *SyncGetUnreadItemsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_chat_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SyncGetUnreadItemsResp.ProtoReflect.Descriptor instead.
+func (*SyncGetUnreadItemsResp) Descriptor() ([]byte, []int) {
+	return file_chat_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *SyncGetUnreadItemsResp) GetBody() []*SyncReturnItem {
+	if x != nil {
+		return x.Body
+	}
+	return nil
 }
 
 var File_chat_proto protoreflect.FileDescriptor
@@ -224,14 +909,105 @@ var file_chat_proto_rawDesc = []byte{
 	0x18, 0x06, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x12, 0x1a, 0x0a, 0x08,
 	0x63, 0x68, 0x61, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08,
 	0x63, 0x68, 0x61, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x28, 0x0a, 0x07,
-	0x53, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x12, 0x1d, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x62, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x06, 0x0a, 0x04, 0x4e, 0x75, 0x6c, 0x6c, 0x32, 0x2c,
-	0x0a, 0x0b, 0x43, 0x68, 0x61, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x1d, 0x0a,
-	0x04, 0x53, 0x65, 0x6e, 0x64, 0x12, 0x0b, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x6e, 0x64, 0x52,
-	0x65, 0x71, 0x1a, 0x08, 0x2e, 0x70, 0x62, 0x2e, 0x4e, 0x75, 0x6c, 0x6c, 0x42, 0x06, 0x5a, 0x04,
-	0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x92, 0x02, 0x0a,
+	0x0e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x12,
+	0x1e, 0x0a, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64, 0x12,
+	0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x12,
+	0x22, 0x0a, 0x0c, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x73, 0x67, 0x54, 0x79, 0x70, 0x65, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x6d, 0x73, 0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x20, 0x0a,
+	0x0b, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01,
+	0x28, 0x05, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12,
+	0x1a, 0x0a, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73,
+	0x65, 0x6e, 0x64, 0x65, 0x72, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x65, 0x6e,
+	0x64, 0x65, 0x72, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x08,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a,
+	0x04, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x09, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c,
+	0x65, 0x22, 0x85, 0x02, 0x0a, 0x0d, 0x53, 0x79, 0x6e, 0x63, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x49,
+	0x74, 0x65, 0x6d, 0x12, 0x1e, 0x0a, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e,
+	0x65, 0x49, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63,
+	0x65, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07, 0x6d,
+	0x73, 0x67, 0x54, 0x79, 0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x07, 0x6d, 0x73,
+	0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74,
+	0x54, 0x79, 0x70, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x63, 0x6f, 0x6e, 0x74,
+	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54,
+	0x69, 0x6d, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54,
+	0x69, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x18, 0x07, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x06, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x12, 0x18, 0x0a, 0x07, 0x63,
+	0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f,
+	0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x18, 0x09, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x04, 0x66, 0x69, 0x6c, 0x65, 0x22, 0x28, 0x0a, 0x07, 0x53, 0x65, 0x6e,
+	0x64, 0x52, 0x65, 0x71, 0x12, 0x1d, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x62, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x03,
+	0x6d, 0x73, 0x67, 0x22, 0x06, 0x0a, 0x04, 0x4e, 0x75, 0x6c, 0x6c, 0x22, 0x37, 0x0a, 0x0f, 0x53,
+	0x74, 0x6f, 0x72, 0x65, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71, 0x12, 0x24,
+	0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70, 0x62,
+	0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x52,
+	0x03, 0x6d, 0x73, 0x67, 0x22, 0x32, 0x0a, 0x10, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x41, 0x64, 0x64,
+	0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x12, 0x1e, 0x0a, 0x0a, 0x74, 0x69, 0x6d, 0x65,
+	0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x74, 0x69,
+	0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64, 0x22, 0x85, 0x01, 0x0a, 0x17, 0x47, 0x65, 0x74,
+	0x53, 0x74, 0x6f, 0x72, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x42, 0x79, 0x53, 0x6c, 0x69, 0x63,
+	0x65, 0x52, 0x65, 0x71, 0x12, 0x12, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x22, 0x0a, 0x0c,
+	0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0c, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x73, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64,
+	0x22, 0x44, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x49, 0x74, 0x65, 0x6d,
+	0x73, 0x42, 0x79, 0x53, 0x6c, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x28, 0x0a, 0x05,
+	0x69, 0x74, 0x65, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70, 0x62,
+	0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x52,
+	0x05, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x22, 0x35, 0x0a, 0x0e, 0x53, 0x79, 0x6e, 0x63, 0x41, 0x64,
+	0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71, 0x12, 0x23, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x79, 0x6e, 0x63, 0x54,
+	0x61, 0x62, 0x6c, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x31, 0x0a,
+	0x0f, 0x53, 0x79, 0x6e, 0x63, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x73, 0x70,
+	0x12, 0x1e, 0x0a, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x74, 0x69, 0x6d, 0x65, 0x4c, 0x69, 0x6e, 0x65, 0x49, 0x64,
+	0x22, 0x37, 0x0a, 0x15, 0x53, 0x79, 0x6e, 0x63, 0x47, 0x65, 0x74, 0x55, 0x6e, 0x72, 0x65, 0x61,
+	0x64, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65, 0x71, 0x12, 0x1e, 0x0a, 0x0a, 0x73, 0x65, 0x71,
+	0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x73,
+	0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x65, 0x49, 0x64, 0x22, 0x7d, 0x0a, 0x0e, 0x53, 0x79, 0x6e,
+	0x63, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x1e, 0x0a, 0x0a, 0x63,
+	0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0a, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x12, 0x2d, 0x0a, 0x08, 0x73,
+	0x68, 0x6f, 0x72, 0x74, 0x63, 0x75, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e,
+	0x70, 0x62, 0x2e, 0x53, 0x79, 0x6e, 0x63, 0x54, 0x61, 0x62, 0x6c, 0x65, 0x49, 0x74, 0x65, 0x6d,
+	0x52, 0x08, 0x73, 0x68, 0x6f, 0x72, 0x74, 0x63, 0x75, 0x74, 0x12, 0x1c, 0x0a, 0x09, 0x75, 0x6e,
+	0x72, 0x65, 0x61, 0x64, 0x43, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x75,
+	0x6e, 0x72, 0x65, 0x61, 0x64, 0x43, 0x6e, 0x74, 0x22, 0x40, 0x0a, 0x16, 0x53, 0x79, 0x6e, 0x63,
+	0x47, 0x65, 0x74, 0x55, 0x6e, 0x72, 0x65, 0x61, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65,
+	0x73, 0x70, 0x12, 0x26, 0x0a, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x79, 0x6e, 0x63, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e,
+	0x49, 0x74, 0x65, 0x6d, 0x52, 0x04, 0x62, 0x6f, 0x64, 0x79, 0x32, 0xa1, 0x02, 0x0a, 0x0c, 0x54,
+	0x61, 0x62, 0x6c, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x39, 0x0a, 0x0c, 0x53,
+	0x74, 0x6f, 0x72, 0x65, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x13, 0x2e, 0x70, 0x62,
+	0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71,
+	0x1a, 0x14, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x41, 0x64, 0x64, 0x49, 0x74,
+	0x65, 0x6d, 0x52, 0x65, 0x73, 0x70, 0x12, 0x51, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f,
+	0x72, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x42, 0x79, 0x53, 0x6c, 0x69, 0x63, 0x65, 0x12, 0x1b,
+	0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x49, 0x74, 0x65, 0x6d,
+	0x73, 0x42, 0x79, 0x53, 0x6c, 0x69, 0x63, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1c, 0x2e, 0x70, 0x62,
+	0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x65, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x42, 0x79,
+	0x53, 0x6c, 0x69, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x36, 0x0a, 0x0b, 0x53, 0x79, 0x6e,
+	0x63, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x12, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x79,
+	0x6e, 0x63, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71, 0x1a, 0x13, 0x2e, 0x70,
+	0x62, 0x2e, 0x53, 0x79, 0x6e, 0x63, 0x41, 0x64, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x73,
+	0x70, 0x12, 0x4b, 0x0a, 0x12, 0x53, 0x79, 0x6e, 0x63, 0x47, 0x65, 0x74, 0x55, 0x6e, 0x72, 0x65,
+	0x61, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x79, 0x6e,
+	0x63, 0x47, 0x65, 0x74, 0x55, 0x6e, 0x72, 0x65, 0x61, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52,
+	0x65, 0x71, 0x1a, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x79, 0x6e, 0x63, 0x47, 0x65, 0x74, 0x55,
+	0x6e, 0x72, 0x65, 0x61, 0x64, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06,
+	0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -246,21 +1022,43 @@ func file_chat_proto_rawDescGZIP() []byte {
 	return file_chat_proto_rawDescData
 }
 
-var file_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_chat_proto_goTypes = []interface{}{
-	(*Message)(nil), // 0: pb.Message
-	(*SendReq)(nil), // 1: pb.SendReq
-	(*Null)(nil),    // 2: pb.Null
+	(*Message)(nil),                  // 0: pb.Message
+	(*StoreTableItem)(nil),           // 1: pb.StoreTableItem
+	(*SyncTableItem)(nil),            // 2: pb.SyncTableItem
+	(*SendReq)(nil),                  // 3: pb.SendReq
+	(*Null)(nil),                     // 4: pb.Null
+	(*StoreAddItemReq)(nil),          // 5: pb.StoreAddItemReq
+	(*StoreAddItemResp)(nil),         // 6: pb.StoreAddItemResp
+	(*GetStoreItemsBySliceReq)(nil),  // 7: pb.GetStoreItemsBySliceReq
+	(*GetStoreItemsBySliceResp)(nil), // 8: pb.GetStoreItemsBySliceResp
+	(*SyncAddItemReq)(nil),           // 9: pb.SyncAddItemReq
+	(*SyncAddItemResp)(nil),          // 10: pb.SyncAddItemResp
+	(*SyncGetUnreadItemsReq)(nil),    // 11: pb.SyncGetUnreadItemsReq
+	(*SyncReturnItem)(nil),           // 12: pb.SyncReturnItem
+	(*SyncGetUnreadItemsResp)(nil),   // 13: pb.SyncGetUnreadItemsResp
 }
 var file_chat_proto_depIdxs = []int32{
-	0, // 0: pb.SendReq.msg:type_name -> pb.Message
-	1, // 1: pb.ChatService.Send:input_type -> pb.SendReq
-	2, // 2: pb.ChatService.Send:output_type -> pb.Null
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0,  // 0: pb.SendReq.msg:type_name -> pb.Message
+	1,  // 1: pb.StoreAddItemReq.msg:type_name -> pb.StoreTableItem
+	1,  // 2: pb.GetStoreItemsBySliceResp.items:type_name -> pb.StoreTableItem
+	2,  // 3: pb.SyncAddItemReq.msg:type_name -> pb.SyncTableItem
+	2,  // 4: pb.SyncReturnItem.shortcut:type_name -> pb.SyncTableItem
+	12, // 5: pb.SyncGetUnreadItemsResp.body:type_name -> pb.SyncReturnItem
+	5,  // 6: pb.TableService.StoreAddItem:input_type -> pb.StoreAddItemReq
+	7,  // 7: pb.TableService.GetStoreItemsBySlice:input_type -> pb.GetStoreItemsBySliceReq
+	9,  // 8: pb.TableService.SyncAddItem:input_type -> pb.SyncAddItemReq
+	11, // 9: pb.TableService.SyncGetUnreadItems:input_type -> pb.SyncGetUnreadItemsReq
+	6,  // 10: pb.TableService.StoreAddItem:output_type -> pb.StoreAddItemResp
+	8,  // 11: pb.TableService.GetStoreItemsBySlice:output_type -> pb.GetStoreItemsBySliceResp
+	10, // 12: pb.TableService.SyncAddItem:output_type -> pb.SyncAddItemResp
+	13, // 13: pb.TableService.SyncGetUnreadItems:output_type -> pb.SyncGetUnreadItemsResp
+	10, // [10:14] is the sub-list for method output_type
+	6,  // [6:10] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_chat_proto_init() }
@@ -282,7 +1080,7 @@ func file_chat_proto_init() {
 			}
 		}
 		file_chat_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SendReq); i {
+			switch v := v.(*StoreTableItem); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -294,7 +1092,139 @@ func file_chat_proto_init() {
 			}
 		}
 		file_chat_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncTableItem); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SendReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Null); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StoreAddItemReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StoreAddItemResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetStoreItemsBySliceReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetStoreItemsBySliceResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncAddItemReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncAddItemResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncGetUnreadItemsReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncReturnItem); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_chat_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SyncGetUnreadItemsResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -312,7 +1242,7 @@ func file_chat_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_chat_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -6,6 +6,7 @@ package ws
 
 import (
 	"time"
+	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/common/constant"
 
 	"github.com/gorilla/websocket"
@@ -46,7 +47,7 @@ type Client struct {
 // ensures that there is at most one reader on a Connection by executing all
 // reads from this goroutine.
 
-func (c *Client) ReadPump() {
+func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 	defer func() {
 		c.Server.UnRegister <- c
 		c.Conn.Close()
@@ -74,7 +75,12 @@ func (c *Client) ReadPump() {
 			}
 			c.Conn.WriteMessage(websocket.BinaryMessage, pongByte)
 		} else {
-			// TODO: 可以使用kafka作为消息队列中间件处理数据
+			// 1. 发送到kafka
+			err = svcCtx.KqPusherClient.Push(string(message))
+			if err != nil {
+				logx.Error(err)
+			}
+			// 2. 广播应该放到数据落盘之后
 			WsServer.Broadcast <- message
 		}
 	}
@@ -85,7 +91,7 @@ func (c *Client) ReadPump() {
 // A goroutine running writePump is started for each Connection. The
 // application ensures that there is at most one writer to a Connection by
 // executing all writes from this goroutine.
-func (c *Client) WritePump() {
+func (c *Client) WritePump(svcCtx *svc.ServiceContext) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()

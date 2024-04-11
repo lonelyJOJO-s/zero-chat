@@ -8,8 +8,13 @@ import (
 type Config struct {
 	rest.RestConf
 	UsercenterRpcConf zrpc.RpcClientConf
+	ChatRpcConf       zrpc.RpcClientConf
 	JwtAuth           struct {
 		AccessSecret string
 		AccessExpire int64
+	}
+	KqPusherConf struct {
+		Brokers []string
+		Topic   string
 	}
 }

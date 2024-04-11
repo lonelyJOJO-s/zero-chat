@@ -9,6 +9,7 @@ import (
 	"zero-chat/app/chat/cmd/rpc/internal/svc"
 	"zero-chat/app/chat/cmd/rpc/pb"
 
+	"github.com/joho/godotenv"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -22,11 +23,12 @@ func main() {
 	flag.Parse()
 
 	var c config.Config
-	conf.MustLoad(*configFile, &c)
+	godotenv.Load()
+	conf.MustLoad(*configFile, &c, conf.UseEnv())
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterChatServiceServer(grpcServer, server.NewChatServiceServer(ctx))
+		pb.RegisterTableServiceServer(grpcServer, server.NewTableServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

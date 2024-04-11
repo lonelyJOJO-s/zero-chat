@@ -1,6 +1,30 @@
 Name: chat.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:2002
 Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: chat.rpc
+
+
+Telemetry:
+  Name: chat-rpc
+  Endpoint: http://localhost:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Log:
+  ServiceName: chat-rpc
+  Level: info # error
+  Encoding: plain # default: json 利于收集日志  plain利于查看日志
+
+Redis:
+  Host: localhost:36379 # 124.221.101.169:36379 # used to be redis:36379
+  Type: node
+  Pass: G62m50oigInC30sf
+  Key: chat-rpc
+
+TableStore:
+  OtsAkEnv: ${OTS_AK_ENV}
+  OtsSkEnv: ${OTS_SK_ENV}
+  Endpoint: ${ENDPOINT}
+

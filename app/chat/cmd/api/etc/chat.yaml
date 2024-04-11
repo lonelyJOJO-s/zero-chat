@@ -9,6 +9,13 @@ UsercenterRpcConf:
     Key: usercenter.rpc
   NonBlock: true
 
+ChatRpcConf:
+  Etcd:
+    Hosts:
+    - 127.0.0.1:2379
+    Key: chat.rpc
+  NonBlock: true
+
 Log:
   ServiceName: chat-api
   Level: info
@@ -24,5 +31,10 @@ JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
   AccessExpire: 172800
 
+
+KqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+  Topic: messages
 
 # 定义redis等中间件

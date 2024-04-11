@@ -10,7 +10,31 @@ message Message {
     repeated int64 to = 5;
     bytes file = 6;
     int32 chatType = 7; // group or single
-    string type = 8; // transfer type: heatbeat or webrtc
+    string type = 8; // transfer type: heartbeat or webrtc
+}
+
+message StoreTableItem {
+    string timeLineId = 1;
+    int64 sequenceId = 2;
+    string conversation = 3;
+    int32 msgType = 4; // group or signle
+    int32 contentType = 5;  // text, pic or others
+    int64 sendTime = 6;
+    int64 sender = 7;
+    string content = 8;
+    bytes file = 9;
+}   
+
+message SyncTableItem {
+    string timeLineId = 1;
+    int64 sequenceId = 2;
+    int64 userId = 3;
+    int32 msgType = 4; // group or signle
+    int32 contentType = 5;  // text, pic or others
+    int64 sendTime = 6;
+    int64 sender = 7;
+    string content = 8;
+    bytes file = 9;
 }
 
 message SendReq {
@@ -18,10 +42,60 @@ message SendReq {
 }
 
 message Null {
+}
+
+message StoreAddItemReq{
+    StoreTableItem msg = 1;
+}
+
+message StoreAddItemResp{
+    string timeLineId = 1;
+}
+
+message GetStoreItemsBySliceReq {
+    int64 page = 1;
+    int32 type = 2;
+    string conversation = 3;
+    int64 sequenceId = 4; // default: latest
+}
+
+message GetStoreItemsBySliceResp {
+    repeated StoreTableItem items = 1;
+}
+
+message SyncAddItemReq{
+    SyncTableItem msg = 1;
+} 
+
+message SyncAddItemResp {
+    string timeLineId = 1;
+}
+
+message SyncGetUnreadItemsReq {
+    int64 sequenceId = 1;
+}
+
+message SyncReturnItem{
+    string conversion = 1; 
+    SyncTableItem shortcut = 2;
+    int64 unreadCnt = 3;
 
 }
 
-service ChatService {
-    rpc Send(SendReq) returns(Null);
+message SyncGetUnreadItemsResp {
+    repeated SyncReturnItem body = 1;
+}
+
+// 负责阿里云table-store相关操作
+service TableService {
+    // store table
+    rpc StoreAddItem (StoreAddItemReq) returns (StoreAddItemResp);
+    rpc GetStoreItemsBySlice (GetStoreItemsBySliceReq) returns (GetStoreItemsBySliceResp);
+    // del operation
+
+
+    // sync table
+    rpc SyncAddItem (SyncAddItemReq) returns (SyncAddItemResp);
+    rpc SyncGetUnreadItems (SyncGetUnreadItemsReq) returns (SyncGetUnreadItemsResp);
 }
 
