@@ -374,6 +374,7 @@ const (
 	FriendService_AddFriends_FullMethodName        = "/pb.FriendService/addFriends"
 	FriendService_DelFrineds_FullMethodName        = "/pb.FriendService/delFrineds"
 	FriendService_SearchFriendFuzzy_FullMethodName = "/pb.FriendService/searchFriendFuzzy"
+	FriendService_GetUuid_FullMethodName           = "/pb.FriendService/getUuid"
 )
 
 // FriendServiceClient is the client API for FriendService service.
@@ -385,6 +386,7 @@ type FriendServiceClient interface {
 	AddFriends(ctx context.Context, in *AddFriendsReq, opts ...grpc.CallOption) (*AddFriendsResp, error)
 	DelFrineds(ctx context.Context, in *DelFriendsReq, opts ...grpc.CallOption) (*DelFriendsResp, error)
 	SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error)
+	GetUuid(ctx context.Context, in *GetUuidReq, opts ...grpc.CallOption) (*GetUuidResp, error)
 }
 
 type friendServiceClient struct {
@@ -431,6 +433,15 @@ func (c *friendServiceClient) SearchFriendFuzzy(ctx context.Context, in *SearchF
 	return out, nil
 }
 
+func (c *friendServiceClient) GetUuid(ctx context.Context, in *GetUuidReq, opts ...grpc.CallOption) (*GetUuidResp, error) {
+	out := new(GetUuidResp)
+	err := c.cc.Invoke(ctx, FriendService_GetUuid_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FriendServiceServer is the server API for FriendService service.
 // All implementations must embed UnimplementedFriendServiceServer
 // for forward compatibility
@@ -440,6 +451,7 @@ type FriendServiceServer interface {
 	AddFriends(context.Context, *AddFriendsReq) (*AddFriendsResp, error)
 	DelFrineds(context.Context, *DelFriendsReq) (*DelFriendsResp, error)
 	SearchFriendFuzzy(context.Context, *SearchFriendFuzzyReq) (*SearchFriendFuzzyResp, error)
+	GetUuid(context.Context, *GetUuidReq) (*GetUuidResp, error)
 	mustEmbedUnimplementedFriendServiceServer()
 }
 
@@ -458,6 +470,9 @@ func (UnimplementedFriendServiceServer) DelFrineds(context.Context, *DelFriendsR
 }
 func (UnimplementedFriendServiceServer) SearchFriendFuzzy(context.Context, *SearchFriendFuzzyReq) (*SearchFriendFuzzyResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchFriendFuzzy not implemented")
+}
+func (UnimplementedFriendServiceServer) GetUuid(context.Context, *GetUuidReq) (*GetUuidResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUuid not implemented")
 }
 func (UnimplementedFriendServiceServer) mustEmbedUnimplementedFriendServiceServer() {}
 
@@ -544,6 +559,24 @@ func _FriendService_SearchFriendFuzzy_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FriendService_GetUuid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUuidReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FriendServiceServer).GetUuid(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FriendService_GetUuid_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FriendServiceServer).GetUuid(ctx, req.(*GetUuidReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FriendService_ServiceDesc is the grpc.ServiceDesc for FriendService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -566,6 +599,10 @@ var FriendService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "searchFriendFuzzy",
 			Handler:    _FriendService_SearchFriendFuzzy_Handler,
+		},
+		{
+			MethodName: "getUuid",
+			Handler:    _FriendService_GetUuid_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

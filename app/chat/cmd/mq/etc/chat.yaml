@@ -1,0 +1,49 @@
+Name: chat-mq
+Host: 0.0.0.0
+Port: 3001
+Mode: dev
+
+#监控
+# Prometheus:
+#   Host: 0.0.0.0
+#   Port: 4003
+#   Path: /metrics
+
+#链路追踪
+Telemetry:
+  Name: message-mq
+  Endpoint: http://jaeger:14268/api/traces
+  Sampler: 1.0
+  Batcher: jaeger
+
+Log:
+  ServiceName: message-mq
+  Level: info
+  Encoding: plain
+
+Redis:
+  Host: redis:6379
+  Type: node
+  Pass: G62m50oigInC30sf
+
+#kq
+KqConsumerConf:
+  Name: kqConsumer
+  Brokers:
+    - 127.0.0.1:9092
+  Group: kqConsumer
+  Topic: messages
+  Offset: last # 从最新产生的数据消费
+  Consumers: 8
+  Processors: 8
+
+#rpc
+ChatRpcConf:
+  Endpoints:
+    - 127.0.0.1:2002
+  NonBlock: true
+
+UserRpcConf:
+  Endpoints:
+    - 127.0.0.1:2001
+  NonBlock: true

@@ -42,3 +42,8 @@ func (s *FriendServiceServer) SearchFriendFuzzy(ctx context.Context, in *pb.Sear
 	l := friendservicelogic.NewSearchFriendFuzzyLogic(ctx, s.svcCtx)
 	return l.SearchFriendFuzzy(in)
 }
+
+func (s *FriendServiceServer) GetUuid(ctx context.Context, in *pb.GetUuidReq) (*pb.GetUuidResp, error) {
+	l := friendservicelogic.NewGetUuidLogic(ctx, s.svcCtx)
+	return l.GetUuid(in)
+}

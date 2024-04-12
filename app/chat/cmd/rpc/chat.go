@@ -25,10 +25,9 @@ func main() {
 	var c config.Config
 	godotenv.Load()
 	conf.MustLoad(*configFile, &c, conf.UseEnv())
-	ctx := svc.NewServiceContext(c)
-
+	svcCtx := svc.NewServiceContext(c)
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		pb.RegisterTableServiceServer(grpcServer, server.NewTableServiceServer(ctx))
+		pb.RegisterTableServiceServer(grpcServer, server.NewTableServiceServer(svcCtx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

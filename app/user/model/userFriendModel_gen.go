@@ -11,6 +11,7 @@ import (
 	"zero-chat/common/xerr"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
@@ -50,6 +51,7 @@ type (
 		Id        int64        `db:"id"`
 		UserId    int64        `db:"user_id"`
 		FriendId  int64        `db:"friend_id"`
+		Uuid      string       `db:"uuid"`
 		CreatedAt time.Time    `db:"created_at"`
 		DeletedAt sql.NullTime `db:"deleted_at"`
 	}
@@ -142,13 +144,14 @@ func (m *defaultUserFriendModel) Insert(ctx context.Context, data *UserFriend) (
 	if uf != nil {
 		return xerr.NewErrCodeMsg(xerr.INSERT_ALREADY_EXSIT, xerr.MapErrMsg(xerr.INSERT_ALREADY_EXSIT))
 	}
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
 	now := time.Now()
-	_, err = m.ExecNoCacheCtx(ctx, query, data.UserId, data.FriendId, now)
+	uuid := uuid.NewString()
+	_, err = m.ExecNoCacheCtx(ctx, query, data.UserId, data.FriendId, uuid, now)
 	if err != nil {
 		return  err
 	}
-	_, err = m.ExecNoCacheCtx(ctx, query, data.FriendId, data.UserId , now)
+	_, err = m.ExecNoCacheCtx(ctx, query, data.FriendId, data.UserId , uuid, now)
 	if err != nil {
 		return  err
 	}

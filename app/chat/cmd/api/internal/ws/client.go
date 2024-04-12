@@ -8,6 +8,7 @@ import (
 	"time"
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/common/constant"
+	"zero-chat/common/protocol"
 
 	"github.com/gorilla/websocket"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -62,10 +63,10 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 			c.Conn.Close()
 			break
 		}
-		msg := &Message{}
+		msg := &protocol.Message{}
 		proto.Unmarshal(message, msg)
 		if msg.Type == constant.HEART_BEAT {
-			pong := &Message{
+			pong := &protocol.Message{
 				Content: constant.PONG,
 				Type:    constant.HEART_BEAT,
 			}
@@ -75,13 +76,13 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 			}
 			c.Conn.WriteMessage(websocket.BinaryMessage, pongByte)
 		} else {
-			// 1. 发送到kafka
+			// 1. send kafka
 			err = svcCtx.KqPusherClient.Push(string(message))
 			if err != nil {
 				logx.Error(err)
 			}
 			// 2. 广播应该放到数据落盘之后
-			WsServer.Broadcast <- message
+			// WsServer.Broadcast <- message
 		}
 	}
 }

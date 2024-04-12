@@ -6,6 +6,7 @@ import (
 	"log"
 	"testing"
 	"time"
+	"zero-chat/common/protocol"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -13,18 +14,17 @@ import (
 func TestProtoGen(t *testing.T) {
 
 	// 创建 Protobuf 消息实例并填充字段
-	msg := Message{}
+	msg := protocol.Message{}
 	msg.From = 5
 	msg.Content = "Hello, this is a message."
 	msg.SendTime = time.Now().UnixNano()
 	msg.ContentType = 0 // 0 for text
 	msg.To = 6
-	msg.File = []byte{}
+	msg.File = []byte("test")
 	msg.ChatType = 0 // o for signle 1 for group
-	msg.Type = "heartbeat"
+	msg.Type = "pass"
 
 	// 序列化 Protobuf 消息为二进制数据
-	fmt.Println(msg)
 	data, err := proto.Marshal(&msg)
 	if err != nil {
 		log.Fatalf("Failed to marshal message: %v", err)

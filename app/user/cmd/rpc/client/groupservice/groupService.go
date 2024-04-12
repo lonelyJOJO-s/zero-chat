@@ -39,6 +39,8 @@ type (
 	GetMemberIdsResp       = pb.GetMemberIdsResp
 	GetUserInfoReq         = pb.GetUserInfoReq
 	GetUserInfoResp        = pb.GetUserInfoResp
+	GetUuidReq             = pb.GetUuidReq
+	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
 	JoinGroupReq           = pb.JoinGroupReq
 	JoinGroupResp          = pb.JoinGroupResp

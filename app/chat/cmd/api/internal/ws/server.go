@@ -9,6 +9,7 @@ import (
 	"zero-chat/app/user/cmd/rpc/client/groupservice"
 	"zero-chat/app/user/cmd/rpc/pb"
 	"zero-chat/common/constant"
+	"zero-chat/common/protocol"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -57,7 +58,7 @@ func (h *Server) Run(groupService groupservice.GroupService) {
 			}
 		case message := <-h.Broadcast:
 			// boardcast to all Clients
-			msg := &Message{}
+			msg := &protocol.Message{}
 			proto.Unmarshal(message, msg)
 			if msg.ChatType == constant.SINGLE {
 				for client := range h.Clients {

@@ -39,6 +39,8 @@ type (
 	GetMemberIdsResp       = pb.GetMemberIdsResp
 	GetUserInfoReq         = pb.GetUserInfoReq
 	GetUserInfoResp        = pb.GetUserInfoResp
+	GetUuidReq             = pb.GetUuidReq
+	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
 	JoinGroupReq           = pb.JoinGroupReq
 	JoinGroupResp          = pb.JoinGroupResp
@@ -67,6 +69,7 @@ type (
 		AddFriends(ctx context.Context, in *AddFriendsReq, opts ...grpc.CallOption) (*AddFriendsResp, error)
 		DelFrineds(ctx context.Context, in *DelFriendsReq, opts ...grpc.CallOption) (*DelFriendsResp, error)
 		SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error)
+		GetUuid(ctx context.Context, in *GetUuidReq, opts ...grpc.CallOption) (*GetUuidResp, error)
 	}
 
 	defaultFriendService struct {
@@ -99,4 +102,9 @@ func (m *defaultFriendService) DelFrineds(ctx context.Context, in *DelFriendsReq
 func (m *defaultFriendService) SearchFriendFuzzy(ctx context.Context, in *SearchFriendFuzzyReq, opts ...grpc.CallOption) (*SearchFriendFuzzyResp, error) {
 	client := pb.NewFriendServiceClient(m.cli.Conn())
 	return client.SearchFriendFuzzy(ctx, in, opts...)
+}
+
+func (m *defaultFriendService) GetUuid(ctx context.Context, in *GetUuidReq, opts ...grpc.CallOption) (*GetUuidResp, error) {
+	client := pb.NewFriendServiceClient(m.cli.Conn())
+	return client.GetUuid(ctx, in, opts...)
 }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "./";
+package protocol;
+
+message Message {
+    int64 from = 1;
+    string content = 2;
+    int64 sendTime = 3;
+    int32 contentType =4; // text or audio or video
+    int64 to = 5;
+    bytes file = 6;
+    int32 chatType = 7; // group or single
+    string type = 8; // transfer type: heartbeat or webrtc
+}

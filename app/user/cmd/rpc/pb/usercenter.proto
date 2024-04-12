@@ -233,6 +233,15 @@ message GetJoinedGroupIdsResp {
   repeated int64 groupIds = 1;
 }
 
+message GetUuidReq {
+  int64 userId = 1;
+  int64 friendId = 2;
+}
+
+message GetUuidResp {
+   string uuid = 1;
+}
+
 //service
 service UserService {
 
@@ -253,6 +262,7 @@ service FriendService {
   rpc addFriends(AddFriendsReq) returns (AddFriendsResp);
   rpc delFrineds(DelFriendsReq) returns (DelFriendsResp); // soft del
   rpc searchFriendFuzzy(SearchFriendFuzzyReq) returns (SearchFriendFuzzyResp); 
+  rpc getUuid(GetUuidReq) returns (GetUuidResp);
 }
 
 service GroupService {
