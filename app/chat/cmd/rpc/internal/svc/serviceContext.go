@@ -12,6 +12,7 @@ type ServiceContext struct {
 	Config     config.Config
 	RdsClient  *redis.Redis
 	StoreTable model.StoreTableModel
+	SyncTable  model.SyncTableModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -20,5 +21,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:     c,
 		RdsClient:  redis.MustNewRedis(c.Redis.RedisConf),
 		StoreTable: model.NewStoreTableModel("im_timeline_store_table", client),
+		SyncTable:  model.NewSyncTableModel("im_timeline_sync_table", client),
 	}
 }

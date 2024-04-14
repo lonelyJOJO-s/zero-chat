@@ -10,6 +10,7 @@ const (
 	Sender       = "sender"
 	Type         = "type"
 	File         = "file"
+	UserId       = "user_id"
 )
 
 func NewPrimaryKeys(timeLineId string, sequenceId int64) map[string]any {
@@ -60,6 +61,12 @@ func WithFile(val []byte) Opt {
 func WithSendTime(val int64) Opt {
 	return func(c *map[string]any) {
 		(*c)[SendTime] = val
+	}
+}
+
+func WithUserId(val int64) Opt {
+	return func(c *map[string]any) {
+		(*c)[UserId] = val
 	}
 }
 

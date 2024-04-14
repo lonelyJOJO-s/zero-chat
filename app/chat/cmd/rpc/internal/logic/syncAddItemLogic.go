@@ -5,7 +5,9 @@ import (
 
 	"zero-chat/app/chat/cmd/rpc/internal/svc"
 	"zero-chat/app/chat/cmd/rpc/pb"
+	"zero-chat/app/chat/model"
 
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -26,6 +28,12 @@ func NewSyncAddItemLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SyncA
 // sync table
 func (l *SyncAddItemLogic) SyncAddItem(in *pb.SyncAddItemReq) (*pb.SyncAddItemResp, error) {
 	// todo: add your logic here and delete this line
-
-	return &pb.SyncAddItemResp{}, nil
+	err := l.svcCtx.SyncTable.PutRow(model.NewPrimaryKeys(in.Msg.TimeLineId, in.Msg.SequenceId),
+		model.NewColumns(model.WithContent(in.Msg.Content), model.WithUserId(in.Msg.UserId),
+			model.WithMsgType(in.Msg.MsgType), model.WithType(in.Msg.ContentType),
+			model.WithSender(in.Msg.Sender), model.WithSendTime(in.Msg.SendTime)))
+	if err != nil {
+		return nil, errors.Wrapf(err, "insert into sync-table error:%s", err.Error())
+	}
+	return &pb.SyncAddItemResp{TimeLineId: in.Msg.TimeLineId}, nil
 }

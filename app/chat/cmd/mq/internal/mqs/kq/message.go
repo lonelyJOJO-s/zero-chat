@@ -50,8 +50,8 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 	if err != nil {
 		return err
 	}
-	// init msg
-	msg := pb.StoreTableItem{
+	// 1. store into store-table (session —— read expand)
+	storeMsg := pb.StoreTableItem{
 		TimeLineId:   uuid.NewString(),
 		SequenceId:   time.Now().UnixNano(),
 		Conversation: string(resp.Uuid),
@@ -62,13 +62,22 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 		Content:      message.Content,
 		File:         message.File,
 	}
-	// 1. store into store-table (session —— read expand)
-	_, err = l.svcCtx.ChatServiceRpc.StoreAddItem(l.ctx, &pb.StoreAddItemReq{Msg: &msg})
+	_, err = l.svcCtx.ChatServiceRpc.StoreAddItem(l.ctx, &pb.StoreAddItemReq{Msg: &storeMsg})
 	if err != nil {
 		return err
 	}
 	// 2. store into sync-table, (mail —— write expand)
-	_, err = l.svcCtx.ChatServiceRpc.SyncAddItem(l.ctx, &pb.SyncAddItemReq{})
+	syncMsg := pb.SyncTableItem{
+		TimeLineId:  uuid.NewString(),
+		SequenceId:  time.Now().UnixNano(),
+		UserId:      message.To,
+		MsgType:     message.ChatType,
+		ContentType: message.ContentType,
+		SendTime:    message.SendTime,
+		Sender:      message.From,
+		Content:     message.Content,
+	}
+	_, err = l.svcCtx.ChatServiceRpc.SyncAddItem(l.ctx, &pb.SyncAddItemReq{Msg: &syncMsg})
 	if err != nil {
 		return err
 	}
