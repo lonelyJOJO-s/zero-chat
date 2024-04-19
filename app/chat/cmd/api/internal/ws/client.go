@@ -81,7 +81,6 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 			if err != nil {
 				logx.Error(err)
 			}
-			// 2. 广播应该放到数据落盘之后
 			// WsServer.Broadcast <- message
 		}
 	}
@@ -109,6 +108,7 @@ func (c *Client) WritePump(svcCtx *svc.ServiceContext) {
 				return
 			}
 			// 数据回传客户端
+			logx.Info("回写客户端成功")
 			c.Conn.WriteMessage(websocket.BinaryMessage, message)
 
 		case <-ticker.C:

@@ -37,4 +37,8 @@ KqPusherConf:
     - 127.0.0.1:9092
   Topic: messages
 
+KqConsumerConf:
+  Brokers:
+    - 127.0.0.1:9092
+  Topic: messages-back
 # 定义redis等中间件

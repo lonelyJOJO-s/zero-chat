@@ -6,6 +6,7 @@ import (
 
 	"zero-chat/app/chat/cmd/api/internal/config"
 	"zero-chat/app/chat/cmd/api/internal/handler"
+	"zero-chat/app/chat/cmd/api/internal/kafka"
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/app/chat/cmd/api/internal/ws"
 
@@ -27,7 +28,8 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	// start ws server
 	go ws.WsServer.Run(ctx.GroupServiceRpc)
-
+	// start kafka listen
+	go kafka.StartConsume(c)
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

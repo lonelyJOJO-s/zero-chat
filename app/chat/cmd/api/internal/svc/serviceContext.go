@@ -7,6 +7,7 @@ import (
 	"zero-chat/app/user/cmd/rpc/client/groupservice"
 	"zero-chat/app/user/cmd/rpc/client/userservice"
 
+	"github.com/IBM/sarama"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/zrpc"
 )
@@ -18,6 +19,7 @@ type ServiceContext struct {
 	FriendServiceRpc friendservice.FriendService
 	ChatServiceRpc   tableservice.TableService
 	KqPusherClient   *kq.Pusher
+	KqConsumerClient *sarama.Consumer
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -28,6 +30,5 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FriendServiceRpc: friendservice.NewFriendService(zrpc.MustNewClient(c.UsercenterRpcConf)),
 		ChatServiceRpc:   tableservice.NewTableService(zrpc.MustNewClient(c.ChatRpcConf)),
 		KqPusherClient:   kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
-		// WsServer:         server, 作为一个全局server吧
 	}
 }

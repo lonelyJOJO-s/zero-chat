@@ -22,9 +22,10 @@ Log:
   Encoding: plain
 
 Redis:
-  Host: redis:6379
+  Host: localhost:36379 # 124.221.101.169:36379 # used to be redis:36379
   Type: node
   Pass: G62m50oigInC30sf
+  Key: chat-mq
 
 #kq
 KqConsumerConf:
@@ -36,6 +37,12 @@ KqConsumerConf:
   Offset: last # 从最新产生的数据消费
   Consumers: 8
   Processors: 8
+
+# pusher
+KqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+  Topic: messages-back
 
 #rpc
 ChatRpcConf:

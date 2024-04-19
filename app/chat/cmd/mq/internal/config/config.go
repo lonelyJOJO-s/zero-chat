@@ -15,6 +15,11 @@ type Config struct {
 	// kq : pub sub
 	KqConsumerConf kq.KqConf
 
+	KqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
+
 	// rpc
 	ChatRpcConf zrpc.RpcClientConf
 	UserRpcConf zrpc.RpcClientConf

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
 	"zero-chat/app/chat/cmd/mq/internal/svc"
 	"zero-chat/app/chat/cmd/rpc/pb"
 	userPb "zero-chat/app/user/cmd/rpc/pb"
@@ -46,15 +47,15 @@ func (l *MessageTransferMq) Consume(_, val string) error {
 		logx.WithContext(l.ctx).Errorf("MessageTransferMq->Consume Unmarshal err : %v , val : %s", err, val)
 		return err
 	}
-	if err := l.execService(&message); err != nil {
-		logx.WithContext(l.ctx).Errorf("MessageTransferMq->execService  err : %v , val : %s , message:%+v", err, val, message)
+	if err := l.execService(val, &message); err != nil {
+		logx.Errorf("MessageTransferMq->execService  err : %v , val : %s", err, val)
 		return err
 	}
 
 	return nil
 }
 
-func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
+func (l *MessageTransferMq) execService(val string, message *protocol.Message) (err error) {
 
 	var receivers []int64
 
@@ -74,7 +75,7 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 	case constant.SINGLE:
 		resp, err := l.svcCtx.FriendServiceRpc.GetUuid(l.ctx, &userPb.GetUuidReq{UserId: message.From, FriendId: message.To})
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "get relation uuid error:%s", err.Error())
 		}
 		storeMsg.Conversation = string(resp.Uuid)
 		receivers = []int64{message.To}
@@ -82,15 +83,14 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 		storeMsg.Conversation = strconv.Itoa(int(message.To))
 		resp, err := l.svcCtx.GroupServiceRpc.GetMemberIds(l.ctx, &userPb.GetMemberIdsReq{GroupId: message.To})
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "get group ids error:%s", err.Error())
 		}
 		receivers = resp.Ids
 
 	}
-
 	_, err = l.svcCtx.ChatServiceRpc.StoreAddItem(l.ctx, &pb.StoreAddItemReq{Msg: &storeMsg})
 	if err != nil {
-		return err
+		return errors.Wrapf(err, "insert store-table error:%s", err.Error())
 	}
 	// 2. store into sync-table, (mail —— write expand)
 	syncMsg := pb.SyncTableItem{
@@ -120,23 +120,29 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 			case acquire:
 				// TODO: 添加事务支持
 				defer lock.Release() // 释放锁
-				key := fmt.Sprintf("%s%d:conversation:%s", cacheMQUsersIdPrefix, syncMsg.Sender, storeMsg.Conversation)
+				key := fmt.Sprintf("%s%d:conversation:%s", cacheMQUsersIdPrefix, syncMsg.UserId, storeMsg.Conversation)
 
 				l.svcCtx.Redis.HsetCtx(l.ctx, key, "lastest_content", message.Content)
 
-				sequenceId, err := l.svcCtx.Redis.HgetCtx(l.ctx, key, "sequence_id")
+				_, err := l.svcCtx.Redis.HgetCtx(l.ctx, key, "sequence_id")
 				switch {
 				case err == redis.Nil:
-					l.svcCtx.Redis.HsetCtx(l.ctx, key, "sequence_id", string(syncMsg.SequenceId))
+					l.svcCtx.Redis.HsetCtx(l.ctx, key, "sequence_id", fmt.Sprint(syncMsg.SequenceId))
 				case err != nil:
 					return errors.Wrapf(err, "get cnt of user:%d err:%s", message.From, err.Error())
 				}
 
 				cnt, err := l.svcCtx.Redis.HgetCtx(l.ctx, key, "cnt")
-				if err != nil {
+				switch {
+				case err == redis.Nil:
+					l.svcCtx.Redis.HsetCtx(l.ctx, key, "cnt", "1")
+				case err != nil:
 					return errors.Wrapf(err, "get cnt of user:%d err:%s", message.From, err.Error())
+				default:
+					cnt, _ = tool.StrAutoIncrease(cnt)
+					l.svcCtx.Redis.HsetCtx(l.ctx, key, "cnt", cnt)
+
 				}
-				cnt, _ = tool.StrAutoIncrease(cnt)
 				break FOR
 			case !acquire:
 				time.Sleep(constant.RETRY_INTERVAL * time.Millisecond)
@@ -146,10 +152,9 @@ func (l *MessageTransferMq) execService(message *protocol.Message) (err error) {
 		}
 
 	}
-	// 4. store into redis sub/pub
+	err = l.svcCtx.KqPusherClient.Push(val)
+	if err != nil {
+		return errors.Wrapf(err, "send to msg back to kafka error:%s", err.Error())
+	}
 	return err
-}
-
-func store2redis() {
-
 }

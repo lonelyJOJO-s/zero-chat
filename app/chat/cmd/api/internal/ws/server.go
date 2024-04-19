@@ -11,8 +11,8 @@ import (
 	"zero-chat/common/constant"
 	"zero-chat/common/protocol"
 
-	"github.com/gogo/protobuf/proto"
 	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/protobuf/proto"
 )
 
 var WsServer *Server

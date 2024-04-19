@@ -2,6 +2,7 @@ package tool
 
 import (
 	"crypto/md5"
+	"encoding/base64"
 	"fmt"
 	"io"
 )
@@ -20,4 +21,13 @@ func Md5ByString(str string) string {
 
 func Md5ByBytes(b []byte) string {
 	return fmt.Sprintf("%x", md5.Sum(b))
+}
+
+func Base64Encode(data []byte) string {
+	return base64.StdEncoding.EncodeToString(data)
+}
+
+func Base64Decode(val string) []byte {
+	res, _ := base64.StdEncoding.DecodeString(val)
+	return res
 }

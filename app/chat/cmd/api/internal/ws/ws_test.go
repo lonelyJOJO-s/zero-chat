@@ -15,11 +15,11 @@ func TestProtoGen(t *testing.T) {
 
 	// 创建 Protobuf 消息实例并填充字段
 	msg := protocol.Message{}
-	msg.From = 5
+	msg.From = 6
 	msg.Content = "Hello, this is a message."
 	msg.SendTime = time.Now().UnixNano()
 	msg.ContentType = 0 // 0 for text
-	msg.To = 6
+	msg.To = 8
 	msg.File = []byte("test")
 	msg.ChatType = 0 // o for signle 1 for group
 	msg.Type = "pass"
@@ -29,6 +29,7 @@ func TestProtoGen(t *testing.T) {
 	if err != nil {
 		log.Fatalf("Failed to marshal message: %v", err)
 	}
+
 	res := base64Encode(data)
 	fmt.Println(res)
 

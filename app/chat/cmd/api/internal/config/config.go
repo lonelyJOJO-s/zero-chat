@@ -17,4 +17,8 @@ type Config struct {
 		Brokers []string
 		Topic   string
 	}
+	KqConsumerConf struct {
+		Brokers []string
+		Topic   string
+	}
 }
