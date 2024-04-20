@@ -64,6 +64,7 @@ type IdReq struct {
 }
 
 type LoginResp struct {
+	Id           string `json:"id"`
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
@@ -82,6 +83,7 @@ type RegisterReq struct {
 }
 
 type RegisterResp struct {
+	Id           string `json:"id"`
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`

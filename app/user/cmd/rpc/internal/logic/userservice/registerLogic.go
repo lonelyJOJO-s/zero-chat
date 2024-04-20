@@ -69,6 +69,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	}
 	l.Logger.Info("%s has been registerd successfully.", in.UserInfo.Username)
 	return &pb.RegisterResp{
+		Id:           userId,
 		AccessToken:  tokenResp.AccessToken,
 		AccessExpire: tokenResp.AccessExpire,
 		RefreshAfter: tokenResp.RefreshAfter,

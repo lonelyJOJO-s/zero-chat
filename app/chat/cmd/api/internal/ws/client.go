@@ -16,8 +16,6 @@ import (
 )
 
 const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
 	pongWait = 60 * time.Second
@@ -98,24 +96,7 @@ func (c *Client) WritePump(svcCtx *svc.ServiceContext) {
 		c.Conn.Close()
 	}()
 
-	for {
-		select {
-		case message, ok := <-c.Send:
-			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if !ok {
-				// The hub closed the channel.
-				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
-				return
-			}
-			// 数据回传客户端
-			logx.Info("回写客户端成功")
-			c.Conn.WriteMessage(websocket.BinaryMessage, message)
-
-		case <-ticker.C:
-			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := c.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				return
-			}
-		}
+	for message := range c.Send {
+		c.Conn.WriteMessage(websocket.BinaryMessage, message)
 	}
 }

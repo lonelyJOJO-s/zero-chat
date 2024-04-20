@@ -46,6 +46,7 @@ type (
 		Sex      int8   `json:"sex" validate:"oneof=0 1"`
 	}
 	RegisterResp {
+		Id string `json:"id"`
 		AccessToken  string `json:"accessToken"`
 		AccessExpire int64  `json:"accessExpire"`
 		RefreshAfter int64  `json:"refreshAfter"`
@@ -62,6 +63,7 @@ type (
 		Captcha string `json:"captcha"`
 	}
 	LoginResp {
+		Id string `json:"id"`
 		AccessToken  string `json:"accessToken"`
 		AccessExpire int64  `json:"accessExpire"`
 		RefreshAfter int64  `json:"refreshAfter"`

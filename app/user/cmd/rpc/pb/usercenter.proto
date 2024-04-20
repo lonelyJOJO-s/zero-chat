@@ -54,6 +54,7 @@ message RegisterResp {
   string accessToken = 1;
   int64  accessExpire = 2;
   int64  refreshAfter = 3;
+  int64 id = 4;
 }
 
 // can be phone with password and email with captcha
@@ -67,6 +68,7 @@ message LoginResp {
   string accessToken = 1;
   int64  accessExpire = 2;
   int64  refreshAfter = 3;
+  int64 id = 4;
 }
 
 message GetCaptchaReq {

@@ -13,19 +13,22 @@ import (
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/session/:id/items",
-				Handler: chat.SessionContentListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/ws",
-				Handler: chat.WsHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
+		
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/session/:id/items",
+					Handler: chat.SessionContentListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/ws",
+					Handler: chat.WsHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/chat/api/v1"),
 		rest.WithTimeout(3000*time.Millisecond),
 	)

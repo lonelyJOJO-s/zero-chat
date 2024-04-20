@@ -45,7 +45,7 @@ func getJwtToken(secretKey string, iat, seconds int64, payload int64) (string, e
 	claims := make(jwt.MapClaims)
 	claims["exp"] = iat + seconds
 	claims["iat"] = iat
-	claims[ctxdata.CtxKeyJwtUserId] = payload
+	claims[string(ctxdata.CtxKeyJwtUserId)] = payload
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Claims = claims
 	return token.SignedString([]byte(secretKey))

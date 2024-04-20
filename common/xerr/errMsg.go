@@ -18,6 +18,7 @@ func init() {
 	message[USER_NOT_FOUND] = "当前用户不存在"
 	message[MUST_CHOOSE_HEIR] = "必须选择一个候选人"
 	message[WEBSOCKET_CONN_ERR] = "websocket链接失败"
+	message[UNACCESSABLE_ERROR] = "401未授权"
 }
 
 func MapErrMsg(errcode uint32) string {

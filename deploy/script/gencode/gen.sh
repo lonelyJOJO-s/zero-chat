@@ -31,3 +31,7 @@
 # ./kafka-console-consumer.sh  --bootstrap-server kafka:9092  --topic looklook-log   --from-beginning
 # 命令生产
 # ./kafka-console-producer.sh --bootstrap-server kafka:9092 --topic second
+
+# docker 部署nginx
+ # docker build -t nginx .
+ # docker run -d -p 8888:8081 nginx

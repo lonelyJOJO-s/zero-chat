@@ -17,10 +17,10 @@ type (
 )
 
 @server (
-	prefix:  chat/api/v1
-	group:   chat
-	timeout: 3s
-	jwt:     JwtAuth
+	prefix:     chat/api/v1
+	group:      chat
+	timeout:    3s
+	middleware: Jwt
 )
 service chat {
 	@doc "websocket"

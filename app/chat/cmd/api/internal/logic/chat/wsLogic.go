@@ -39,6 +39,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func (l *WsLogic) Ws(w http.ResponseWriter, r *http.Request) error {
+
 	// upgrade to websocket
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	logx.Infof("user:%d has been connected to ws", userId)
