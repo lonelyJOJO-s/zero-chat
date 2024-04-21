@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"fmt"
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
@@ -36,8 +35,8 @@ func (l *LoginWithUsernameLogic) LoginWithUsername(req *types.UsernameLoginReq) 
 	if err != nil {
 		return nil, err
 	}
+	logx.Info((*pbResp).Id)
 	resp = new(types.LoginResp)
 	copier.Copy(resp, pbResp)
-	fmt.Println(resp)
 	return
 }

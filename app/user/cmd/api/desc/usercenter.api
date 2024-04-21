@@ -47,7 +47,7 @@ service user {
 service user {
 	@doc "user information"
 	@handler Detail
-	get /user/detail (UserInfoReq) returns (UserInfoResp)
+	get /user/detail/:id (UserInfoReq) returns (UserInfoResp)
 
 	@doc "delete user"
 	@handler Delete

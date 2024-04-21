@@ -5,7 +5,10 @@ import (
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
+	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/ctxdata"
 
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,7 +27,10 @@ func NewQuitGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *QuitGro
 }
 
 func (l *QuitGroupLogic) QuitGroup(req *types.GroupQuitReq) (resp *types.Null, err error) {
-	// todo: add your logic here and delete this line
-
+	userId := ctxdata.GetUidFromCtx(l.ctx)
+	_, err = l.svcCtx.GroupServiceRpc.QuitGroup(l.ctx, &pb.QuitGroupReq{UserId: userId, HeirId: req.HeirId, GroupId: req.GroupId})
+	if err != nil {
+		return nil, errors.Wrapf(err, "user_%d quit group error with:%s", userId, err.Error())
+	}
 	return
 }

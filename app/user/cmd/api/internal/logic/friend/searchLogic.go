@@ -5,7 +5,11 @@ import (
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
+	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/ctxdata"
 
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,6 +29,19 @@ func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogi
 
 func (l *SearchLogic) Search(req *types.FriendSearchReq) (resp *types.FriendSearchResp, err error) {
 	// todo: add your logic here and delete this line
-
+	id := ctxdata.GetUidFromCtx(l.ctx)
+	logx.Info(id)
+	friendsResp, err := l.svcCtx.FriendServiceRpc.SearchFriendFuzzy(l.ctx, &pb.SearchFriendFuzzyReq{Id: id, Keyword: req.Keyword})
+	if err != nil {
+		return nil, errors.Wrapf(err, "del friend rpc error with:%s", err.Error())
+	}
+	resp = new(types.FriendSearchResp)
+	for _, user := range friendsResp.Users {
+		u := types.User{}
+		logx.Info(user)
+		copier.Copy(&u, user)
+		logx.Info(u)
+		resp.Users = append(resp.Users, u)
+	}
 	return
 }

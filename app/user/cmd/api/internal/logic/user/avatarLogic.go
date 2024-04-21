@@ -39,6 +39,7 @@ func (l *AvatarLogic) Avatar(req *types.Null, r *http.Request) (resp string, err
 	if err != nil {
 		return
 	}
+	logx.Info(file)
 	resp, err = l.Upload2Oss(file, int(ctxdata.GetUidFromCtx(l.ctx)))
 	if err != nil {
 		return

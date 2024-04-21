@@ -3,7 +3,6 @@ package ctxdata
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -16,8 +15,7 @@ const CtxKeyJwtUserId ContextKey = "jwtUserId"
 
 func GetUidFromCtx(ctx context.Context) int64 {
 	var uid int64
-	fmt.Println(ctx.Value(CtxKeyJwtUserId))
-	if jsonUid, ok := ctx.Value(CtxKeyJwtUserId).(json.Number); ok {
+	if jsonUid, ok := ctx.Value(string(CtxKeyJwtUserId)).(json.Number); ok {
 		if int64Uid, err := jsonUid.Int64(); err == nil {
 			uid = int64Uid
 		} else {

@@ -15,7 +15,7 @@ type FriendIdReq struct {
 }
 
 type FriendSearchReq struct {
-	Keyword string `json:"keyword"`
+	Keyword string `path:"keyword"`
 }
 
 type FriendSearchResp struct {
@@ -64,7 +64,7 @@ type IdReq struct {
 }
 
 type LoginResp struct {
-	Id           string `json:"id"`
+	Id           int64  `json:"id"`
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
@@ -83,7 +83,7 @@ type RegisterReq struct {
 }
 
 type RegisterResp struct {
-	Id           string `json:"id"`
+	Id           int64  `json:"id"`
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
@@ -110,7 +110,7 @@ type UserBasic struct {
 }
 
 type UserInfoReq struct {
-	Id int64 `json:"id"`
+	Id int64 `path:"id"`
 }
 
 type UserInfoResp struct {

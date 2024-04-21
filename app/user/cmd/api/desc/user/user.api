@@ -46,7 +46,7 @@ type (
 		Sex      int8   `json:"sex" validate:"oneof=0 1"`
 	}
 	RegisterResp {
-		Id string `json:"id"`
+		Id int64 `json:"id"`
 		AccessToken  string `json:"accessToken"`
 		AccessExpire int64  `json:"accessExpire"`
 		RefreshAfter int64  `json:"refreshAfter"`
@@ -63,7 +63,7 @@ type (
 		Captcha string `json:"captcha"`
 	}
 	LoginResp {
-		Id string `json:"id"`
+		Id int64 `json:"id"`
 		AccessToken  string `json:"accessToken"`
 		AccessExpire int64  `json:"accessExpire"`
 		RefreshAfter int64  `json:"refreshAfter"`
@@ -72,7 +72,7 @@ type (
 
 type (
 	UserInfoReq {
-		id int64 `json:"id"`
+		id int64 `path:"id"`
 	}
 	UserInfoResp {
 		UserInfo User `json:"user_info"`
@@ -99,7 +99,7 @@ type (
         Users []User  `json:"users"`
     }
     FriendSearchReq{
-        keyword string `json:"keyword"`
+        keyword string `path:"keyword"`
     }
     FriendSearchResp{
         users []User `json:"users"`

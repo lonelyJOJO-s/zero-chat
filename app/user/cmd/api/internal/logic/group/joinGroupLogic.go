@@ -5,7 +5,10 @@ import (
 
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
+	"zero-chat/app/user/cmd/rpc/pb"
+	"zero-chat/common/ctxdata"
 
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,7 +27,10 @@ func NewJoinGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *JoinGro
 }
 
 func (l *JoinGroupLogic) JoinGroup(req *types.GroupId) (resp *types.GroupResp, err error) {
-	// todo: add your logic here and delete this line
-
+	userId := ctxdata.GetUidFromCtx(l.ctx)
+	_, err = l.svcCtx.GroupServiceRpc.JoinGroup(l.ctx, &pb.JoinGroupReq{UserId: userId, GroupId: req.Id})
+	if err != nil {
+		return nil, errors.Wrapf(err, "join group error with:%s", err.Error())
+	}
 	return
 }
