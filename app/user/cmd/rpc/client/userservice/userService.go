@@ -25,6 +25,8 @@ type (
 	DismissGroupResp       = pb.DismissGroupResp
 	GenerateTokenReq       = pb.GenerateTokenReq
 	GenerateTokenResp      = pb.GenerateTokenResp
+	GetAllUsersReq         = pb.GetAllUsersReq
+	GetAllUsersResp        = pb.GetAllUsersResp
 	GetCaptchaReq          = pb.GetCaptchaReq
 	GetCaptchaResp         = pb.GetCaptchaResp
 	GetFriendsReq          = pb.GetFriendsReq
@@ -33,6 +35,8 @@ type (
 	GetGroupInfoResp       = pb.GetGroupInfoResp
 	GetJoinedGroupIdsReq   = pb.GetJoinedGroupIdsReq
 	GetJoinedGroupIdsResp  = pb.GetJoinedGroupIdsResp
+	GetJoinedGroupsReq     = pb.GetJoinedGroupsReq
+	GetJoinedGroupsResp    = pb.GetJoinedGroupsResp
 	GetManagedGroupIdsReq  = pb.GetManagedGroupIdsReq
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq
@@ -73,6 +77,7 @@ type (
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 		SearchUserFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
 		GetCaptcha(ctx context.Context, in *GetCaptchaReq, opts ...grpc.CallOption) (*GetCaptchaResp, error)
+		GetAllUsers(ctx context.Context, in *GetAllUsersReq, opts ...grpc.CallOption) (*GetAllUsersResp, error)
 	}
 
 	defaultUserService struct {
@@ -125,4 +130,9 @@ func (m *defaultUserService) SearchUserFuzzy(ctx context.Context, in *SearchUser
 func (m *defaultUserService) GetCaptcha(ctx context.Context, in *GetCaptchaReq, opts ...grpc.CallOption) (*GetCaptchaResp, error) {
 	client := pb.NewUserServiceClient(m.cli.Conn())
 	return client.GetCaptcha(ctx, in, opts...)
+}
+
+func (m *defaultUserService) GetAllUsers(ctx context.Context, in *GetAllUsersReq, opts ...grpc.CallOption) (*GetAllUsersResp, error) {
+	client := pb.NewUserServiceClient(m.cli.Conn())
+	return client.GetAllUsers(ctx, in, opts...)
 }

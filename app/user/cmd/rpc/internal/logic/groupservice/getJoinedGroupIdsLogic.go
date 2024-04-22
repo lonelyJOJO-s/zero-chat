@@ -26,7 +26,7 @@ func NewGetJoinedGroupIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *GetJoinedGroupIdsLogic) GetJoinedGroupIds(in *pb.GetJoinedGroupIdsReq) (*pb.GetJoinedGroupIdsResp, error) {
-	ans, err := l.svcCtx.UserGroup.FindAllByUserId(l.ctx, in.UserId)
+	ans, err := l.svcCtx.UserGroup.FindAllIdsByUserId(l.ctx, in.UserId)
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get group ids error:%s", err.Error())
 	}

@@ -18,6 +18,7 @@ message User {
   int64 loginInTime = 9;
   int64 createAt = 10;
   int64 updateAt = 11;
+  string avatar = 12;
 }
 
 message UserWithPwd {
@@ -235,6 +236,14 @@ message GetJoinedGroupIdsResp {
   repeated int64 groupIds = 1;
 }
 
+message GetJoinedGroupsReq {
+  int64 userId = 1;
+}
+
+message GetJoinedGroupsResp {
+  repeated Group groups = 1;
+}
+
 message GetUuidReq {
   int64 userId = 1;
   int64 friendId = 2;
@@ -242,6 +251,12 @@ message GetUuidReq {
 
 message GetUuidResp {
    string uuid = 1;
+}
+
+message getAllUsersReq{}
+
+message getAllUsersResp {
+  repeated User users = 1;
 }
 
 //service
@@ -256,6 +271,7 @@ service UserService {
   rpc updateUserInfo(UpdateUserInfoReq) returns (UpdateUserInfoResp);
   rpc searchUserFuzzy(SearchUserFuzzyReq) returns (SearchUserFuzzyResp); 
   rpc getCaptcha(GetCaptchaReq) returns (GetCaptchaResp);
+  rpc getAllUsers(getAllUsersReq) returns (getAllUsersResp);
 }
 
 service FriendService {
@@ -279,4 +295,5 @@ service GroupService {
   rpc GetMemberIds(GetMemberIdsReq) returns (GetMemberIdsResp);
   rpc GetManagedGroupIds(GetManagedGroupIdsReq) returns (GetManagedGroupIdsResp);
   rpc GetJoinedGroupIds(GetJoinedGroupIdsReq) returns (GetJoinedGroupIdsResp);
+  rpc GetJoinedGroups(GetJoinedGroupsReq) returns (GetJoinedGroupsResp);
 }

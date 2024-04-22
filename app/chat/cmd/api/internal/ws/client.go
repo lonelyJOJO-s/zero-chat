@@ -5,7 +5,6 @@
 package ws
 
 import (
-	"time"
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/common/constant"
 	"zero-chat/common/protocol"
@@ -15,17 +14,7 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const (
-
-	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
-
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 512
-)
+// 不同于一般的websocket 后端例子会把ping/pong逻辑写在后端，这里把ping/pong逻辑写在了前端
 
 // Client is a middleman between the websocket Connection and the Hub.
 type Client struct {
@@ -51,10 +40,8 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 		c.Server.UnRegister <- c
 		c.Conn.Close()
 	}()
-	c.Conn.SetReadLimit(maxMessageSize)
-	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
+		c.Conn.PongHandler()
 		_, message, err := c.Conn.ReadMessage()
 		if err != nil {
 			WsServer.UnRegister <- c
@@ -74,12 +61,11 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 			}
 			c.Conn.WriteMessage(websocket.BinaryMessage, pongByte)
 		} else {
-			// 1. send kafka
+			// send kafka
 			err = svcCtx.KqPusherClient.Push(string(message))
 			if err != nil {
 				logx.Error(err)
 			}
-			// WsServer.Broadcast <- message
 		}
 	}
 }
@@ -90,9 +76,7 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 // application ensures that there is at most one writer to a Connection by
 // executing all writes from this goroutine.
 func (c *Client) WritePump(svcCtx *svc.ServiceContext) {
-	ticker := time.NewTicker(pingPeriod)
 	defer func() {
-		ticker.Stop()
 		c.Conn.Close()
 	}()
 

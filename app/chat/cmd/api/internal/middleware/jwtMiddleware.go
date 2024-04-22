@@ -4,12 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"reflect"
 	"strconv"
 	"zero-chat/common/ctxdata"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type JwtMiddleware struct {
@@ -44,8 +42,6 @@ func (m *JwtMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		userId, ok := claims[string(ctxdata.CtxKeyJwtUserId)].(float64)
-		logx.Info(userId)
-		logx.Info(reflect.TypeOf(userId))
 		if !ok {
 			http.Error(w, "Failed to parse CtxKeyJwtUserId", http.StatusInternalServerError)
 			return

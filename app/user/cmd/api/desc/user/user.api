@@ -108,3 +108,17 @@ type (
 		id int64 `path:"id"`
 	}
 )
+
+type (
+	GetAllResp {
+		Users []User  `json:"users"`
+	}
+
+	SearchUsersReq {
+		keyword string `json:"path"`
+	}
+
+	SearchUsersResp {
+		Users []User  `json:"users"`
+	}
+)

@@ -27,6 +27,7 @@ const (
 	UserService_UpdateUserInfo_FullMethodName  = "/pb.UserService/updateUserInfo"
 	UserService_SearchUserFuzzy_FullMethodName = "/pb.UserService/searchUserFuzzy"
 	UserService_GetCaptcha_FullMethodName      = "/pb.UserService/getCaptcha"
+	UserService_GetAllUsers_FullMethodName     = "/pb.UserService/getAllUsers"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -42,6 +43,7 @@ type UserServiceClient interface {
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 	SearchUserFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
 	GetCaptcha(ctx context.Context, in *GetCaptchaReq, opts ...grpc.CallOption) (*GetCaptchaResp, error)
+	GetAllUsers(ctx context.Context, in *GetAllUsersReq, opts ...grpc.CallOption) (*GetAllUsersResp, error)
 }
 
 type userServiceClient struct {
@@ -124,6 +126,15 @@ func (c *userServiceClient) GetCaptcha(ctx context.Context, in *GetCaptchaReq, o
 	return out, nil
 }
 
+func (c *userServiceClient) GetAllUsers(ctx context.Context, in *GetAllUsersReq, opts ...grpc.CallOption) (*GetAllUsersResp, error) {
+	out := new(GetAllUsersResp)
+	err := c.cc.Invoke(ctx, UserService_GetAllUsers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -137,6 +148,7 @@ type UserServiceServer interface {
 	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*UpdateUserInfoResp, error)
 	SearchUserFuzzy(context.Context, *SearchUserFuzzyReq) (*SearchUserFuzzyResp, error)
 	GetCaptcha(context.Context, *GetCaptchaReq) (*GetCaptchaResp, error)
+	GetAllUsers(context.Context, *GetAllUsersReq) (*GetAllUsersResp, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -167,6 +179,9 @@ func (UnimplementedUserServiceServer) SearchUserFuzzy(context.Context, *SearchUs
 }
 func (UnimplementedUserServiceServer) GetCaptcha(context.Context, *GetCaptchaReq) (*GetCaptchaResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCaptcha not implemented")
+}
+func (UnimplementedUserServiceServer) GetAllUsers(context.Context, *GetAllUsersReq) (*GetAllUsersResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllUsers not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -325,6 +340,24 @@ func _UserService_GetCaptcha_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetAllUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUsersReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetAllUsers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetAllUsers_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetAllUsers(ctx, req.(*GetAllUsersReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -363,6 +396,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "getCaptcha",
 			Handler:    _UserService_GetCaptcha_Handler,
+		},
+		{
+			MethodName: "getAllUsers",
+			Handler:    _UserService_GetAllUsers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -620,6 +657,7 @@ const (
 	GroupService_GetMemberIds_FullMethodName       = "/pb.GroupService/GetMemberIds"
 	GroupService_GetManagedGroupIds_FullMethodName = "/pb.GroupService/GetManagedGroupIds"
 	GroupService_GetJoinedGroupIds_FullMethodName  = "/pb.GroupService/GetJoinedGroupIds"
+	GroupService_GetJoinedGroups_FullMethodName    = "/pb.GroupService/GetJoinedGroups"
 )
 
 // GroupServiceClient is the client API for GroupService service.
@@ -637,6 +675,7 @@ type GroupServiceClient interface {
 	GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
 	GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
 	GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
+	GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error)
 }
 
 type groupServiceClient struct {
@@ -737,6 +776,15 @@ func (c *groupServiceClient) GetJoinedGroupIds(ctx context.Context, in *GetJoine
 	return out, nil
 }
 
+func (c *groupServiceClient) GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error) {
+	out := new(GetJoinedGroupsResp)
+	err := c.cc.Invoke(ctx, GroupService_GetJoinedGroups_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GroupServiceServer is the server API for GroupService service.
 // All implementations must embed UnimplementedGroupServiceServer
 // for forward compatibility
@@ -752,6 +800,7 @@ type GroupServiceServer interface {
 	GetMemberIds(context.Context, *GetMemberIdsReq) (*GetMemberIdsResp, error)
 	GetManagedGroupIds(context.Context, *GetManagedGroupIdsReq) (*GetManagedGroupIdsResp, error)
 	GetJoinedGroupIds(context.Context, *GetJoinedGroupIdsReq) (*GetJoinedGroupIdsResp, error)
+	GetJoinedGroups(context.Context, *GetJoinedGroupsReq) (*GetJoinedGroupsResp, error)
 	mustEmbedUnimplementedGroupServiceServer()
 }
 
@@ -788,6 +837,9 @@ func (UnimplementedGroupServiceServer) GetManagedGroupIds(context.Context, *GetM
 }
 func (UnimplementedGroupServiceServer) GetJoinedGroupIds(context.Context, *GetJoinedGroupIdsReq) (*GetJoinedGroupIdsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJoinedGroupIds not implemented")
+}
+func (UnimplementedGroupServiceServer) GetJoinedGroups(context.Context, *GetJoinedGroupsReq) (*GetJoinedGroupsResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJoinedGroups not implemented")
 }
 func (UnimplementedGroupServiceServer) mustEmbedUnimplementedGroupServiceServer() {}
 
@@ -982,6 +1034,24 @@ func _GroupService_GetJoinedGroupIds_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GroupService_GetJoinedGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJoinedGroupsReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).GetJoinedGroups(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GroupService_GetJoinedGroups_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).GetJoinedGroups(ctx, req.(*GetJoinedGroupsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GroupService_ServiceDesc is the grpc.ServiceDesc for GroupService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1028,6 +1098,10 @@ var GroupService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetJoinedGroupIds",
 			Handler:    _GroupService_GetJoinedGroupIds_Handler,
+		},
+		{
+			MethodName: "GetJoinedGroups",
+			Handler:    _GroupService_GetJoinedGroups_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

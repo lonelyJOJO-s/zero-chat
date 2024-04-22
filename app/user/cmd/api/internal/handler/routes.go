@@ -74,6 +74,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/group/update",
 				Handler: group.UpdateGroupHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/groups",
+				Handler: group.GetAllGroupsHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/usercenter/api/v1"),
@@ -130,9 +135,19 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.LoginOutHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/user/search",
+				Handler: user.SearchUsersHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/user/update",
 				Handler: user.UpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users",
+				Handler: user.GetAllHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

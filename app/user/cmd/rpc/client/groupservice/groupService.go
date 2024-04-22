@@ -25,6 +25,8 @@ type (
 	DismissGroupResp       = pb.DismissGroupResp
 	GenerateTokenReq       = pb.GenerateTokenReq
 	GenerateTokenResp      = pb.GenerateTokenResp
+	GetAllUsersReq         = pb.GetAllUsersReq
+	GetAllUsersResp        = pb.GetAllUsersResp
 	GetCaptchaReq          = pb.GetCaptchaReq
 	GetCaptchaResp         = pb.GetCaptchaResp
 	GetFriendsReq          = pb.GetFriendsReq
@@ -33,6 +35,8 @@ type (
 	GetGroupInfoResp       = pb.GetGroupInfoResp
 	GetJoinedGroupIdsReq   = pb.GetJoinedGroupIdsReq
 	GetJoinedGroupIdsResp  = pb.GetJoinedGroupIdsResp
+	GetJoinedGroupsReq     = pb.GetJoinedGroupsReq
+	GetJoinedGroupsResp    = pb.GetJoinedGroupsResp
 	GetManagedGroupIdsReq  = pb.GetManagedGroupIdsReq
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq
@@ -75,6 +79,7 @@ type (
 		GetMemberIds(ctx context.Context, in *GetMemberIdsReq, opts ...grpc.CallOption) (*GetMemberIdsResp, error)
 		GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
 		GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
+		GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error)
 	}
 
 	defaultGroupService struct {
@@ -137,4 +142,9 @@ func (m *defaultGroupService) GetManagedGroupIds(ctx context.Context, in *GetMan
 func (m *defaultGroupService) GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error) {
 	client := pb.NewGroupServiceClient(m.cli.Conn())
 	return client.GetJoinedGroupIds(ctx, in, opts...)
+}
+
+func (m *defaultGroupService) GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error) {
+	client := pb.NewGroupServiceClient(m.cli.Conn())
+	return client.GetJoinedGroups(ctx, in, opts...)
 }

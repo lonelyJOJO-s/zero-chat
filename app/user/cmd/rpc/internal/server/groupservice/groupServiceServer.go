@@ -72,3 +72,8 @@ func (s *GroupServiceServer) GetJoinedGroupIds(ctx context.Context, in *pb.GetJo
 	l := groupservicelogic.NewGetJoinedGroupIdsLogic(ctx, s.svcCtx)
 	return l.GetJoinedGroupIds(in)
 }
+
+func (s *GroupServiceServer) GetJoinedGroups(ctx context.Context, in *pb.GetJoinedGroupsReq) (*pb.GetJoinedGroupsResp, error) {
+	l := groupservicelogic.NewGetJoinedGroupsLogic(ctx, s.svcCtx)
+	return l.GetJoinedGroups(in)
+}

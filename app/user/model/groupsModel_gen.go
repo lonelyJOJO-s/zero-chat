@@ -68,7 +68,7 @@ func newGroupsModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) 
 func (m *defaultGroupsModel) Delete(ctx context.Context, id int64) error {
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		query := fmt.Sprintf("delete from %s where `id` = ? and deleted_at is null", m.table)
 		return conn.ExecCtx(ctx, query, id)
 	}, usercenterGroupsIdKey)
 	return err
@@ -88,7 +88,7 @@ func (m *defaultGroupsModel) FindOne(ctx context.Context, id int64) (*Groups, er
 	usercenterGroupsIdKey := fmt.Sprintf("%s%v", cacheUsercenterGroupsIdPrefix, id)
 	var resp Groups
 	err := m.QueryRowCtx(ctx, &resp, usercenterGroupsIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? and owner_id != 0 limit 1", groupsRows, m.table)
+		query := fmt.Sprintf("select %s from %s where `id` = ? and owner_id != 0 and deleted_at is null limit 1", groupsRows, m.table)
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
 	switch err {
@@ -110,7 +110,7 @@ func (m *defaultGroupsModel) FindAllByUserId(ctx context.Context, rowBuilder squ
 		rowBuilder = rowBuilder.OrderBy(orderBy)
 	}
 
-	query, values, err := rowBuilder.ToSql()
+	query, values, err := rowBuilder.Where(squirrel.Eq{"deleted_at": nil}).ToSql()
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (m *defaultGroupsModel) FindAllByUserId(ctx context.Context, rowBuilder squ
 }
 
 func (m *defaultGroupsModel) FindAll(ctx context.Context, rowBuilder squirrel.SelectBuilder, orderBy string) ([]*Groups, error) {
-rowBuilder = rowBuilder.Columns(groupsRows)
+	rowBuilder = rowBuilder.Columns(groupsRows)
 
 	if orderBy == "" {
 		rowBuilder = rowBuilder.OrderBy("id DESC")
@@ -134,7 +134,7 @@ rowBuilder = rowBuilder.Columns(groupsRows)
 		rowBuilder = rowBuilder.OrderBy(orderBy)
 	}
 
-	query, values, err := rowBuilder.ToSql()
+	query, values, err := rowBuilder.Where(squirrel.Eq{"deleted_at": nil}).ToSql()
 	if err != nil {
 		return nil, err
 	}

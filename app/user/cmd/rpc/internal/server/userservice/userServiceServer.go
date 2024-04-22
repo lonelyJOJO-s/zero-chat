@@ -62,3 +62,8 @@ func (s *UserServiceServer) GetCaptcha(ctx context.Context, in *pb.GetCaptchaReq
 	l := userservicelogic.NewGetCaptchaLogic(ctx, s.svcCtx)
 	return l.GetCaptcha(in)
 }
+
+func (s *UserServiceServer) GetAllUsers(ctx context.Context, in *pb.GetAllUsersReq) (*pb.GetAllUsersResp, error) {
+	l := userservicelogic.NewGetAllUsersLogic(ctx, s.svcCtx)
+	return l.GetAllUsers(in)
+}

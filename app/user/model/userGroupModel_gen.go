@@ -39,7 +39,7 @@ type (
 		DelAllRelationByGroupId(ctx context.Context, builder squirrel.UpdateBuilder, orderBy string) error
 		SelectBuilder() squirrel.SelectBuilder
 		UpdateBuilder() squirrel.UpdateBuilder
-		FindAllByUserId(ctx context.Context, id int64) ([]int64, error)
+		FindAllIdsByUserId(ctx context.Context, id int64) ([]int64, error)
 	}
 
 	defaultUserGroupModel struct {
@@ -71,7 +71,7 @@ func (m *defaultUserGroupModel) UpdateBuilder() squirrel.UpdateBuilder {
 	return squirrel.Update(m.table)
 }
 
-func (m *defaultUserGroupModel) FindAllByUserId(ctx context.Context, id int64) (ids []int64, err error) {
+func (m *defaultUserGroupModel) FindAllIdsByUserId(ctx context.Context, id int64) (ids []int64, err error) {
 	query := fmt.Sprintf("select `group_id` from %s where `user_id`= ? and deleted_at is null", m.table)
 	
 	err = m.QueryRowsNoCacheCtx(ctx, &ids, query, id)

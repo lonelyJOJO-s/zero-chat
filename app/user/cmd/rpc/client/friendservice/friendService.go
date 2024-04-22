@@ -25,6 +25,8 @@ type (
 	DismissGroupResp       = pb.DismissGroupResp
 	GenerateTokenReq       = pb.GenerateTokenReq
 	GenerateTokenResp      = pb.GenerateTokenResp
+	GetAllUsersReq         = pb.GetAllUsersReq
+	GetAllUsersResp        = pb.GetAllUsersResp
 	GetCaptchaReq          = pb.GetCaptchaReq
 	GetCaptchaResp         = pb.GetCaptchaResp
 	GetFriendsReq          = pb.GetFriendsReq
@@ -33,6 +35,8 @@ type (
 	GetGroupInfoResp       = pb.GetGroupInfoResp
 	GetJoinedGroupIdsReq   = pb.GetJoinedGroupIdsReq
 	GetJoinedGroupIdsResp  = pb.GetJoinedGroupIdsResp
+	GetJoinedGroupsReq     = pb.GetJoinedGroupsReq
+	GetJoinedGroupsResp    = pb.GetJoinedGroupsResp
 	GetManagedGroupIdsReq  = pb.GetManagedGroupIdsReq
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq

@@ -26,6 +26,14 @@ type FriendsResp struct {
 	Users []User `json:"users"`
 }
 
+type GetAllGroupsResp struct {
+	Groups []GroupWithId `json:"groups"`
+}
+
+type GetAllResp struct {
+	Users []User `json:"users"`
+}
+
 type Group struct {
 	Name      string `json:"name"`
 	Desc      string `json:"desc"`
@@ -87,6 +95,14 @@ type RegisterResp struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type SearchUsersReq struct {
+	Keyword string `json:"path"`
+}
+
+type SearchUsersResp struct {
+	Users []User `json:"users"`
 }
 
 type User struct {

@@ -37,4 +37,8 @@ type (
         GroupId int64 `json:"group_id"`
         HeirId int64 `json:"heir_id"`
     }
+
+    GetAllGroupsResp {
+        groups []GroupWithId `json:"groups"`
+    }
 )

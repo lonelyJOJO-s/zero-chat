@@ -64,6 +64,14 @@ service user {
 	@doc "post user avatar"
 	@handler Avatar
 	post /user/avatar (Null) returns (string)
+
+	@doc "get all users"
+	@handler GetAll
+	get /users (Null) returns (GetAllResp)
+
+	@doc "search users who are not friends yet"
+	@handler SearchUsers
+	get /user/search (SearchUsersReq) returns (SearchUsersResp)
 }
 
 @server (
@@ -119,5 +127,9 @@ service user {
 	@doc "dismiss a group"
 	@handler DismissGroup
 	delete /group/:id (GroupId) returns (Null)
+
+	@doc "get groups belong to user"
+	@handler GetAllGroups
+	get /groups (Null) returns (GetAllGroupsResp)
 }
 

@@ -26,9 +26,5 @@ service chat {
 	@doc "websocket"
 	@handler ws
 	get /ws
-
-	@doc "acquire session msg list(page-divided;time-ordered)"
-	@handler SessionContentList
-	get /session/:id/items (SessionContentListReq) returns (SessionContentListResp)
 }
 
