@@ -30,7 +30,7 @@ type Message struct {
 	SendTime    int64  `protobuf:"varint,3,opt,name=sendTime,proto3" json:"sendTime,omitempty"`
 	ContentType int32  `protobuf:"varint,4,opt,name=contentType,proto3" json:"contentType,omitempty"` // text or audio or video
 	To          int64  `protobuf:"varint,5,opt,name=to,proto3" json:"to,omitempty"`
-	File        []byte `protobuf:"bytes,6,opt,name=file,proto3" json:"file,omitempty"`  // 文件内容
+	File        string `protobuf:"bytes,6,opt,name=file,proto3" json:"file,omitempty"`  // 文件内容
 	ChatType    int32  `protobuf:"varint,7,opt,name=chatType,proto3" json:"chatType,omitempty"` // group or single
 	Type        string `protobuf:"bytes,8,opt,name=type,proto3" json:"type,omitempty"`          // transfer type: heartbeat or webrtc
 }
@@ -102,11 +102,11 @@ func (x *Message) GetTo() int64 {
 	return 0
 }
 
-func (x *Message) GetFile() []byte {
+func (x *Message) GetFile() string {
 	if x != nil {
 		return x.File
 	}
-	return nil
+	return ""
 }
 
 func (x *Message) GetChatType() int32 {

@@ -19,22 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TableService_StoreAddItem_FullMethodName         = "/pb.TableService/StoreAddItem"
-	TableService_GetStoreItemsBySlice_FullMethodName = "/pb.TableService/GetStoreItemsBySlice"
-	TableService_SyncAddItem_FullMethodName          = "/pb.TableService/SyncAddItem"
-	TableService_SyncGetUnreadItems_FullMethodName   = "/pb.TableService/SyncGetUnreadItems"
+	TableService_StoreAddItem_FullMethodName      = "/pb.TableService/StoreAddItem"
+	TableService_SyncAddItem_FullMethodName       = "/pb.TableService/SyncAddItem"
+	TableService_Send_FullMethodName              = "/pb.TableService/Send"
+	TableService_GetSyncMessage_FullMethodName    = "/pb.TableService/GetSyncMessage"
+	TableService_GetHistoryMessage_FullMethodName = "/pb.TableService/GetHistoryMessage"
 )
 
 // TableServiceClient is the client API for TableService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TableServiceClient interface {
-	// store table
+	// has been depricated
 	StoreAddItem(ctx context.Context, in *StoreAddItemReq, opts ...grpc.CallOption) (*StoreAddItemResp, error)
-	GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error)
-	// sync table
 	SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error)
-	SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error)
+	Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error)
+	GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error)
+	GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error)
 }
 
 type tableServiceClient struct {
@@ -54,15 +55,6 @@ func (c *tableServiceClient) StoreAddItem(ctx context.Context, in *StoreAddItemR
 	return out, nil
 }
 
-func (c *tableServiceClient) GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error) {
-	out := new(GetStoreItemsBySliceResp)
-	err := c.cc.Invoke(ctx, TableService_GetStoreItemsBySlice_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *tableServiceClient) SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error) {
 	out := new(SyncAddItemResp)
 	err := c.cc.Invoke(ctx, TableService_SyncAddItem_FullMethodName, in, out, opts...)
@@ -72,9 +64,27 @@ func (c *tableServiceClient) SyncAddItem(ctx context.Context, in *SyncAddItemReq
 	return out, nil
 }
 
-func (c *tableServiceClient) SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error) {
-	out := new(SyncGetUnreadItemsResp)
-	err := c.cc.Invoke(ctx, TableService_SyncGetUnreadItems_FullMethodName, in, out, opts...)
+func (c *tableServiceClient) Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error) {
+	out := new(SendResp)
+	err := c.cc.Invoke(ctx, TableService_Send_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tableServiceClient) GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error) {
+	out := new(GetSyncMessageResp)
+	err := c.cc.Invoke(ctx, TableService_GetSyncMessage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tableServiceClient) GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error) {
+	out := new(GetHistoryMessageResp)
+	err := c.cc.Invoke(ctx, TableService_GetHistoryMessage_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,12 +95,12 @@ func (c *tableServiceClient) SyncGetUnreadItems(ctx context.Context, in *SyncGet
 // All implementations must embed UnimplementedTableServiceServer
 // for forward compatibility
 type TableServiceServer interface {
-	// store table
+	// has been depricated
 	StoreAddItem(context.Context, *StoreAddItemReq) (*StoreAddItemResp, error)
-	GetStoreItemsBySlice(context.Context, *GetStoreItemsBySliceReq) (*GetStoreItemsBySliceResp, error)
-	// sync table
 	SyncAddItem(context.Context, *SyncAddItemReq) (*SyncAddItemResp, error)
-	SyncGetUnreadItems(context.Context, *SyncGetUnreadItemsReq) (*SyncGetUnreadItemsResp, error)
+	Send(context.Context, *SendReq) (*SendResp, error)
+	GetSyncMessage(context.Context, *GetSyncMessageReq) (*GetSyncMessageResp, error)
+	GetHistoryMessage(context.Context, *GetHistoryMessageReq) (*GetHistoryMessageResp, error)
 	mustEmbedUnimplementedTableServiceServer()
 }
 
@@ -101,14 +111,17 @@ type UnimplementedTableServiceServer struct {
 func (UnimplementedTableServiceServer) StoreAddItem(context.Context, *StoreAddItemReq) (*StoreAddItemResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StoreAddItem not implemented")
 }
-func (UnimplementedTableServiceServer) GetStoreItemsBySlice(context.Context, *GetStoreItemsBySliceReq) (*GetStoreItemsBySliceResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetStoreItemsBySlice not implemented")
-}
 func (UnimplementedTableServiceServer) SyncAddItem(context.Context, *SyncAddItemReq) (*SyncAddItemResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SyncAddItem not implemented")
 }
-func (UnimplementedTableServiceServer) SyncGetUnreadItems(context.Context, *SyncGetUnreadItemsReq) (*SyncGetUnreadItemsResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SyncGetUnreadItems not implemented")
+func (UnimplementedTableServiceServer) Send(context.Context, *SendReq) (*SendResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Send not implemented")
+}
+func (UnimplementedTableServiceServer) GetSyncMessage(context.Context, *GetSyncMessageReq) (*GetSyncMessageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSyncMessage not implemented")
+}
+func (UnimplementedTableServiceServer) GetHistoryMessage(context.Context, *GetHistoryMessageReq) (*GetHistoryMessageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHistoryMessage not implemented")
 }
 func (UnimplementedTableServiceServer) mustEmbedUnimplementedTableServiceServer() {}
 
@@ -141,24 +154,6 @@ func _TableService_StoreAddItem_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TableService_GetStoreItemsBySlice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetStoreItemsBySliceReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TableServiceServer).GetStoreItemsBySlice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: TableService_GetStoreItemsBySlice_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TableServiceServer).GetStoreItemsBySlice(ctx, req.(*GetStoreItemsBySliceReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _TableService_SyncAddItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SyncAddItemReq)
 	if err := dec(in); err != nil {
@@ -177,20 +172,56 @@ func _TableService_SyncAddItem_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _TableService_SyncGetUnreadItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SyncGetUnreadItemsReq)
+func _TableService_Send_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TableServiceServer).SyncGetUnreadItems(ctx, in)
+		return srv.(TableServiceServer).Send(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: TableService_SyncGetUnreadItems_FullMethodName,
+		FullMethod: TableService_Send_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TableServiceServer).SyncGetUnreadItems(ctx, req.(*SyncGetUnreadItemsReq))
+		return srv.(TableServiceServer).Send(ctx, req.(*SendReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TableService_GetSyncMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSyncMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).GetSyncMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_GetSyncMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).GetSyncMessage(ctx, req.(*GetSyncMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TableService_GetHistoryMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHistoryMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).GetHistoryMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_GetHistoryMessage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).GetHistoryMessage(ctx, req.(*GetHistoryMessageReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -207,16 +238,20 @@ var TableService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TableService_StoreAddItem_Handler,
 		},
 		{
-			MethodName: "GetStoreItemsBySlice",
-			Handler:    _TableService_GetStoreItemsBySlice_Handler,
-		},
-		{
 			MethodName: "SyncAddItem",
 			Handler:    _TableService_SyncAddItem_Handler,
 		},
 		{
-			MethodName: "SyncGetUnreadItems",
-			Handler:    _TableService_SyncGetUnreadItems_Handler,
+			MethodName: "Send",
+			Handler:    _TableService_Send_Handler,
+		},
+		{
+			MethodName: "GetSyncMessage",
+			Handler:    _TableService_GetSyncMessage_Handler,
+		},
+		{
+			MethodName: "GetHistoryMessage",
+			Handler:    _TableService_GetHistoryMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

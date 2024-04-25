@@ -8,13 +8,26 @@ info (
 	version: "v1"
 )
 
-type (
-	// like session/1/items?limit=10&page=1
-	SessionContentListReq {
-		id int64 `path:"id"`
-	}
-	SessionContentListResp  {}
-)
+type Message {
+	From         int64  `json:"from"`
+	Content      string `json:"content"`
+	SendTime     int64  `json:"send_time"`
+	ContentType  int32  `json:"content_type"` // text or audio or video
+	File         string `json:"file"`
+	ChatType     int32  `json:"chat_type"` // group or single
+	FromUsername string `json:"fromUsername"`
+	Avatar       string `json:"avatar"`
+}
+
+type GetHistoryMessageReq {
+	ChatType int32 `query:"chat_type"`
+	Id       int32 `query:"id"`
+	Cnt      int64 `query:"cnt"`
+}
+
+type GetHistoryMessageResp {
+	Msgs []Message `json:"msgs"`
+}
 
 @server (
 	prefix:     chat/api/v1
@@ -26,5 +39,17 @@ service chat {
 	@doc "websocket"
 	@handler ws
 	get /ws
+}
+
+@server (
+	prefix:  chat/api/v1
+	group:   chat
+	timeout: 3s
+	jwt:     Auth
+)
+service chat {
+	@doc "get history message"
+	@handler GetHistoryMessage
+	get /history-message (GetHistoryMessageReq) returns (GetHistoryMessageResp)
 }
 

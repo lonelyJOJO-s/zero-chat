@@ -20,7 +20,7 @@ type ServiceContext struct {
 	FriendServiceRpc friendservice.FriendService
 	ChatServiceRpc   tableservice.TableService
 	KqPusherClient   *kq.Pusher
-	JwtMiddleware    rest.Middleware
+	Jwt              rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -31,6 +31,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FriendServiceRpc: friendservice.NewFriendService(zrpc.MustNewClient(c.UsercenterRpcConf)),
 		ChatServiceRpc:   tableservice.NewTableService(zrpc.MustNewClient(c.ChatRpcConf)),
 		KqPusherClient:   kq.NewPusher(c.KqPusherConf.Brokers, c.KqPusherConf.Topic),
-		JwtMiddleware:    middleware.NewJwtMiddleware(c.JwtAuth.AccessSecret).Handle,
+		Jwt:              middleware.NewJwtMiddleware(c.JwtAuth.AccessSecret).Handle,
 	}
 }

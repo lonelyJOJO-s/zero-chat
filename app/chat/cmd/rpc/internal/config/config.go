@@ -10,5 +10,7 @@ type Config struct {
 		OtsAkEnv string
 		OtsSkEnv string
 		Endpoint string
+		Instance string
 	}
+	UsercenterRpcConf zrpc.RpcClientConf
 }

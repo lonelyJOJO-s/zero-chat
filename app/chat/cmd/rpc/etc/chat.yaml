@@ -27,4 +27,13 @@ TableStore:
   OtsAkEnv: ${OTS_AK_ENV}
   OtsSkEnv: ${OTS_SK_ENV}
   Endpoint: ${ENDPOINT}
+  Instance: ${INSTANCE}
+
+
+UsercenterRpcConf:
+  Etcd:
+    Hosts:
+    - 127.0.0.1:2379
+    Key: usercenter.rpc
+  NonBlock: true
 

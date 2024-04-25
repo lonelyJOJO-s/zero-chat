@@ -22,24 +22,28 @@ func NewTableServiceServer(svcCtx *svc.ServiceContext) *TableServiceServer {
 	}
 }
 
-// store table
+// has been depricated
 func (s *TableServiceServer) StoreAddItem(ctx context.Context, in *pb.StoreAddItemReq) (*pb.StoreAddItemResp, error) {
 	l := logic.NewStoreAddItemLogic(ctx, s.svcCtx)
 	return l.StoreAddItem(in)
 }
 
-func (s *TableServiceServer) GetStoreItemsBySlice(ctx context.Context, in *pb.GetStoreItemsBySliceReq) (*pb.GetStoreItemsBySliceResp, error) {
-	l := logic.NewGetStoreItemsBySliceLogic(ctx, s.svcCtx)
-	return l.GetStoreItemsBySlice(in)
-}
-
-// sync table
 func (s *TableServiceServer) SyncAddItem(ctx context.Context, in *pb.SyncAddItemReq) (*pb.SyncAddItemResp, error) {
 	l := logic.NewSyncAddItemLogic(ctx, s.svcCtx)
 	return l.SyncAddItem(in)
 }
 
-func (s *TableServiceServer) SyncGetUnreadItems(ctx context.Context, in *pb.SyncGetUnreadItemsReq) (*pb.SyncGetUnreadItemsResp, error) {
-	l := logic.NewSyncGetUnreadItemsLogic(ctx, s.svcCtx)
-	return l.SyncGetUnreadItems(in)
+func (s *TableServiceServer) Send(ctx context.Context, in *pb.SendReq) (*pb.SendResp, error) {
+	l := logic.NewSendLogic(ctx, s.svcCtx)
+	return l.Send(in)
+}
+
+func (s *TableServiceServer) GetSyncMessage(ctx context.Context, in *pb.GetSyncMessageReq) (*pb.GetSyncMessageResp, error) {
+	l := logic.NewGetSyncMessageLogic(ctx, s.svcCtx)
+	return l.GetSyncMessage(in)
+}
+
+func (s *TableServiceServer) GetHistoryMessage(ctx context.Context, in *pb.GetHistoryMessageReq) (*pb.GetHistoryMessageResp, error) {
+	l := logic.NewGetHistoryMessageLogic(ctx, s.svcCtx)
+	return l.GetHistoryMessage(in)
 }

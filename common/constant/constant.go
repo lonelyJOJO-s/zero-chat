@@ -2,7 +2,7 @@ package constant
 
 // content_type
 const (
-	TEXT = iota
+	TEXT = iota + 1
 	FILE
 	IMAGE
 	AUDIO
@@ -13,7 +13,7 @@ const (
 
 // chat_type
 const (
-	SINGLE = iota
+	SINGLE = iota + 1
 	GROUP
 )
 

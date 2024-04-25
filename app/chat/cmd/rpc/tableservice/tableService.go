@@ -13,28 +13,29 @@ import (
 )
 
 type (
-	GetStoreItemsBySliceReq  = pb.GetStoreItemsBySliceReq
-	GetStoreItemsBySliceResp = pb.GetStoreItemsBySliceResp
-	Message                  = pb.Message
-	Null                     = pb.Null
-	SendReq                  = pb.SendReq
-	StoreAddItemReq          = pb.StoreAddItemReq
-	StoreAddItemResp         = pb.StoreAddItemResp
-	StoreTableItem           = pb.StoreTableItem
-	SyncAddItemReq           = pb.SyncAddItemReq
-	SyncAddItemResp          = pb.SyncAddItemResp
-	SyncGetUnreadItemsReq    = pb.SyncGetUnreadItemsReq
-	SyncGetUnreadItemsResp   = pb.SyncGetUnreadItemsResp
-	SyncReturnItem           = pb.SyncReturnItem
-	SyncTableItem            = pb.SyncTableItem
+	GetHistoryMessageReq  = pb.GetHistoryMessageReq
+	GetHistoryMessageResp = pb.GetHistoryMessageResp
+	GetSyncMessageReq     = pb.GetSyncMessageReq
+	GetSyncMessageResp    = pb.GetSyncMessageResp
+	Message               = pb.Message
+	MessageWithSeq        = pb.MessageWithSeq
+	Null                  = pb.Null
+	SendReq               = pb.SendReq
+	SendResp              = pb.SendResp
+	StoreAddItemReq       = pb.StoreAddItemReq
+	StoreAddItemResp      = pb.StoreAddItemResp
+	StoreTableItem        = pb.StoreTableItem
+	SyncAddItemReq        = pb.SyncAddItemReq
+	SyncAddItemResp       = pb.SyncAddItemResp
+	SyncTableItem         = pb.SyncTableItem
 
 	TableService interface {
-		// store table
+		// has been depricated
 		StoreAddItem(ctx context.Context, in *StoreAddItemReq, opts ...grpc.CallOption) (*StoreAddItemResp, error)
-		GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error)
-		// sync table
 		SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error)
-		SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error)
+		Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error)
+		GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error)
+		GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error)
 	}
 
 	defaultTableService struct {
@@ -48,24 +49,28 @@ func NewTableService(cli zrpc.Client) TableService {
 	}
 }
 
-// store table
+// has been depricated
 func (m *defaultTableService) StoreAddItem(ctx context.Context, in *StoreAddItemReq, opts ...grpc.CallOption) (*StoreAddItemResp, error) {
 	client := pb.NewTableServiceClient(m.cli.Conn())
 	return client.StoreAddItem(ctx, in, opts...)
 }
 
-func (m *defaultTableService) GetStoreItemsBySlice(ctx context.Context, in *GetStoreItemsBySliceReq, opts ...grpc.CallOption) (*GetStoreItemsBySliceResp, error) {
-	client := pb.NewTableServiceClient(m.cli.Conn())
-	return client.GetStoreItemsBySlice(ctx, in, opts...)
-}
-
-// sync table
 func (m *defaultTableService) SyncAddItem(ctx context.Context, in *SyncAddItemReq, opts ...grpc.CallOption) (*SyncAddItemResp, error) {
 	client := pb.NewTableServiceClient(m.cli.Conn())
 	return client.SyncAddItem(ctx, in, opts...)
 }
 
-func (m *defaultTableService) SyncGetUnreadItems(ctx context.Context, in *SyncGetUnreadItemsReq, opts ...grpc.CallOption) (*SyncGetUnreadItemsResp, error) {
+func (m *defaultTableService) Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error) {
 	client := pb.NewTableServiceClient(m.cli.Conn())
-	return client.SyncGetUnreadItems(ctx, in, opts...)
+	return client.Send(ctx, in, opts...)
+}
+
+func (m *defaultTableService) GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error) {
+	client := pb.NewTableServiceClient(m.cli.Conn())
+	return client.GetSyncMessage(ctx, in, opts...)
+}
+
+func (m *defaultTableService) GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error) {
+	client := pb.NewTableServiceClient(m.cli.Conn())
+	return client.GetHistoryMessage(ctx, in, opts...)
 }

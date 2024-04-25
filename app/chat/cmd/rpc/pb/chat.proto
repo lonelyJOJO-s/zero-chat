@@ -6,39 +6,43 @@ message Message {
     int64 from = 1;
     string content = 2;
     int64 sendTime = 3;
-    int32 contentType =4; // text or audio or video
-    repeated int64 to = 5;
-    bytes file = 6;
+    int32 contentType = 4; // text or audio or video
+    int64 to = 5;
+    string file = 6;
     int32 chatType = 7; // group or single
-    string type = 8; // transfer type: heartbeat or webrtc
+}
+
+message MessageWithSeq {
+    int64 from = 1;
+    string content = 2;
+    int64 sendTime = 3;
+    int32 contentType = 4; // text or audio or video
+    int64 to = 5;
+    string file = 6;
+    int32 chatType = 7; // group or single
+    int64 sequence = 8;
 }
 
 message StoreTableItem {
     string timeLineId = 1;
-    int64 sequenceId = 2;
-    string conversation = 3;
-    int32 msgType = 4; // group or signle
-    int32 contentType = 5;  // text, pic or others
-    int64 sendTime = 6;
-    int64 sender = 7;
-    string content = 8;
-    bytes file = 9;
+    string conversation = 2;
+    int32 msgType = 3; // group or signle
+    int32 contentType = 4;  // text, pic or others
+    int64 sendTime = 5;
+    int64 sender = 6;
+    string content = 7;
+    string file = 8;
 }   
 
 message SyncTableItem {
     string timeLineId = 1;
-    int64 sequenceId = 2;
-    int64 userId = 3;
-    int32 msgType = 4; // group or signle
-    int32 contentType = 5;  // text, pic or others
-    int64 sendTime = 6;
-    int64 sender = 7;
-    string content = 8;
-    bytes file = 9;
-}
-
-message SendReq {
-    Message msg = 1;
+    int64 userId = 2;
+    int32 msgType = 3; // group or signle
+    int32 contentType = 4;  // text, pic or others
+    int64 sendTime = 5;
+    int64 sender = 6;
+    string content = 7;
+    string file = 8;
 }
 
 message Null {
@@ -50,17 +54,7 @@ message StoreAddItemReq{
 
 message StoreAddItemResp{
     string timeLineId = 1;
-}
-
-message GetStoreItemsBySliceReq {
-    int64 page = 1;
-    int32 type = 2;
-    string conversation = 3;
-    int64 sequenceId = 4; // default: latest
-}
-
-message GetStoreItemsBySliceResp {
-    repeated StoreTableItem items = 1;
+    int64 SequenceId = 2;
 }
 
 message SyncAddItemReq{
@@ -69,33 +63,48 @@ message SyncAddItemReq{
 
 message SyncAddItemResp {
     string timeLineId = 1;
+    int64 SequenceId = 2;
 }
 
-message SyncGetUnreadItemsReq {
-    int64 sequenceId = 1;
+message SendReq {
+    Message msg = 1;
 }
 
-message SyncReturnItem{
-    string conversion = 1; 
-    SyncTableItem shortcut = 2;
-    int64 unreadCnt = 3;
-
+message SendResp {
+    int64 storeSequence = 1; 
+    int64 syncSequence = 2; 
 }
 
-message SyncGetUnreadItemsResp {
-    repeated SyncReturnItem body = 1;
+message GetSyncMessageReq {
+    int64 lastRead = 1;
+    int64 userId = 2; 
 }
+
+message GetSyncMessageResp {
+    repeated MessageWithSeq msg = 1;
+}
+
+message GetHistoryMessageReq {
+    int64 groupId = 1;
+    int64 userA = 2;
+    int64 userB = 3; 
+    int64 nums = 4;
+}
+
+message GetHistoryMessageResp{
+    repeated MessageWithSeq msg = 1;
+}
+
 
 // 负责阿里云table-store相关操作
 service TableService {
-    // store table
+    // has been depricated
     rpc StoreAddItem (StoreAddItemReq) returns (StoreAddItemResp);
-    rpc GetStoreItemsBySlice (GetStoreItemsBySliceReq) returns (GetStoreItemsBySliceResp);
-    // del operation
-
-
-    // sync table
     rpc SyncAddItem (SyncAddItemReq) returns (SyncAddItemResp);
-    rpc SyncGetUnreadItems (SyncGetUnreadItemsReq) returns (SyncGetUnreadItemsResp);
+
+    
+    rpc Send(SendReq) returns (SendResp);
+    rpc GetSyncMessage(GetSyncMessageReq) returns (GetSyncMessageResp);
+    rpc GetHistoryMessage(GetHistoryMessageReq) returns (GetHistoryMessageResp);
 }
 

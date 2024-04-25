@@ -1,26 +1,33 @@
 package model
 
 const (
-	TimeLineId   = "timeline_id"
-	SequenceId   = "sequence_id"
-	Conversation = "conversation"
-	Content      = "content"
-	MsgType      = "msg_type"
-	SendTime     = "send_time"
-	Sender       = "sender"
-	Type         = "type"
-	File         = "file"
+	TimelineId   = "TimelineId"
+	Sequence     = "Sequence"
+	Id           = "Id"
+	Conversation = "Conversation"
+	Content      = "Content"
+	MsgType      = "MsgType"
+	SendTime     = "Timestamp"
+	Sender       = "Sender"
+	Type         = "Type"
+	File         = "File"
 	UserId       = "user_id"
 )
 
-func NewPrimaryKeys(timeLineId string, sequenceId int64) map[string]any {
+func NewPrimaryKeys(timeLineId string, sequence int64) map[string]any {
 	return map[string]any{
-		TimeLineId: timeLineId,
-		SequenceId: sequenceId,
+		TimelineId: timeLineId,
+		Sequence:   sequence,
 	}
 }
 
 type Opt func(*map[string]any)
+
+func WithId(val string) Opt {
+	return func(c *map[string]any) {
+		(*c)[Id] = val
+	}
+}
 
 func WithConversation(val string) Opt {
 	return func(c *map[string]any) {
@@ -52,7 +59,7 @@ func WithType(val int32) Opt {
 	}
 }
 
-func WithFile(val []byte) Opt {
+func WithFile(val string) Opt {
 	return func(c *map[string]any) {
 		(*c)[File] = val
 	}

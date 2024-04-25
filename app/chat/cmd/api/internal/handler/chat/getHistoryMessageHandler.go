@@ -1,21 +1,22 @@
 package chat
 
 import (
-	"github.com/go-playground/validator/v10"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"zero-chat/app/chat/cmd/api/internal/logic/chat"
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/app/chat/cmd/api/internal/types"
 	"zero-chat/common/result"
+	"zero-chat/common/tool"
 	"zero-chat/common/xerr"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 )
 
-func SessionContentListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func GetHistoryMessageHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.SessionContentListReq
-		if err := httpx.Parse(r, &req); err != nil {
+		var req types.GetHistoryMessageReq
+		if err := tool.ParseQuery(r, &req); err != nil {
 			result.HttpResult(r, w, nil, errors.Wrapf(xerr.NewErrCode(xerr.REUQEST_PARAM_ERROR), "params errors with:%s", err.Error()))
 			return
 		}
@@ -26,8 +27,8 @@ func SessionContentListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := chat.NewSessionContentListLogic(r.Context(), svcCtx)
-		resp, err := l.SessionContentList(&req)
+		l := chat.NewGetHistoryMessageLogic(r.Context(), svcCtx)
+		resp, err := l.GetHistoryMessage(&req)
 		// uniform return
 		result.HttpResult(r, w, resp, err)
 	}

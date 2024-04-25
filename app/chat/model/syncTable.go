@@ -1,7 +1,12 @@
 package model
 
+// this package has been deprecated
+
 import (
+	"fmt"
+
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 var _ SyncTableModel = (*customSyncTableModel)(nil)
@@ -44,22 +49,25 @@ func newSyncTableModel(table string, client *tablestore.TableStoreClient) *defau
 	}
 }
 
-func (m *defaultSyncModel) PutRow(primaryKeys map[string]any, columns map[string]any) error {
-	columns["file"] = []byte("test use")
+func (m *defaultSyncModel) PutRow(primaryKeys map[string]any, columns map[string]any) (err error) {
 	putRowRequest := new(tablestore.PutRowRequest)
 	putRowChange := new(tablestore.PutRowChange)
 	putRowChange.TableName = m.table
 	putPk := new(tablestore.PrimaryKey)
 	for primaryKey, primaryVal := range primaryKeys {
 		putPk.AddPrimaryKeyColumn(primaryKey, primaryVal)
+		fmt.Println(primaryKey, primaryVal)
 	}
 	putRowChange.PrimaryKey = putPk
 	for column, val := range columns {
+		fmt.Println(column, val)
 		putRowChange.AddColumn(column, val)
 	}
-	// putRowChange.SetCondition(tablestore.RowExistenceExpectation_IGNORE)
 	putRowRequest.PutRowChange = putRowChange
 	putRowChange.SetCondition(tablestore.RowExistenceExpectation_IGNORE)
-	_, err := m.client.PutRow(putRowRequest)
-	return err
+	logx.Info(putRowRequest.PutRowChange.Columns)
+	logx.Info(putRowRequest.PutRowChange.PrimaryKey.PrimaryKeys)
+	logx.Info(putRowRequest.PutRowChange.TableName)
+	_, err = m.client.PutRow(putRowRequest)
+	return
 }

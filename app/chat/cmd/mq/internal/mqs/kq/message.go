@@ -62,7 +62,6 @@ func (l *MessageTransferMq) execService(val string, message *protocol.Message) (
 	// 1. store into store-table (session —— read expand)
 	storeMsg := pb.StoreTableItem{
 		TimeLineId:  uuid.NewString(),
-		SequenceId:  time.Now().UnixNano(),
 		MsgType:     message.ChatType,
 		ContentType: message.ContentType,
 		SendTime:    message.SendTime,
@@ -103,7 +102,6 @@ func (l *MessageTransferMq) execService(val string, message *protocol.Message) (
 	for _, recevier := range receivers {
 		syncMsg.UserId = recevier
 		syncMsg.TimeLineId = uuid.NewString()
-		syncMsg.SequenceId = time.Now().UnixNano()
 		_, err = l.svcCtx.ChatServiceRpc.SyncAddItem(l.ctx, &pb.SyncAddItemReq{Msg: &syncMsg})
 		if err != nil {
 			return err
@@ -127,7 +125,8 @@ func (l *MessageTransferMq) execService(val string, message *protocol.Message) (
 				_, err := l.svcCtx.Redis.HgetCtx(l.ctx, key, "sequence_id")
 				switch {
 				case err == redis.Nil:
-					l.svcCtx.Redis.HsetCtx(l.ctx, key, "sequence_id", fmt.Sprint(syncMsg.SequenceId))
+					// TODO: 解决这里的逻辑问题
+					// l.svcCtx.Redis.HsetCtx(l.ctx, key, "sequence_id", fmt.Sprint(syncMsg.SequenceId))
 				case err != nil:
 					return errors.Wrapf(err, "get cnt of user:%d err:%s", message.From, err.Error())
 				}

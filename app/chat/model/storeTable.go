@@ -1,5 +1,7 @@
 package model
 
+// this package has been deprecated
+
 import (
 	"github.com/aliyun/aliyun-tablestore-go-sdk/tablestore"
 )
@@ -46,7 +48,6 @@ func newStoreTableModel(table string, client *tablestore.TableStoreClient) *defa
 }
 
 func (m *defaultStoreModel) PutRow(primaryKeys map[string]any, columns map[string]any) error {
-	columns["file"] = []byte("test use")
 	putRowRequest := new(tablestore.PutRowRequest)
 	putRowChange := new(tablestore.PutRowChange)
 	putRowChange.TableName = m.table
