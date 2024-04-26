@@ -37,7 +37,7 @@ func (l *SearchUsersLogic) SearchUsers(req *types.SearchUsersReq) (resp *types.S
 	if err != nil {
 		return nil, errors.Wrapf(err, "get user friends error with:%s", err.Error())
 	}
-	friendIds := map[int64]bool{}
+	friendIds := map[int64]bool{id: true}
 	for _, friend := range friendResp.Users {
 		friendIds[friend.Id] = true
 	}

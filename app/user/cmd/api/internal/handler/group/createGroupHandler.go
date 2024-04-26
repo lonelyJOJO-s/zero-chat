@@ -1,15 +1,16 @@
 package group
 
 import (
-	"github.com/go-playground/validator/v10"
-	"github.com/pkg/errors"
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 	"zero-chat/app/user/cmd/api/internal/logic/group"
 	"zero-chat/app/user/cmd/api/internal/svc"
 	"zero-chat/app/user/cmd/api/internal/types"
 	"zero-chat/common/result"
 	"zero-chat/common/xerr"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 func CreateGroupHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
@@ -27,7 +28,7 @@ func CreateGroupHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 
 		l := group.NewCreateGroupLogic(r.Context(), svcCtx)
-		resp, err := l.CreateGroup(&req)
+		resp, err := l.CreateGroup(&req, r)
 		// uniform return
 		result.HttpResult(r, w, resp, err)
 	}

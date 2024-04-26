@@ -42,7 +42,8 @@ type Group struct {
 }
 
 type GroupCreateReq struct {
-	GroupInfo Group `json:"group_info"`
+	Name string `form:"name"`
+	Desc string `form:"desc"`
 }
 
 type GroupId struct {

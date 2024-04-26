@@ -22,7 +22,8 @@ type GroupWithId {
 
 type (
     GroupCreateReq {
-        GroupInfo Group `json:"group_info"`
+        Name string `form:"name"`
+        Desc string `form:"desc"`
     }
     GroupResp {
         group GroupWithId `json:"group"`

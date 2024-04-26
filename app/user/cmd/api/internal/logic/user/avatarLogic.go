@@ -61,7 +61,7 @@ func (l *AvatarLogic) Upload2Oss(file *multipart.FileHeader, userId int) (url st
 	}
 	timeStamp := strconv.Itoa(int(time.Now().Unix()))
 	path := fmt.Sprintf("avatar/user/%d/%s/%s", userId, timeStamp, file.Filename)
-	go oss.Upload2Oss(fileBytes, path)
+	oss.Upload2Oss(fileBytes, path)
 	url = os.Getenv("OSS_URI")
 	url = fmt.Sprintf("%s/%s", url, path)
 	// 2. store to local db
