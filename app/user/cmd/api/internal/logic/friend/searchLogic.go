@@ -30,7 +30,6 @@ func NewSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SearchLogi
 func (l *SearchLogic) Search(req *types.FriendSearchReq) (resp *types.FriendSearchResp, err error) {
 	// todo: add your logic here and delete this line
 	id := ctxdata.GetUidFromCtx(l.ctx)
-	logx.Info(id)
 	friendsResp, err := l.svcCtx.FriendServiceRpc.SearchFriendFuzzy(l.ctx, &pb.SearchFriendFuzzyReq{Id: id, Keyword: req.Keyword})
 	if err != nil {
 		return nil, errors.Wrapf(err, "del friend rpc error with:%s", err.Error())

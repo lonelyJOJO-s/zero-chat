@@ -42,4 +42,22 @@ type (
     GetAllGroupsResp {
         groups []GroupWithId `json:"groups"`
     }
+
+    SearchJoinedGroupReq {
+        keyword string `query:"keyword"`
+    }
+    SearchJoinedGroupResp {
+        groups []GroupWithId `json:"groups"`
+    }
+
+    SearchAllGroupReq {
+        keyword string `query:"keyword"`
+    }
+    SearchAllGroupResp {
+        groups []GroupWithId `json:"groups"`
+    }
+
+    JoinGroupReq {
+        id int64 `path:"id"`
+    }
 )

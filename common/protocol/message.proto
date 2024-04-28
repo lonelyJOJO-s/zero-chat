@@ -11,4 +11,5 @@ message Message {
     bytes file = 6;
     int32 chatType = 7; // group or single
     string type = 8; // transfer type: heartbeat or webrtc
+    string fileBack = 9;
 }

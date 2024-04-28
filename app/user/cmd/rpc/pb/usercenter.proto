@@ -80,11 +80,11 @@ message GetCaptchaResp {
   string code = 1;
 }
 
-message GetUserInfoReq {
-  int64  id = 1;
+message GetUsersInfoReq {
+  repeated int64  ids = 1;
 }
-message GetUserInfoResp {
-   User user = 1;
+message GetUsersInfoResp {
+  repeated User users = 1;
 }
 
 message GenerateTokenReq {
@@ -212,6 +212,14 @@ message SearchGroupResp {
   repeated Group group = 1;
 }
 
+message SearchAllGroupReq {
+  string keyword = 1;
+}
+
+message SearchAllGroupResp {
+  repeated Group group = 1;
+}
+
 message GetMemberIdsReq {
   int64 groupId = 1;
 }
@@ -266,7 +274,7 @@ service UserService {
   rpc register(RegisterReq) returns(RegisterResp);
   rpc generateToken(GenerateTokenReq) returns(GenerateTokenResp);
   // user basic
-  rpc getUserInfo(GetUserInfoReq) returns(GetUserInfoResp);
+  rpc getUsersInfo(GetUsersInfoReq) returns(GetUsersInfoResp);
   rpc softDelUser(DelUserInfoReq) returns (DelUserInfoResp);
   rpc updateUserInfo(UpdateUserInfoReq) returns (UpdateUserInfoResp);
   rpc searchUserFuzzy(SearchUserFuzzyReq) returns (SearchUserFuzzyResp); 
@@ -296,4 +304,5 @@ service GroupService {
   rpc GetManagedGroupIds(GetManagedGroupIdsReq) returns (GetManagedGroupIdsResp);
   rpc GetJoinedGroupIds(GetJoinedGroupIdsReq) returns (GetJoinedGroupIdsResp);
   rpc GetJoinedGroups(GetJoinedGroupsReq) returns (GetJoinedGroupsResp);
+  rpc searchAllGroup(SearchAllGroupReq) returns (SearchAllGroupResp);
 }

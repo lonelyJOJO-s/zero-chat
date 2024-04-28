@@ -41,8 +41,8 @@ type (
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq
 	GetMemberIdsResp       = pb.GetMemberIdsResp
-	GetUserInfoReq         = pb.GetUserInfoReq
-	GetUserInfoResp        = pb.GetUserInfoResp
+	GetUsersInfoReq        = pb.GetUsersInfoReq
+	GetUsersInfoResp       = pb.GetUsersInfoResp
 	GetUuidReq             = pb.GetUuidReq
 	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
@@ -54,6 +54,8 @@ type (
 	QuitGroupResp          = pb.QuitGroupResp
 	RegisterReq            = pb.RegisterReq
 	RegisterResp           = pb.RegisterResp
+	SearchAllGroupReq      = pb.SearchAllGroupReq
+	SearchAllGroupResp     = pb.SearchAllGroupResp
 	SearchFriendFuzzyReq   = pb.SearchFriendFuzzyReq
 	SearchFriendFuzzyResp  = pb.SearchFriendFuzzyResp
 	SearchGroupReq         = pb.SearchGroupReq
@@ -72,7 +74,7 @@ type (
 		Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 		GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
 		// user basic
-		GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
+		GetUsersInfo(ctx context.Context, in *GetUsersInfoReq, opts ...grpc.CallOption) (*GetUsersInfoResp, error)
 		SoftDelUser(ctx context.Context, in *DelUserInfoReq, opts ...grpc.CallOption) (*DelUserInfoResp, error)
 		UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 		SearchUserFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
@@ -107,9 +109,9 @@ func (m *defaultUserService) GenerateToken(ctx context.Context, in *GenerateToke
 }
 
 // user basic
-func (m *defaultUserService) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error) {
+func (m *defaultUserService) GetUsersInfo(ctx context.Context, in *GetUsersInfoReq, opts ...grpc.CallOption) (*GetUsersInfoResp, error) {
 	client := pb.NewUserServiceClient(m.cli.Conn())
-	return client.GetUserInfo(ctx, in, opts...)
+	return client.GetUsersInfo(ctx, in, opts...)
 }
 
 func (m *defaultUserService) SoftDelUser(ctx context.Context, in *DelUserInfoReq, opts ...grpc.CallOption) (*DelUserInfoResp, error) {

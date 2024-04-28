@@ -46,10 +46,10 @@ func (l *GetHistoryMessageLogic) GetHistoryMessage(req *types.GetHistoryMessageR
 	resp = new(types.GetHistoryMessageResp)
 	for _, msg := range messages.Msg {
 		var m types.Message
-		user, _ := l.svcCtx.UserServiceRpc.GetUserInfo(l.ctx, &userPb.GetUserInfoReq{Id: msg.From})
+		user, _ := l.svcCtx.UserServiceRpc.GetUsersInfo(l.ctx, &userPb.GetUsersInfoReq{Ids: []int64{msg.From}})
 		copier.Copy(&m, msg)
-		m.Avatar = user.User.Avatar
-		m.FromUsername = user.User.Username
+		m.Avatar = user.Users[0].Avatar
+		m.FromUsername = user.Users[0].Username
 		resp.Msgs = append(resp.Msgs, m)
 	}
 	return

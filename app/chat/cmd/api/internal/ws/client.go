@@ -5,8 +5,13 @@
 package ws
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+	"time"
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/common/constant"
+	"zero-chat/common/oss"
 	"zero-chat/common/protocol"
 
 	"github.com/gorilla/websocket"
@@ -62,7 +67,29 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 			c.Conn.WriteMessage(websocket.BinaryMessage, pongByte)
 		} else {
 			// send kafka
-			err = svcCtx.KqPusherClient.Push(string(message))
+			if msg.File != nil {
+				var session string
+				switch msg.ChatType {
+				case constant.SINGLE:
+					session = SingChatStoreName("user_"+strconv.Itoa(int(msg.From)), "user_"+strconv.Itoa(int(msg.To)))
+				case constant.GROUP:
+					session = "group_" + strconv.Itoa(int(msg.To))
+				default:
+					session = "default"
+				}
+				msg.FileBack, err = Upload2Oss(msg.File, session, msg.Content)
+				if err != nil {
+					logx.Errorf("upload file to oss error:%s", err.Error())
+					continue
+				}
+				msg.File = []byte{}
+			}
+			msgSend, err := proto.Marshal(msg)
+			if err != nil {
+				logx.Errorf("unmarshal error with proto:%s", err.Error())
+				continue
+			}
+			err = svcCtx.KqPusherClient.Push(string(msgSend))
 			if err != nil {
 				logx.Error(err)
 			}
@@ -83,4 +110,22 @@ func (c *Client) WritePump(svcCtx *svc.ServiceContext) {
 	for message := range c.Send {
 		c.Conn.WriteMessage(websocket.BinaryMessage, message)
 	}
+}
+
+func Upload2Oss(file []byte, session string, fileName string) (url string, err error) {
+	// 1. upload to oss
+
+	timeStamp := strconv.Itoa(int(time.Now().Unix()))
+	path := fmt.Sprintf("file/%s/%s/%s", session, timeStamp, fileName)
+	oss.Upload2Oss(file, path)
+	url = os.Getenv("OSS_URI")
+	url = fmt.Sprintf("%s/%s", url, path)
+	return
+}
+
+func SingChatStoreName(userA, userB string) string {
+	if userA > userB {
+		return userB + ":" + userA
+	}
+	return userA + ":" + userB
 }

@@ -77,3 +77,8 @@ func (s *GroupServiceServer) GetJoinedGroups(ctx context.Context, in *pb.GetJoin
 	l := groupservicelogic.NewGetJoinedGroupsLogic(ctx, s.svcCtx)
 	return l.GetJoinedGroups(in)
 }
+
+func (s *GroupServiceServer) SearchAllGroup(ctx context.Context, in *pb.SearchAllGroupReq) (*pb.SearchAllGroupResp, error) {
+	l := groupservicelogic.NewSearchAllGroupLogic(ctx, s.svcCtx)
+	return l.SearchAllGroup(in)
+}

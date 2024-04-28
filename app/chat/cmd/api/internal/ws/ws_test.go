@@ -20,7 +20,7 @@ func TestProtoGen(t *testing.T) {
 	msg.SendTime = time.Now().UnixNano()
 	msg.ContentType = 0 // 0 for text
 	msg.To = 8
-	msg.File = "xxx"
+	msg.File = []byte{}
 	msg.ChatType = 0 // o for signle 1 for group
 	msg.Type = "pass"
 

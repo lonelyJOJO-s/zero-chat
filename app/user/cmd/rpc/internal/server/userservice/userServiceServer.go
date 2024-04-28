@@ -38,9 +38,9 @@ func (s *UserServiceServer) GenerateToken(ctx context.Context, in *pb.GenerateTo
 }
 
 // user basic
-func (s *UserServiceServer) GetUserInfo(ctx context.Context, in *pb.GetUserInfoReq) (*pb.GetUserInfoResp, error) {
-	l := userservicelogic.NewGetUserInfoLogic(ctx, s.svcCtx)
-	return l.GetUserInfo(in)
+func (s *UserServiceServer) GetUsersInfo(ctx context.Context, in *pb.GetUsersInfoReq) (*pb.GetUsersInfoResp, error) {
+	l := userservicelogic.NewGetUsersInfoLogic(ctx, s.svcCtx)
+	return l.GetUsersInfo(in)
 }
 
 func (s *UserServiceServer) SoftDelUser(ctx context.Context, in *pb.DelUserInfoReq) (*pb.DelUserInfoResp, error) {

@@ -27,11 +27,11 @@ func NewDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DetailLogi
 
 func (l *DetailLogic) Detail(req *types.UserInfoReq) (resp *types.UserInfoResp, err error) {
 	// todo: add your logic here and delete this line
-	user, err := l.svcCtx.UserServiceRpc.GetUserInfo(l.ctx, &pb.GetUserInfoReq{Id: req.Id})
+	user, err := l.svcCtx.UserServiceRpc.GetUsersInfo(l.ctx, &pb.GetUsersInfoReq{Ids: []int64{req.Id}})
 	if err != nil {
 		return nil, err
 	}
 	resp = new(types.UserInfoResp)
-	copier.Copy(&resp.UserInfo, user.User)
+	copier.Copy(&resp.UserInfo, user.Users[0])
 	return
 }

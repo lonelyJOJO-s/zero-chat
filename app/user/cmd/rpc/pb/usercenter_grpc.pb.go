@@ -22,7 +22,7 @@ const (
 	UserService_Login_FullMethodName           = "/pb.UserService/login"
 	UserService_Register_FullMethodName        = "/pb.UserService/register"
 	UserService_GenerateToken_FullMethodName   = "/pb.UserService/generateToken"
-	UserService_GetUserInfo_FullMethodName     = "/pb.UserService/getUserInfo"
+	UserService_GetUsersInfo_FullMethodName    = "/pb.UserService/getUsersInfo"
 	UserService_SoftDelUser_FullMethodName     = "/pb.UserService/softDelUser"
 	UserService_UpdateUserInfo_FullMethodName  = "/pb.UserService/updateUserInfo"
 	UserService_SearchUserFuzzy_FullMethodName = "/pb.UserService/searchUserFuzzy"
@@ -38,7 +38,7 @@ type UserServiceClient interface {
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 	GenerateToken(ctx context.Context, in *GenerateTokenReq, opts ...grpc.CallOption) (*GenerateTokenResp, error)
 	// user basic
-	GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error)
+	GetUsersInfo(ctx context.Context, in *GetUsersInfoReq, opts ...grpc.CallOption) (*GetUsersInfoResp, error)
 	SoftDelUser(ctx context.Context, in *DelUserInfoReq, opts ...grpc.CallOption) (*DelUserInfoResp, error)
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoReq, opts ...grpc.CallOption) (*UpdateUserInfoResp, error)
 	SearchUserFuzzy(ctx context.Context, in *SearchUserFuzzyReq, opts ...grpc.CallOption) (*SearchUserFuzzyResp, error)
@@ -81,9 +81,9 @@ func (c *userServiceClient) GenerateToken(ctx context.Context, in *GenerateToken
 	return out, nil
 }
 
-func (c *userServiceClient) GetUserInfo(ctx context.Context, in *GetUserInfoReq, opts ...grpc.CallOption) (*GetUserInfoResp, error) {
-	out := new(GetUserInfoResp)
-	err := c.cc.Invoke(ctx, UserService_GetUserInfo_FullMethodName, in, out, opts...)
+func (c *userServiceClient) GetUsersInfo(ctx context.Context, in *GetUsersInfoReq, opts ...grpc.CallOption) (*GetUsersInfoResp, error) {
+	out := new(GetUsersInfoResp)
+	err := c.cc.Invoke(ctx, UserService_GetUsersInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +143,7 @@ type UserServiceServer interface {
 	Register(context.Context, *RegisterReq) (*RegisterResp, error)
 	GenerateToken(context.Context, *GenerateTokenReq) (*GenerateTokenResp, error)
 	// user basic
-	GetUserInfo(context.Context, *GetUserInfoReq) (*GetUserInfoResp, error)
+	GetUsersInfo(context.Context, *GetUsersInfoReq) (*GetUsersInfoResp, error)
 	SoftDelUser(context.Context, *DelUserInfoReq) (*DelUserInfoResp, error)
 	UpdateUserInfo(context.Context, *UpdateUserInfoReq) (*UpdateUserInfoResp, error)
 	SearchUserFuzzy(context.Context, *SearchUserFuzzyReq) (*SearchUserFuzzyResp, error)
@@ -165,8 +165,8 @@ func (UnimplementedUserServiceServer) Register(context.Context, *RegisterReq) (*
 func (UnimplementedUserServiceServer) GenerateToken(context.Context, *GenerateTokenReq) (*GenerateTokenResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenerateToken not implemented")
 }
-func (UnimplementedUserServiceServer) GetUserInfo(context.Context, *GetUserInfoReq) (*GetUserInfoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
+func (UnimplementedUserServiceServer) GetUsersInfo(context.Context, *GetUsersInfoReq) (*GetUsersInfoResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsersInfo not implemented")
 }
 func (UnimplementedUserServiceServer) SoftDelUser(context.Context, *DelUserInfoReq) (*DelUserInfoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SoftDelUser not implemented")
@@ -250,20 +250,20 @@ func _UserService_GenerateToken_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserInfoReq)
+func _UserService_GetUsersInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUsersInfoReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserServiceServer).GetUserInfo(ctx, in)
+		return srv.(UserServiceServer).GetUsersInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserService_GetUserInfo_FullMethodName,
+		FullMethod: UserService_GetUsersInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).GetUserInfo(ctx, req.(*GetUserInfoReq))
+		return srv.(UserServiceServer).GetUsersInfo(ctx, req.(*GetUsersInfoReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -378,8 +378,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_GenerateToken_Handler,
 		},
 		{
-			MethodName: "getUserInfo",
-			Handler:    _UserService_GetUserInfo_Handler,
+			MethodName: "getUsersInfo",
+			Handler:    _UserService_GetUsersInfo_Handler,
 		},
 		{
 			MethodName: "softDelUser",
@@ -658,6 +658,7 @@ const (
 	GroupService_GetManagedGroupIds_FullMethodName = "/pb.GroupService/GetManagedGroupIds"
 	GroupService_GetJoinedGroupIds_FullMethodName  = "/pb.GroupService/GetJoinedGroupIds"
 	GroupService_GetJoinedGroups_FullMethodName    = "/pb.GroupService/GetJoinedGroups"
+	GroupService_SearchAllGroup_FullMethodName     = "/pb.GroupService/searchAllGroup"
 )
 
 // GroupServiceClient is the client API for GroupService service.
@@ -676,6 +677,7 @@ type GroupServiceClient interface {
 	GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
 	GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
 	GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error)
+	SearchAllGroup(ctx context.Context, in *SearchAllGroupReq, opts ...grpc.CallOption) (*SearchAllGroupResp, error)
 }
 
 type groupServiceClient struct {
@@ -785,6 +787,15 @@ func (c *groupServiceClient) GetJoinedGroups(ctx context.Context, in *GetJoinedG
 	return out, nil
 }
 
+func (c *groupServiceClient) SearchAllGroup(ctx context.Context, in *SearchAllGroupReq, opts ...grpc.CallOption) (*SearchAllGroupResp, error) {
+	out := new(SearchAllGroupResp)
+	err := c.cc.Invoke(ctx, GroupService_SearchAllGroup_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GroupServiceServer is the server API for GroupService service.
 // All implementations must embed UnimplementedGroupServiceServer
 // for forward compatibility
@@ -801,6 +812,7 @@ type GroupServiceServer interface {
 	GetManagedGroupIds(context.Context, *GetManagedGroupIdsReq) (*GetManagedGroupIdsResp, error)
 	GetJoinedGroupIds(context.Context, *GetJoinedGroupIdsReq) (*GetJoinedGroupIdsResp, error)
 	GetJoinedGroups(context.Context, *GetJoinedGroupsReq) (*GetJoinedGroupsResp, error)
+	SearchAllGroup(context.Context, *SearchAllGroupReq) (*SearchAllGroupResp, error)
 	mustEmbedUnimplementedGroupServiceServer()
 }
 
@@ -840,6 +852,9 @@ func (UnimplementedGroupServiceServer) GetJoinedGroupIds(context.Context, *GetJo
 }
 func (UnimplementedGroupServiceServer) GetJoinedGroups(context.Context, *GetJoinedGroupsReq) (*GetJoinedGroupsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJoinedGroups not implemented")
+}
+func (UnimplementedGroupServiceServer) SearchAllGroup(context.Context, *SearchAllGroupReq) (*SearchAllGroupResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchAllGroup not implemented")
 }
 func (UnimplementedGroupServiceServer) mustEmbedUnimplementedGroupServiceServer() {}
 
@@ -1052,6 +1067,24 @@ func _GroupService_GetJoinedGroups_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GroupService_SearchAllGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchAllGroupReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GroupServiceServer).SearchAllGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GroupService_SearchAllGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GroupServiceServer).SearchAllGroup(ctx, req.(*SearchAllGroupReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GroupService_ServiceDesc is the grpc.ServiceDesc for GroupService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1102,6 +1135,10 @@ var GroupService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetJoinedGroups",
 			Handler:    _GroupService_GetJoinedGroups_Handler,
+		},
+		{
+			MethodName: "searchAllGroup",
+			Handler:    _GroupService_SearchAllGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

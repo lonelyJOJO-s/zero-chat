@@ -34,6 +34,14 @@ type GetAllResp struct {
 	Users []User `json:"users"`
 }
 
+type GetMembersReq struct {
+	Id int64 `query:"id"`
+}
+
+type GetMembersResp struct {
+	Users []UserBasic `json:"users"`
+}
+
 type Group struct {
 	Name      string `json:"name"`
 	Desc      string `json:"desc"`
@@ -72,6 +80,10 @@ type IdReq struct {
 	Id int64 `json:"id"`
 }
 
+type JoinGroupReq struct {
+	Id int64 `path:"id"`
+}
+
 type LoginResp struct {
 	Id           int64  `json:"id"`
 	AccessToken  string `json:"accessToken"`
@@ -96,6 +108,22 @@ type RegisterResp struct {
 	AccessToken  string `json:"accessToken"`
 	AccessExpire int64  `json:"accessExpire"`
 	RefreshAfter int64  `json:"refreshAfter"`
+}
+
+type SearchAllGroupReq struct {
+	Keyword string `query:"keyword"`
+}
+
+type SearchAllGroupResp struct {
+	Groups []GroupWithId `json:"groups"`
+}
+
+type SearchJoinedGroupReq struct {
+	Keyword string `query:"keyword"`
+}
+
+type SearchJoinedGroupResp struct {
+	Groups []GroupWithId `json:"groups"`
 }
 
 type SearchUsersReq struct {

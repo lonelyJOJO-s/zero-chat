@@ -10,6 +10,7 @@ import (
 	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/app/chat/cmd/api/internal/ws"
 
+	"github.com/joho/godotenv"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -18,7 +19,7 @@ var configFile = flag.String("f", "etc/chat.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-
+	godotenv.Load()
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 

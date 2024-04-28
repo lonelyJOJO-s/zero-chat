@@ -27,7 +27,6 @@ func NewGetAllGroupsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetA
 }
 
 func (l *GetAllGroupsLogic) GetAllGroups(req *types.Null) (resp *types.GetAllGroupsResp, err error) {
-	// todo: add your logic here and delete this line
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	groupResp, err := l.svcCtx.GroupServiceRpc.GetJoinedGroups(l.ctx, &pb.GetJoinedGroupsReq{UserId: userId})
 	if err != nil {

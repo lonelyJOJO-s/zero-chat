@@ -65,9 +65,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: group.JoinGroupHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/group/members",
+				Handler: group.GetMembersHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/group/quit/",
 				Handler: group.QuitGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/group/search-all",
+				Handler: group.SearchAllGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/group/search-joined",
+				Handler: group.SearchJoinedGroupHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

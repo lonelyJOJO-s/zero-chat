@@ -13,6 +13,15 @@ import (
 	"group/group.api"
 )
 
+type (
+	GetMembersReq {
+		id int64 `query:"id"`
+	}
+	GetMembersResp {
+		users []UserBasic `json:"users"`
+	}
+)
+
 // user 注册和登录
 @server (
 	prefix:  usercenter/api/v1
@@ -110,7 +119,7 @@ service user {
 
 	@doc "join a group"
 	@handler JoinGroup
-	post /group/join/:id (GroupId) returns (GroupResp)
+	post /group/join/:id (JoinGroupReq) returns (GroupResp)
 
 	@doc "update a group"
 	@handler UpdateGroup
@@ -131,5 +140,17 @@ service user {
 	@doc "get groups belong to user"
 	@handler GetAllGroups
 	get /groups (Null) returns (GetAllGroupsResp)
+
+	@doc "search group belong to user"
+	@handler SearchJoinedGroup
+	get /group/search-joined (SearchJoinedGroupReq) returns (SearchJoinedGroupResp)
+
+	@doc "search all group"
+	@handler SearchAllGroup
+	get /group/search-all (SearchAllGroupReq) returns (SearchAllGroupResp)
+
+	@doc "get group members"
+	@handler GetMembers
+	get /group/members (GetMembersReq) returns (GetMembersResp)
 }
 

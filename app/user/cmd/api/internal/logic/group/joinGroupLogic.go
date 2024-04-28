@@ -26,7 +26,7 @@ func NewJoinGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *JoinGro
 	}
 }
 
-func (l *JoinGroupLogic) JoinGroup(req *types.GroupId) (resp *types.GroupResp, err error) {
+func (l *JoinGroupLogic) JoinGroup(req *types.JoinGroupReq) (resp *types.GroupResp, err error) {
 	userId := ctxdata.GetUidFromCtx(l.ctx)
 	_, err = l.svcCtx.GroupServiceRpc.JoinGroup(l.ctx, &pb.JoinGroupReq{UserId: userId, GroupId: req.Id})
 	if err != nil {

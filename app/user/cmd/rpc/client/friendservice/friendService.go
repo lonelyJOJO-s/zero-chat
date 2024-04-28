@@ -41,8 +41,8 @@ type (
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq
 	GetMemberIdsResp       = pb.GetMemberIdsResp
-	GetUserInfoReq         = pb.GetUserInfoReq
-	GetUserInfoResp        = pb.GetUserInfoResp
+	GetUsersInfoReq        = pb.GetUsersInfoReq
+	GetUsersInfoResp       = pb.GetUsersInfoResp
 	GetUuidReq             = pb.GetUuidReq
 	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
@@ -54,6 +54,8 @@ type (
 	QuitGroupResp          = pb.QuitGroupResp
 	RegisterReq            = pb.RegisterReq
 	RegisterResp           = pb.RegisterResp
+	SearchAllGroupReq      = pb.SearchAllGroupReq
+	SearchAllGroupResp     = pb.SearchAllGroupResp
 	SearchFriendFuzzyReq   = pb.SearchFriendFuzzyReq
 	SearchFriendFuzzyResp  = pb.SearchFriendFuzzyResp
 	SearchGroupReq         = pb.SearchGroupReq

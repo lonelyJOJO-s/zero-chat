@@ -41,8 +41,8 @@ type (
 	GetManagedGroupIdsResp = pb.GetManagedGroupIdsResp
 	GetMemberIdsReq        = pb.GetMemberIdsReq
 	GetMemberIdsResp       = pb.GetMemberIdsResp
-	GetUserInfoReq         = pb.GetUserInfoReq
-	GetUserInfoResp        = pb.GetUserInfoResp
+	GetUsersInfoReq        = pb.GetUsersInfoReq
+	GetUsersInfoResp       = pb.GetUsersInfoResp
 	GetUuidReq             = pb.GetUuidReq
 	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
@@ -54,6 +54,8 @@ type (
 	QuitGroupResp          = pb.QuitGroupResp
 	RegisterReq            = pb.RegisterReq
 	RegisterResp           = pb.RegisterResp
+	SearchAllGroupReq      = pb.SearchAllGroupReq
+	SearchAllGroupResp     = pb.SearchAllGroupResp
 	SearchFriendFuzzyReq   = pb.SearchFriendFuzzyReq
 	SearchFriendFuzzyResp  = pb.SearchFriendFuzzyResp
 	SearchGroupReq         = pb.SearchGroupReq
@@ -80,6 +82,7 @@ type (
 		GetManagedGroupIds(ctx context.Context, in *GetManagedGroupIdsReq, opts ...grpc.CallOption) (*GetManagedGroupIdsResp, error)
 		GetJoinedGroupIds(ctx context.Context, in *GetJoinedGroupIdsReq, opts ...grpc.CallOption) (*GetJoinedGroupIdsResp, error)
 		GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error)
+		SearchAllGroup(ctx context.Context, in *SearchAllGroupReq, opts ...grpc.CallOption) (*SearchAllGroupResp, error)
 	}
 
 	defaultGroupService struct {
@@ -147,4 +150,9 @@ func (m *defaultGroupService) GetJoinedGroupIds(ctx context.Context, in *GetJoin
 func (m *defaultGroupService) GetJoinedGroups(ctx context.Context, in *GetJoinedGroupsReq, opts ...grpc.CallOption) (*GetJoinedGroupsResp, error) {
 	client := pb.NewGroupServiceClient(m.cli.Conn())
 	return client.GetJoinedGroups(ctx, in, opts...)
+}
+
+func (m *defaultGroupService) SearchAllGroup(ctx context.Context, in *SearchAllGroupReq, opts ...grpc.CallOption) (*SearchAllGroupResp, error) {
+	client := pb.NewGroupServiceClient(m.cli.Conn())
+	return client.SearchAllGroup(ctx, in, opts...)
 }

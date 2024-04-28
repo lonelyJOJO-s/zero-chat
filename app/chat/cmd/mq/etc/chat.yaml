@@ -2,6 +2,7 @@ Name: chat-mq
 Host: 0.0.0.0
 Port: 3001
 Mode: dev
+MaxBytes: 1073741824
 
 #监控
 # Prometheus:
