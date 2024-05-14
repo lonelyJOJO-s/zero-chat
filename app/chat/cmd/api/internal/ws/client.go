@@ -65,6 +65,9 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 				logx.Error(err)
 			}
 			c.Conn.WriteMessage(websocket.BinaryMessage, pongByte)
+		} else if msg.Type == constant.WEBRTC {
+			// online dont need to store, no use of kafka
+			WsServer.Broadcast <- message
 		} else {
 			// send kafka
 			if msg.File != nil {
@@ -89,6 +92,7 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 				logx.Errorf("unmarshal error with proto:%s", err.Error())
 				continue
 			}
+
 			err = svcCtx.KqPusherClient.Push(string(msgSend))
 			if err != nil {
 				logx.Error(err)

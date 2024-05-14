@@ -2,6 +2,7 @@ package kq
 
 import (
 	"context"
+	"time"
 
 	"zero-chat/app/chat/cmd/mq/internal/svc"
 	"zero-chat/app/chat/cmd/rpc/pb"
@@ -35,6 +36,7 @@ func NewMessageTransferMq(ctx context.Context, svcCtx *svc.ServiceContext) *Mess
 func (l *MessageTransferMq) Consume(_, val string) error {
 
 	var message protocol.Message
+	logx.Infof("start to consume at time:%s", time.Now().String())
 	if err := proto.Unmarshal([]byte(val), &message); err != nil {
 		logx.WithContext(l.ctx).Errorf("MessageTransferMq->Consume Unmarshal err : %v , val : %s", err, val)
 		return err
@@ -49,7 +51,6 @@ func (l *MessageTransferMq) Consume(_, val string) error {
 func (l *MessageTransferMq) execService(val string, message *protocol.Message) (err error) {
 
 	// var receivers []int64
-
 	// send msgs
 	_, err = l.svcCtx.ChatServiceRpc.Send(l.ctx, &pb.SendReq{Msg: &pb.Message{
 		From:        message.From,
@@ -128,6 +129,6 @@ func (l *MessageTransferMq) execService(val string, message *protocol.Message) (
 	if err != nil {
 		return errors.Wrapf(err, "send to msg back to kafka error:%s", err.Error())
 	}
-	logx.Info("send back successfully")
+	logx.Infof("finish store and send back at time:%s", time.Now().String())
 	return err
 }

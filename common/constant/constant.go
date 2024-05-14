@@ -20,6 +20,7 @@ const (
 const (
 	HEART_BEAT = "heartbeat"
 	PONG       = "pong"
+	WEBRTC     = "webrtc"
 )
 
 const (
