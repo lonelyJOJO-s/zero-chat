@@ -24,7 +24,7 @@
 # --home 可以设置模板路径 具体到tpl即可
 
 # 创建kafka的topic
-# kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 -partitions 1 --topic {topic}
+# kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 -partitions 1 --topic {topic}
 # 查看消费者组情况
 # kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --group {group}
 # 命令行消费
