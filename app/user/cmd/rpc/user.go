@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"zero-chat/app/user/cmd/rpc/internal/config"
 	friendserviceServer "zero-chat/app/user/cmd/rpc/internal/server/friendservice"
@@ -13,6 +14,7 @@ import (
 	"zero-chat/common/interceptor/rpcserver"
 
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -23,7 +25,7 @@ var configFile = flag.String("f", "etc/usercenter.yaml", "the config file")
 
 func main() {
 	flag.Parse()
-
+	logx.SetWriter(logx.NewWriter(os.Stdout))
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
 	ctx := svc.NewServiceContext(c)

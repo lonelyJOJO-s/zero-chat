@@ -15,7 +15,7 @@ processors:
 
 output.kafka:
   enabled: true
-  hosts: ["kafka:9092"]
+  hosts: ["kafka:9093"]
   #要提前创建topic
   topic: "zero-chat-log"
   partition.hash:

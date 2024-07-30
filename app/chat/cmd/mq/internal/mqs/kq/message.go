@@ -33,7 +33,7 @@ func NewMessageTransferMq(ctx context.Context, svcCtx *svc.ServiceContext) *Mess
 	}
 }
 
-func (l *MessageTransferMq) Consume(_, val string) error {
+func (l *MessageTransferMq) Consume(ctx context.Context, key, val string) error {
 
 	var message protocol.Message
 	logx.Infof("start to consume at time:%s", time.Now().String())
@@ -125,7 +125,7 @@ func (l *MessageTransferMq) execService(val string, message *protocol.Message) (
 	// 	}
 
 	// }
-	err = l.svcCtx.KqPusherClient.Push(string(val))
+	err = l.svcCtx.KqPusherClient.Push(context.TODO(), string(val))
 	if err != nil {
 		return errors.Wrapf(err, "send to msg back to kafka error:%s", err.Error())
 	}

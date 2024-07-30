@@ -7,7 +7,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`id`),
   `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `users`  (
   `sex` tinyint NULL DEFAULT 0,
   `addr` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `avatar` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `login_in_time` datetime NULL DEFAULT NULL,
   `login_out_time` datetime NULL DEFAULT NULL,
   `heartbeat_time` datetime NULL DEFAULT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `users`  (
 DROP TABLE IF EXISTS `groups`;
 CREATE TABLE `groups`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`id`),
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` datetime NULL DEFAULT NULL,
@@ -54,13 +54,13 @@ CREATE TABLE `groups`  (
 DROP TABLE IF EXISTS `user_friend`;
 CREATE TABLE `user_friend`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`id`),
   `user_id` bigint UNSIGNED NOT NULL,
   `friend_id` bigint UNSIGNED NOT NULL,
   `uuid` BINARY(16) NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime NULL DEFAULT NULL,
-  INDEX `idx_user_id`(`user_id` ASC) USING BTREE
+  INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_friend_id`(`friend_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
@@ -71,7 +71,7 @@ CREATE TABLE `user_friend`  (
 DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE `user_group`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`) USING BTREE,
+  PRIMARY KEY (`id`),
   `group_id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,

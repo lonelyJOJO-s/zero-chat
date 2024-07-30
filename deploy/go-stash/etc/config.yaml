@@ -3,7 +3,7 @@ Clusters:
       Kafka:
         Name: gostash
         Brokers:
-          - "kafka:9092"
+          - "kafka:9093"
         Topics:
           - zero-chat-log
         Group: pro

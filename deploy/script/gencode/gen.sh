@@ -28,10 +28,15 @@
 # 查看消费者组情况
 # kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --group {group}
 # 命令行消费
-# ./kafka-console-consumer.sh  --bootstrap-server kafka:9092  --topic looklook-log   --from-beginning
+# ./kafka-console-consumer.sh  --bootstrap-server kafka:9092  --topic zero-chat-log   --from-beginning
 # 命令生产
 # ./kafka-console-producer.sh --bootstrap-server kafka:9092 --topic second
 
 # docker 部署nginx
  # docker build -t nginx .
  # docker run -d -p 8888:8081 nginx
+
+# 设置挂载卷权限
+ # 1001为docker内部用户id
+ # sudo chown -R 1001:1001 ./data/etcd
+ # sudo chmod -R 755 ./data/etcd

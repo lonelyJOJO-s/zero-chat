@@ -5,6 +5,7 @@
 package ws
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -93,7 +94,7 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 				continue
 			}
 
-			err = svcCtx.KqPusherClient.Push(string(msgSend))
+			err = svcCtx.KqPusherClient.Push(context.TODO(), string(msgSend))
 			if err != nil {
 				logx.Error(err)
 			}
