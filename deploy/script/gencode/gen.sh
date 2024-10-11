@@ -1,6 +1,6 @@
 # 生成api业务代码 ， 进入"服务/cmd/api/desc"目录下，执行下面命令
 # goctl api go -api *.api -dir ../  --style=goZero
-# goctl api go -api .\usercenter.api -dir ../  --style=goZero --home ../../../../../tpl
+# goctl api go -api usercenter.api -dir ../  --style=goZero --home ../../../../../tpl
 
 # 生成rpc业务代码
 # 【注】 需要安装下面3个插件
@@ -13,7 +13,7 @@
 #       go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 #
 # 1）goctl >= 1.3 进入"服务/cmd/rpc/pb"目录下，执行下面命令
-#    goctl rpc protoc *.proto --go_out=../ --go-grpc_out=../  --zrpc_out=../ --style=goZero
+#    goctl rpc protoc *.proto --go_out=../ --go-grpc_out=../  --zrpc_out=../ --style=goZero -m
 #    去除proto中的json的omitempty
 #    mac: sed -i "" 's/,omitempty//g' *.pb.go
 #    linux: sed -i 's/,omitempty//g' *.pb.go
@@ -25,6 +25,7 @@
 
 # 创建kafka的topic
 # kafka-topics.sh --create --bootstrap-server kafka:9092 --replication-factor 1 -partitions 1 --topic {topic}
+# kafka-topics.sh --list --bootstrap-server kafka:9092
 # 查看消费者组情况
 # kafka-consumer-groups.sh --bootstrap-server kafka:9092 --describe --group {group}
 # 命令行消费

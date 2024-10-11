@@ -43,6 +43,7 @@ CREATE TABLE `groups`  (
   `desc` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `owner_id` bigint UNSIGNED NOT NULL DEFAULT 1,
+  `last_message_time` datetime DEFAULT CURRENT_TIMESTAMP,
   INDEX `idx_groups_deleted_at`(`deleted_at` ASC) USING BTREE,
   INDEX `idx_groups_name`(`name` ASC) USING BTREE,
   INDEX `idx_groups_owner_id`(`owner_id` ASC) USING BTREE
@@ -57,9 +58,10 @@ CREATE TABLE `user_friend`  (
   PRIMARY KEY (`id`),
   `user_id` bigint UNSIGNED NOT NULL,
   `friend_id` bigint UNSIGNED NOT NULL,
-  `uuid` BINARY(16) NOT NULL,
+  `uuid` CHAR(36) NOT NULL,
   `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime NULL DEFAULT NULL,
+  `last_message_time` datetime DEFAULT CURRENT_TIMESTAMP,
   INDEX `idx_user_id`(`user_id` ASC) USING BTREE,
   INDEX `idx_friend_id`(`friend_id` ASC) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;

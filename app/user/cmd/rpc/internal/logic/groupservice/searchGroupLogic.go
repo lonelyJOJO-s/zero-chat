@@ -36,8 +36,8 @@ func (l *SearchGroupLogic) SearchGroup(in *pb.SearchGroupReq) (*pb.SearchGroupRe
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get group ids error:%s", err.Error())
 	}
-	rowBuilder := l.svcCtx.GroupModel.SelectBuilder().Where(squirrel.Eq{"`id`": idsResp.GroupIds})
-	groups, err := l.svcCtx.GroupModel.FindAll(l.ctx, rowBuilder, "")
+	rowBuilder := l.svcCtx.GroupModel.SelectBuilder().Where(squirrel.Eq{"`id`": idsResp.Ids})
+	groups, err := l.svcCtx.GroupModel.FindAll(l.ctx, rowBuilder, "last_message_time DESC")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get groups error:%s", err.Error())
 	}

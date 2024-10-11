@@ -46,6 +46,7 @@ type (
 	GetUuidReq             = pb.GetUuidReq
 	GetUuidResp            = pb.GetUuidResp
 	Group                  = pb.Group
+	GroupIdWithTime        = pb.GroupIdWithTime
 	JoinGroupReq           = pb.JoinGroupReq
 	JoinGroupResp          = pb.JoinGroupResp
 	LoginReq               = pb.LoginReq
@@ -64,6 +65,8 @@ type (
 	SearchUserFuzzyResp    = pb.SearchUserFuzzyResp
 	UpdateGroupReq         = pb.UpdateGroupReq
 	UpdateGroupResp        = pb.UpdateGroupResp
+	UpdateLastTimeReq      = pb.UpdateLastTimeReq
+	UpdateLastTimeResp     = pb.UpdateLastTimeResp
 	UpdateUserInfoReq      = pb.UpdateUserInfoReq
 	UpdateUserInfoResp     = pb.UpdateUserInfoResp
 	User                   = pb.User

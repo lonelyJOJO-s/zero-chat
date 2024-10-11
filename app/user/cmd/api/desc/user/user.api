@@ -24,6 +24,7 @@ type User {
 	Status   int `json:"status"`
 	Desc     string `json:"desc"`
     Email string  `json:"email"`
+	LastMessageTime int64 `json:"last_message_time"`
 }
 
 // for update basic info
@@ -78,10 +79,10 @@ type (
 		UserInfo User `json:"user_info"`
 	}
     UserUpdateReq {
-        UserBasic `json:"user_update"`
+        userUpdate UserBasic `json:"user_update"`
     }
     UserUpdateResp {
-        UserBasic `json:"user_update"`
+        userUpdate UserBasic `json:"user_update"`
     }
 )
 

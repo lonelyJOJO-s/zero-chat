@@ -38,7 +38,7 @@ func (l *SearchAllGroupLogic) SearchAllGroup(req *types.SearchAllGroupReq) (resp
 		return nil, errors.Wrapf(err, "search joined group error with:%s", err.Error())
 	}
 	joinedIdsMap := map[int64]bool{}
-	for _, jid := range joinedGroupResp.GroupIds {
+	for _, jid := range joinedGroupResp.Ids {
 		joinedIdsMap[jid] = true
 	}
 	resp = new(types.SearchAllGroupResp)

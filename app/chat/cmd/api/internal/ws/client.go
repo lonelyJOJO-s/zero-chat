@@ -11,11 +11,13 @@ import (
 	"strconv"
 	"time"
 	"zero-chat/app/chat/cmd/api/internal/svc"
+	"zero-chat/app/user/cmd/rpc/pb"
 	"zero-chat/common/constant"
 	"zero-chat/common/oss"
 	"zero-chat/common/protocol"
 
 	"github.com/gorilla/websocket"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/protobuf/proto"
 )
@@ -93,11 +95,11 @@ func (c *Client) ReadPump(svcCtx *svc.ServiceContext) {
 				logx.Errorf("unmarshal error with proto:%s", err.Error())
 				continue
 			}
-
 			err = svcCtx.KqPusherClient.Push(context.TODO(), string(msgSend))
 			if err != nil {
 				logx.Error(err)
 			}
+			UpdateLastTime(svcCtx, msg.ChatType, msg.To, msg.From)
 		}
 	}
 }
@@ -133,4 +135,31 @@ func SingChatStoreName(userA, userB string) string {
 		return userB + ":" + userA
 	}
 	return userA + ":" + userB
+}
+
+func UpdateLastTime(svcCtx *svc.ServiceContext, chatType int32, to, from int64) (err error) {
+	switch chatType {
+	case constant.SINGLE:
+		_, err = svcCtx.FriendServiceRpc.UpdateLastTime(context.TODO(), &pb.UpdateLastTimeReq{
+			From: from,
+			To:   to,
+		})
+		if err != nil {
+			return errors.Wrap(err, "update friend user last time error")
+		}
+	case constant.GROUP:
+		groupResp, err := svcCtx.GroupServiceRpc.GetGroupInfo(context.TODO(), &pb.GetGroupInfoReq{Id: to})
+		if err != nil {
+			return errors.Wrapf(err, "get group information error, gorup ID:%d", to)
+		}
+		group := groupResp.Group
+		group.LastMessageTime = time.Now().Unix()
+		_, err = svcCtx.GroupServiceRpc.UpdateGroupInfo(context.TODO(), &pb.UpdateGroupReq{Group: group})
+		if err != nil {
+			return errors.Wrapf(err, "update group last_message_time error, gorup ID:%d", to)
+		}
+	default:
+		logx.Info("not supported chat_tpe")
+	}
+	return
 }

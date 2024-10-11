@@ -22,42 +22,42 @@ services:
     networks:
       - zero-chat
 
-  #prometheus监控 — Prometheus for monitoring
-  # prometheus:
-  #   image: prom/prometheus:v2.28.1
-  #   container_name: prometheus
-  #   environment:
-  #     # 时区上海 - Time zone Shanghai (Change if needed)
-  #     TZ: Asia/Shanghai
-  #   volumes:
-  #     - ./deploy/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
-  #     - ./data/prometheus/data:/prometheus
-  #   command:
-  #     - '--config.file=/etc/prometheus/prometheus.yml'
-  #     - '--storage.tsdb.path=/prometheus'
-  #   restart: always
-  #   user: root
-  #   ports:
-  #     - 9090:9090
-  #   networks:
-  #     - zero-chat
+  # prometheus监控 — Prometheus for monitoring
+  prometheus:
+    image: prom/prometheus:v2.28.1
+    container_name: prometheus
+    environment:
+      # 时区上海 - Time zone Shanghai (Change if needed)
+      TZ: Asia/Shanghai
+    volumes:
+      - ./deploy/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: always
+    user: root
+    ports:
+      - 9090:9090
+    networks:
+      - zero-chat
 
-  #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
-  # grafana:
-  #   image: grafana/grafana:8.0.6
-  #   container_name: grafana
-  #   hostname: grafana
-  #   user: root
-  #   environment:
-  #     # 时区上海 - Time zone Shanghai (Change if needed)
-  #     TZ: Asia/Shanghai
-  #   restart: always
-  #   volumes:
-  #       - ./data/grafana/data:/var/lib/grafana
-  #   ports:
-  #       - "3001:3000"
-  #   networks:
-  #       - zero-chat
+  # 查看prometheus监控数据 - Grafana to view Prometheus monitoring data
+  grafana:
+    image: grafana/grafana:8.0.6
+    container_name: grafana
+    hostname: grafana
+    user: root
+    environment:
+      # 时区上海 - Time zone Shanghai (Change if needed)
+      TZ: Asia/Shanghai
+    restart: always
+    volumes:
+        - ./data/grafana/data:/var/lib/grafana
+    ports:
+        - "3000:3000"
+    networks:
+        - zero-chat
 
   #搜集kafka业务日志、存储prometheus监控数据 - Kafka for collecting business logs and storing Prometheus monitoring data
   elasticsearch:
@@ -155,11 +155,12 @@ services:
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
+    user: root
     ports:
       - 9092:9092
     environment:
     # 注意kafka的配置，不然外部服务无妨访问
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://10.87.81.207:9092 # localhost
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
@@ -168,12 +169,22 @@ services:
       TZ: Asia/Shanghai
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
       - ./data/kafka/data:/var/lib/kafka/data
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - zero-chat
     depends_on:
       - zookeeper
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - kafka
+    environment:
+      DYNAMIC_CONFIG_ENABLED: "TRUE"
 
   #asynqmon asynq延迟队列、定时队列的webui - Asynqmon asynq delay queue, timing queue's webUI
   # asynqmon:
@@ -243,12 +254,45 @@ services:
         - 2379:2379
       environment:
         - ALLOW_NONE_AUTHENTICATION=yes
-        - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379 # 应该为etcd
+        - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379 # 应该为localhost 而非etcd
         - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
       volumes:
         - ./data/etcd/data:/bitnami/etcd
       networks:
         - zero-chat
+
+  #前端网关nginx-gateay
+  nginx-gateway:
+    image: nginx:latest
+    container_name: nginx-gateway
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Shanghai
+    ports:
+      - 8088:8088
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/nginx/log:/var/log/nginx
+    networks:
+      - zero-chat
+  
+  # chat-service:
+  #   # docker-hub : https://hub.docker.com/r/lyumikael/gomodd
+  #   # dockerfile: https://github.com/Mikaelemmmm/gomodd , If you are macOs m1\m2 use dockerfile yourself to build the image
+  #   image: bluesonny2022/gomodd:v1.22.4
+  #   container_name: chat-service
+  #   environment:
+  #     # 时区上海 - Timezone Shanghai
+  #     TZ: Asia/Shanghai
+  #     GOPROXY: https://goproxy.cn,direct
+  #   working_dir: /go/chat-service
+  #   volumes:
+  #     - .:/go/chat-service
+  #   privileged: true
+  #   restart: always
+  #   networks:
+  #     - zero-chat
 
 
 networks:

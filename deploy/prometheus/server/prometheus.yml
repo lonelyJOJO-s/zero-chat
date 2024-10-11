@@ -1,0 +1,47 @@
+global:
+  scrape_interval:
+  external_labels:
+    monitor: 'codelab-monitor'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s  #global catch time
+    static_configs:
+      - targets: ['127.0.0.1:9090']
+
+  - job_name: 'user-api'
+    static_configs:
+      - targets: [ 'localhost:3001' ] # zero-chat & modd
+        labels:
+          job: user-api
+          app: user-api
+          env: dev
+  - job_name: 'user-rpc'
+    static_configs:
+      - targets: [ 'localhost:2001' ]
+        labels:
+          job: user-rpc
+          app: user-rpc
+          env: dev
+  - job_name: 'chat-mq'
+    static_configs:
+      - targets: [ 'localhost:3003' ]
+        labels:
+          job: chat-mq
+          app: chat-mq
+          env: dev
+  - job_name: 'chat-api'
+    static_configs:
+      - targets: [ 'localhost:3002' ]
+        labels:
+          job: chat-api
+          app: chat-api
+          env: dev
+  - job_name: 'chat-rpc'
+    static_configs:
+      - targets: [ 'localhost:2002' ]
+        labels:
+          job: chat-rpc
+          app: chat-rpc
+          env: dev
+

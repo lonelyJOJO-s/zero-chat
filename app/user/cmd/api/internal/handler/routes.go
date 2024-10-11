@@ -17,6 +17,81 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				Method:  http.MethodPost,
+				Path:    "/user/register",
+				Handler: user.RegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/login/username",
+				Handler: user.LoginWithUsernameHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/login/email",
+				Handler: user.LogWithEmailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/email/send",
+				Handler: user.SendEmailHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/usercenter/api/v1"),
+		rest.WithTimeout(3000*time.Millisecond),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/detail/:id",
+				Handler: user.DetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/delete",
+				Handler: user.DeleteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/update",
+				Handler: user.UpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/loginOut",
+				Handler: user.LoginOutHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/avatar",
+				Handler: user.AvatarHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/users",
+				Handler: user.GetAllHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/search",
+				Handler: user.SearchUsersHandler(serverCtx),
+			},
+		},
+		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		rest.WithPrefix("/usercenter/api/v1"),
+		rest.WithTimeout(3000*time.Millisecond),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/friends",
+				Handler: friend.FriendListHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodDelete,
 				Path:    "/user/friend/:id",
 				Handler: friend.FriendDelHandler(serverCtx),
@@ -31,11 +106,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/friend/search",
 				Handler: friend.SearchHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/friends",
-				Handler: friend.FriendListHandler(serverCtx),
-			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/usercenter/api/v1"),
@@ -44,16 +114,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/group/:id",
-				Handler: group.GroupInfoHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodDelete,
-				Path:    "/group/:id",
-				Handler: group.DismissGroupHandler(serverCtx),
-			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/group/create",
@@ -65,14 +125,34 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: group.JoinGroupHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodPost,
+				Path:    "/group/update",
+				Handler: group.UpdateGroupHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodGet,
-				Path:    "/group/members",
-				Handler: group.GetMembersHandler(serverCtx),
+				Path:    "/group/:id",
+				Handler: group.GroupInfoHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/group/quit/",
+				Path:    "/group/quit",
 				Handler: group.QuitGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodDelete,
+				Path:    "/group/:id",
+				Handler: group.DismissGroupHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/groups",
+				Handler: group.GetAllGroupsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/group/search-joined",
+				Handler: group.SearchJoinedGroupHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
@@ -81,88 +161,8 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/group/search-joined",
-				Handler: group.SearchJoinedGroupHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/group/update",
-				Handler: group.UpdateGroupHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/groups",
-				Handler: group.GetAllGroupsHandler(serverCtx),
-			},
-		},
-		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
-		rest.WithPrefix("/usercenter/api/v1"),
-		rest.WithTimeout(3000*time.Millisecond),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/email/send",
-				Handler: user.SendEmailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/login/email",
-				Handler: user.LogWithEmailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/login/username",
-				Handler: user.LoginWithUsernameHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/register",
-				Handler: user.RegisterHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/usercenter/api/v1"),
-		rest.WithTimeout(3000*time.Millisecond),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/avatar",
-				Handler: user.AvatarHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/delete",
-				Handler: user.DeleteHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/detail/:id",
-				Handler: user.DetailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/loginOut",
-				Handler: user.LoginOutHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/user/search",
-				Handler: user.SearchUsersHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/user/update",
-				Handler: user.UpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/users",
-				Handler: user.GetAllHandler(serverCtx),
+				Path:    "/group/members",
+				Handler: group.GetMembersHandler(serverCtx),
 			},
 		},
 		rest.WithJwt(serverCtx.Config.Auth.AccessSecret),

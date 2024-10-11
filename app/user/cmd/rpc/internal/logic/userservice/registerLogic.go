@@ -44,7 +44,7 @@ func (l *RegisterLogic) Register(in *pb.RegisterReq) (*pb.RegisterResp, error) {
 	var userId int64
 	user = new(model.Users)
 	copier.Copy(user, in.UserInfo)
-	fmt.Println(user)
+	user.Avatar = in.UserInfo.Avatar
 	if len(in.UserInfo.Password) > 0 {
 		user.Password = tool.Md5ByString(in.UserInfo.Password)
 	}

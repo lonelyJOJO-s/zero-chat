@@ -47,3 +47,8 @@ func (s *FriendServiceServer) GetUuid(ctx context.Context, in *pb.GetUuidReq) (*
 	l := friendservicelogic.NewGetUuidLogic(ctx, s.svcCtx)
 	return l.GetUuid(in)
 }
+
+func (s *FriendServiceServer) UpdateLastTime(ctx context.Context, in *pb.UpdateLastTimeReq) (*pb.UpdateLastTimeResp, error) {
+	l := friendservicelogic.NewUpdateLastTimeLogic(ctx, s.svcCtx)
+	return l.UpdateLastTime(in)
+}

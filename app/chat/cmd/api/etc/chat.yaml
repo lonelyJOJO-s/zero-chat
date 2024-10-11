@@ -38,7 +38,11 @@ KqPusherConf:
   Topic: messages
 
 KqConsumerConf:
+  Name: kqConsumer
   Brokers:
     - 127.0.0.1:9092
   Topic: messages-back
-# 定义redis等中间件
+  Group: kqConsumer
+  Consumers: 8
+  Processors: 8
+  Offset: last # 从最新产生的数据消费

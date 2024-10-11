@@ -23,10 +23,12 @@ type GetHistoryMessageReq {
 	ChatType int32 `query:"chat_type"`
 	Id       int32 `query:"id"`
 	Cnt      int64 `query:"cnt"`
+	Offset   int64 `query:"offset"`
 }
 
 type GetHistoryMessageResp {
-	Msgs []Message `json:"msgs"`
+	Msgs          []Message `json:"msgs"`
+	NextReadIndex int64     `json:"next_read_index"`
 }
 
 @server (
@@ -52,4 +54,3 @@ service chat {
 	@handler GetHistoryMessage
 	get /history-message (GetHistoryMessageReq) returns (GetHistoryMessageResp)
 }
-

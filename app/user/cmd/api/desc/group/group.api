@@ -13,6 +13,7 @@ type Group {
     Desc string `json:"desc"`
     Avatar string `json:"avatar"`
     CreatorId int64 `json:"creator_id"`
+    LastMessageTime int64 `json:"last_message_time"`
 }
 
 type GroupWithId {

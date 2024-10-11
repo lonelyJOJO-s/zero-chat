@@ -73,15 +73,16 @@ func (h *Server) Run(groupService groupservice.GroupService) {
 					}
 				}
 			} else if msg.ChatType == constant.GROUP { // group chat
-				members := map[int64]bool{}
+				members := map[int64]struct{}{}
 				ids, err := groupService.GetMemberIds(context.Background(), &pb.GetMemberIdsReq{GroupId: msg.To})
 				if err != nil {
 					logx.Error(err)
 					break
 				}
 				for _, id := range ids.Ids {
-					members[id] = true
+					members[id] = struct{}{}
 				}
+				delete(members, msg.From)
 				for client := range h.Clients {
 					if _, ok := members[client.ClientId]; ok {
 						select {

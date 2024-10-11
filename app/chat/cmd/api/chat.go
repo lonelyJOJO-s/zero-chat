@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
@@ -12,6 +13,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/zeromicro/go-zero/core/conf"
+	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/rest"
 )
 
@@ -29,8 +31,14 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	// start ws server
 	go ws.WsServer.Run(ctx.GroupServiceRpc)
+
 	// start kafka listen
-	go kafka.StartConsume(c)
+	serviceGroup := service.NewServiceGroup()
+	for _, mq := range kafka.Consumers(c, context.TODO(), ctx) {
+		serviceGroup.Add(mq)
+	}
+	go serviceGroup.Start()
+
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

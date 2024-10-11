@@ -1,31 +1,24 @@
 package kafka
 
 import (
-	"zero-chat/app/chat/cmd/api/internal/config"
+	"context"
+	"zero-chat/app/chat/cmd/api/internal/svc"
 	"zero-chat/app/chat/cmd/api/internal/ws"
-
-	"github.com/IBM/sarama"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
-func StartConsume(c config.Config) {
-	config := sarama.NewConfig()
-	client, err := sarama.NewClient(c.KqConsumerConf.Brokers, config)
-	if err != nil {
-		logx.Error(err)
-	}
-	consumer, err := sarama.NewConsumerFromClient(client)
-	if err != nil {
-		logx.Error(err)
-	}
-	partitionConsumer, err := consumer.ConsumePartition(c.KqConsumerConf.Topic, 0, sarama.OffsetNewest)
-	if err != nil {
-		logx.Errorf("ConsumePartition error:%s", err.Error())
-	}
-	defer partitionConsumer.Close()
+type MessageBackMq struct {
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
 
-	for {
-		msg := <-partitionConsumer.Messages()
-		ws.WsServer.Broadcast <- msg.Value
+func NewMessageBackMq(ctx context.Context, svcCtx *svc.ServiceContext) *MessageBackMq {
+	return &MessageBackMq{
+		ctx:    ctx,
+		svcCtx: svcCtx,
 	}
+}
+
+func (l *MessageBackMq) Consume(ctx context.Context, key, val string) error {
+	ws.WsServer.Broadcast <- []byte(val)
+	return nil
 }

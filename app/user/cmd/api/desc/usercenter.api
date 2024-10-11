@@ -15,10 +15,10 @@ import (
 
 type (
 	GetMembersReq {
-		id int64 `query:"id"`
+		Id int64 `query:"id"`
 	}
 	GetMembersResp {
-		users []UserBasic `json:"users"`
+		Users []UserBasic `json:"users"`
 	}
 )
 
@@ -131,7 +131,7 @@ service user {
 
 	@doc "quit a group"
 	@handler QuitGroup
-	post /group/quit/ (GroupQuitReq) returns (Null)
+	post /group/quit (GroupQuitReq) returns (Null)
 
 	@doc "dismiss a group"
 	@handler DismissGroup
@@ -153,4 +153,3 @@ service user {
 	@handler GetMembers
 	get /group/members (GetMembersReq) returns (GetMembersResp)
 }
-

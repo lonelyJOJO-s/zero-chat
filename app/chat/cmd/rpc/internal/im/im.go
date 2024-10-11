@@ -74,32 +74,43 @@ func (im *IM) GetSyncMessage(member string, lastRead int64) ([]*timeline.Entry, 
 	return entries, nil
 }
 
-func (im *IM) GetHistoryMessage(storeName string, numOfHistory int) ([]*timeline.Entry, error) {
+func (im *IM) GetHistoryMessage(storeName string, numOfHistory int, lastRead int64) ([]*timeline.Entry, int64, error) {
+	if lastRead <= 0 {
+		lastRead = math.MaxInt64
+	}
+	var latestRead int64 = math.MaxInt64
 	receiver, err := timeline.NewTmLine(storeName, im.adapter, im.historyStore)
 	if err != nil {
-		return nil, err
+		return nil, latestRead, err
 	}
+
 	iterator := receiver.Scan(&timeline.ScanParameter{
-		From:        math.MaxInt64,
+		From:        lastRead,
 		To:          0,
-		MaxCount:    numOfHistory,
-		BufChanSize: 10,
+		MaxCount:    numOfHistory + 1,
+		BufChanSize: 15,
 	})
+
 	entries := make([]*timeline.Entry, 0)
 	//avoid scanner goroutine leak
 	defer iterator.Close()
-	for {
+
+	for index := 0; index <= numOfHistory; index++ {
 		entry, err := iterator.Next()
-		if err != nil {
+		if index == numOfHistory {
 			if err == timeline.ErrorDone {
-				break
+				latestRead = 1
 			} else {
-				return entries, err
+				latestRead = entry.Sequence
 			}
+		}
+		if err == timeline.ErrorDone {
+			latestRead = 1
+			break
 		}
 		entries = append(entries, entry)
 	}
-	return entries, nil
+	return entries, latestRead, nil
 }
 
 func (im *IM) Send(from, to string, message timeline.Message) (seq1 int64, seq2 int64, err error) {

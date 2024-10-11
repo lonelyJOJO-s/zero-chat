@@ -34,8 +34,8 @@ func (l *GetJoinedGroupsLogic) GetJoinedGroups(in *pb.GetJoinedGroupsReq) (resp 
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get group ids error:%s", err.Error())
 	}
-	selectBuilder := l.svcCtx.GroupModel.SelectBuilder().Where(squirrel.Eq{"`id`": idsResp.GroupIds})
-	groups, err := l.svcCtx.GroupModel.FindAll(l.ctx, selectBuilder, "")
+	selectBuilder := l.svcCtx.GroupModel.SelectBuilder().Where(squirrel.Eq{"`id`": idsResp.Ids})
+	groups, err := l.svcCtx.GroupModel.FindAll(l.ctx, selectBuilder, "last_message_time DESC")
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get groups error:%s", err.Error())
 	}
@@ -43,6 +43,7 @@ func (l *GetJoinedGroupsLogic) GetJoinedGroups(in *pb.GetJoinedGroupsReq) (resp 
 	for _, group := range groups {
 		var g pb.Group
 		copier.Copy(&g, group)
+		g.LastMessageTime = group.LastMessageTime.Unix()
 		resp.Groups = append(resp.Groups, &g)
 	}
 	return resp, nil

@@ -37,9 +37,7 @@ func (l *SearchLogic) Search(req *types.FriendSearchReq) (resp *types.FriendSear
 	resp = new(types.FriendSearchResp)
 	for _, user := range friendsResp.Users {
 		u := types.User{}
-		logx.Info(user)
 		copier.Copy(&u, user)
-		logx.Info(u)
 		resp.Users = append(resp.Users, u)
 	}
 	return

@@ -53,6 +53,7 @@ type (
 		Desc      sql.NullString `db:"desc"`
 		Avatar    sql.NullString `db:"avatar"`
 		OwnerId   int64          `db:"owner_id"`
+		LastMessageTime time.Time 	 `db:"last_message_time"`
 	}
 )
 

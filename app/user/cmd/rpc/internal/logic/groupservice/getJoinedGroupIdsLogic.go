@@ -30,5 +30,5 @@ func (l *GetJoinedGroupIdsLogic) GetJoinedGroupIds(in *pb.GetJoinedGroupIdsReq) 
 	if err != nil {
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.DB_ERROR), "get group ids error:%s", err.Error())
 	}
-	return &pb.GetJoinedGroupIdsResp{GroupIds: ans}, nil
+	return &pb.GetJoinedGroupIdsResp{Ids: ans}, nil
 }

@@ -3,6 +3,7 @@ package im
 import (
 	"fmt"
 	"log"
+	"math"
 	"strconv"
 	"testing"
 	"time"
@@ -96,7 +97,7 @@ func TestIm(t *testing.T) {
 
 	// user_B check group_1 history message
 	fmt.Printf("****user_B read group_1 history messages****\n")
-	entries, err = im.GetHistoryMessage("group_1", 10)
+	entries, _, err = im.GetHistoryMessage("group_1", 10, math.MaxInt64)
 	if err != nil {
 		log.Fatal("user_B get history messages failed: ", err)
 	}
@@ -111,7 +112,7 @@ func TestIm(t *testing.T) {
 
 	// user_B check chat with user_A history message
 	fmt.Printf("****user_B read chat with user_A history messages****\n")
-	entries, err = im.GetHistoryMessage(SingChatStoreName("user_B", "user_A"), 10)
+	entries, _, err = im.GetHistoryMessage(SingChatStoreName("user_B", "user_A"), 10, math.MaxInt64)
 	if err != nil {
 		log.Fatal("user_B get history messages failed: ", err)
 	}
@@ -130,7 +131,7 @@ func TestIm(t *testing.T) {
 
 func TestMyIm(t *testing.T) {
 	timelineId := SingChatStoreName("user_"+strconv.Itoa(int(6)), "user_"+strconv.Itoa(int(8)))
-	entries, err := im.GetHistoryMessage(timelineId, int(10))
+	entries, _, err := im.GetHistoryMessage(timelineId, int(10), math.MaxInt64)
 	if err != nil {
 		log.Println(err.Error())
 	}

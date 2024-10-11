@@ -1,12 +1,12 @@
 module zero-chat
 
-go 1.22.1
+go 1.22
 
 require (
 	github.com/IBM/sarama v1.43.2
 	github.com/Masterminds/squirrel v1.5.4
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
-	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.15
+	github.com/aliyun/aliyun-tablestore-go-sdk v1.7.14
 	github.com/casbin/casbin/v2 v2.98.0
 	github.com/casbin/xorm-adapter v1.0.0
 	github.com/go-playground/validator/v10 v10.22.0

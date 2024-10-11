@@ -35,10 +35,10 @@ func (l *GetHistoryMessageLogic) GetHistoryMessage(req *types.GetHistoryMessageR
 	switch req.ChatType {
 	case constant.SINGLE:
 		messages, err = l.svcCtx.ChatServiceRpc.GetHistoryMessage(l.ctx, &pb.GetHistoryMessageReq{
-			UserA: int64(req.Id), UserB: userId, Nums: req.Cnt})
+			UserA: int64(req.Id), UserB: userId, Nums: req.Cnt, Offset: req.Offset})
 	case constant.GROUP:
 		messages, err = l.svcCtx.ChatServiceRpc.GetHistoryMessage(l.ctx, &pb.GetHistoryMessageReq{
-			GroupId: int64(req.Id), Nums: req.Cnt})
+			GroupId: int64(req.Id), Nums: req.Cnt, Offset: req.Offset})
 	}
 	if err != nil {
 		return nil, errors.Wrapf(err, "api--- get history msg error: %s", err.Error())
@@ -52,5 +52,6 @@ func (l *GetHistoryMessageLogic) GetHistoryMessage(req *types.GetHistoryMessageR
 		m.FromUsername = user.Users[0].Username
 		resp.Msgs = append(resp.Msgs, m)
 	}
+	resp.NextReadIndex = messages.NextReadIndex
 	return
 }

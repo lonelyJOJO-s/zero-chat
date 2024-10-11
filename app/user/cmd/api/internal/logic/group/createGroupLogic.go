@@ -37,12 +37,16 @@ func NewCreateGroupLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Creat
 func (l *CreateGroupLogic) CreateGroup(req *types.GroupCreateReq, r *http.Request) (resp *types.GroupResp, err error) {
 	// todo: add your logic here and delete this line
 	_, file, err := r.FormFile("file")
+	var avatar string = fmt.Sprintf("%s/avatar/group.jpg", os.Getenv("OSS_URI"))
 	if err != nil {
-		return
-	}
-	avatar, err := l.Upload2Oss(file, int(ctxdata.GetUidFromCtx(l.ctx)))
-	if err != nil {
-		return
+		if err != http.ErrMissingFile {
+			return
+		}
+	} else {
+		avatar, err = l.Upload2Oss(file, int(ctxdata.GetUidFromCtx(l.ctx)))
+		if err != nil {
+			return
+		}
 	}
 	pbResp, err := l.svcCtx.GroupServiceRpc.CreateGroup(l.ctx, &pb.CreateGroupReq{Keyword: &pb.Group{
 		Name:    req.Name,
@@ -67,7 +71,7 @@ func (l *CreateGroupLogic) CreateGroup(req *types.GroupCreateReq, r *http.Reques
 	return
 }
 
-func (l *CreateGroupLogic) Upload2Oss(file *multipart.FileHeader, userId int) (url string, err error) {
+func (l *CreateGroupLogic) Upload2Oss(file *multipart.FileHeader, groupId int) (url string, err error) {
 	// 1. upload to oss
 	openedFile, err := file.Open()
 	if err != nil {
@@ -80,16 +84,9 @@ func (l *CreateGroupLogic) Upload2Oss(file *multipart.FileHeader, userId int) (u
 		return
 	}
 	timeStamp := strconv.Itoa(int(time.Now().Unix()))
-	path := fmt.Sprintf("avatar/user/%d/%s/%s", userId, timeStamp, file.Filename)
-	oss.Upload2Oss(fileBytes, path)
+	path := fmt.Sprintf("avatar/group/%d/%s/%s", groupId, timeStamp, file.Filename)
+	err = oss.Upload2Oss(fileBytes, path)
 	url = os.Getenv("OSS_URI")
 	url = fmt.Sprintf("%s/%s", url, path)
-	// 2. store to local db
-	_, err = l.svcCtx.UserServiceRpc.UpdateUserInfo(l.ctx, &pb.UpdateUserInfoReq{
-		User: &pb.UserWithPwd{Id: int64(userId), Avatar: url},
-	})
-	if err != nil {
-		return
-	}
 	return
 }

@@ -47,12 +47,14 @@ type (
 		table string
 	}
 
+
 	UserGroup struct {
 		Id        int64        `db:"id"`
 		GroupId   int64        `db:"group_id"`
 		UserId    int64        `db:"user_id"`
 		CreatedAt time.Time    `db:"created_at"`
 		DeletedAt sql.NullTime `db:"deleted_at"`
+		LastMessageTime  time.Time `db:"last_message_time"`
 	}
 )
 
@@ -73,7 +75,6 @@ func (m *defaultUserGroupModel) UpdateBuilder() squirrel.UpdateBuilder {
 
 func (m *defaultUserGroupModel) FindAllIdsByUserId(ctx context.Context, id int64) (ids []int64, err error) {
 	query := fmt.Sprintf("select `group_id` from %s where `user_id`= ? and deleted_at is null", m.table)
-	
 	err = m.QueryRowsNoCacheCtx(ctx, &ids, query, id)
 	switch err {
 	case nil:

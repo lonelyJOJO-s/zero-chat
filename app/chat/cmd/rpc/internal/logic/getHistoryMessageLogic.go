@@ -30,11 +30,12 @@ func NewGetHistoryMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 
 func (l *GetHistoryMessageLogic) GetHistoryMessage(in *pb.GetHistoryMessageReq) (resp *pb.GetHistoryMessageResp, err error) {
 	var entries []*timeline.Entry
+	var nextRead int64
 	if in.GroupId > 0 {
-		entries, err = l.svcCtx.IM.GetHistoryMessage("group_"+strconv.Itoa(int(in.GroupId)), int(in.Nums))
+		entries, nextRead, err = l.svcCtx.IM.GetHistoryMessage("group_"+strconv.Itoa(int(in.GroupId)), int(in.Nums), in.Offset)
 	} else {
 		timelineId := im.SingChatStoreName("user_"+strconv.Itoa(int(in.UserA)), "user_"+strconv.Itoa(int(in.UserB)))
-		entries, err = l.svcCtx.IM.GetHistoryMessage(timelineId, int(in.Nums))
+		entries, nextRead, err = l.svcCtx.IM.GetHistoryMessage(timelineId, int(in.Nums), in.Offset)
 	}
 	if err != nil {
 		return nil, errors.Wrapf(err, "get histpry msgs failed:%s", err.Error())
@@ -53,5 +54,6 @@ func (l *GetHistoryMessageLogic) GetHistoryMessage(in *pb.GetHistoryMessageReq) 
 		}
 		resp.Msg = append(resp.Msg, &msg)
 	}
+	resp.NextReadIndex = nextRead
 	return
 }

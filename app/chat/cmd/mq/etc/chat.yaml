@@ -1,6 +1,6 @@
 Name: chat-mq
 Host: 0.0.0.0
-Port: 3001
+Port: 3003
 Mode: dev
 MaxBytes: 1073741824
 

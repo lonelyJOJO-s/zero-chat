@@ -27,7 +27,7 @@ func NewUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateLogi
 
 func (l *UpdateLogic) Update(req *types.UserUpdateReq) (resp *types.UserUpdateResp, err error) {
 	user := new(pb.UserWithPwd)
-	copier.Copy(user, &req.UserBasic)
+	copier.Copy(user, &req.UserUpdate)
 	_, err = l.svcCtx.UserServiceRpc.UpdateUserInfo(l.ctx, &pb.UpdateUserInfoReq{
 		User: user,
 	})

@@ -19,6 +19,12 @@ message User {
   int64 createAt = 10;
   int64 updateAt = 11;
   string avatar = 12;
+  int64 lastMessageTime = 13;
+}
+
+message groupIdWithTime {
+  int64 id = 1;
+  int64 lastMessageTime = 2;
 }
 
 message UserWithPwd {
@@ -49,6 +55,7 @@ message Group {
   string desc = 4;
   string avatar = 5;
   int64 ownerId = 6;
+  int64 lastMessageTime = 7;
 }
 
 message RegisterResp {
@@ -241,7 +248,8 @@ message GetJoinedGroupIdsReq {
 }
 
 message GetJoinedGroupIdsResp {
-  repeated int64 groupIds = 1;
+  repeated int64 ids  = 1;
+
 }
 
 message GetJoinedGroupsReq {
@@ -259,6 +267,14 @@ message GetUuidReq {
 
 message GetUuidResp {
    string uuid = 1;
+}
+
+message updateLastTimeReq {
+  int64 from = 1;
+  int64 to = 2;
+}
+
+message updateLastTimeResp {
 }
 
 message getAllUsersReq{}
@@ -289,6 +305,7 @@ service FriendService {
   rpc delFrineds(DelFriendsReq) returns (DelFriendsResp); // soft del
   rpc searchFriendFuzzy(SearchFriendFuzzyReq) returns (SearchFriendFuzzyResp); 
   rpc getUuid(GetUuidReq) returns (GetUuidResp);
+  rpc updateLastTime(updateLastTimeReq) returns (updateLastTimeResp);
 }
 
 service GroupService {

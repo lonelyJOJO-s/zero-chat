@@ -37,10 +37,11 @@ func (l *GetAllGroupsLogic) GetAllGroups(req *types.Null) (resp *types.GetAllGro
 		g := types.GroupWithId{
 			Id: group.Id,
 			Group: types.Group{
-				Name:      group.Name,
-				Desc:      group.Desc,
-				Avatar:    group.Avatar,
-				CreatorId: group.OwnerId,
+				Name:            group.Name,
+				Desc:            group.Desc,
+				Avatar:          group.Avatar,
+				CreatorId:       group.OwnerId,
+				LastMessageTime: group.LastMessageTime,
 			},
 		}
 		resp.Groups = append(resp.Groups, g)

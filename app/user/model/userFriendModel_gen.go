@@ -23,8 +23,6 @@ var (
 	userFriendFieldNames          = builder.RawFieldNames(&UserFriend{})
 	userFriendRows                = strings.Join(userFriendFieldNames, ",")
 	userFriendRowsExpectAutoSet   = strings.Join(stringx.Remove(userFriendFieldNames, "`id`", "`create_time`", "`deleted_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	userFriendRowsWithPlaceHolder = strings.Join(stringx.Remove(userFriendFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
-
 	cacheUsercenterUserFriendIdPrefix             = "cache:usercenter:userFriend:id:"
 	cacheUsercenterUserFriendUserIdFriendIdPrefix = "cache:usercenter:userFriend:userId:friendId:"
 )
@@ -36,7 +34,7 @@ type (
 		FindOneByUserIdFriendId(ctx context.Context, userId int64, friendId int64) (*UserFriend, error)
 		Update(ctx context.Context, data *UserFriend) error
 		Delete(ctx context.Context, id int64) error
-		GetFriendIds(ctx context.Context, id int64) ([]int, error)
+		GetFriendIdsAndLastTime(ctx context.Context, id int64) ([]idsWithLastTime, error)
 		DeleteSoft(ctx context.Context, uf UserFriend) error
 		DeleteBuilder() squirrel.DeleteBuilder
 		UpdateBuilder() squirrel.UpdateBuilder
@@ -47,6 +45,11 @@ type (
 		table string
 	}
 
+	idsWithLastTime struct {
+		Id int64
+		LastTime time.Time
+	}
+
 	UserFriend struct {
 		Id        int64        `db:"id"`
 		UserId    int64        `db:"user_id"`
@@ -54,6 +57,7 @@ type (
 		Uuid      string       `db:"uuid"`
 		CreatedAt time.Time    `db:"created_at"`
 		DeletedAt sql.NullTime `db:"deleted_at"`
+		LastMessageTime  time.Time `db:"last_message_time"`
 	}
 )
 
@@ -99,8 +103,8 @@ func (m *defaultUserFriendModel) DeleteSoft(ctx context.Context, uf UserFriend) 
 }
 
 
-func (m *defaultUserFriendModel) GetFriendIds(ctx context.Context, id int64) (ids []int, err error) {
-	query := fmt.Sprintf("select friend_id from %s where `user_id` = ? and deleted_at is null", m.table)
+func (m *defaultUserFriendModel) GetFriendIdsAndLastTime(ctx context.Context, id int64) (ids []idsWithLastTime, err error) {
+	query := fmt.Sprintf("select friend_id, `last_message_time` from %s where `user_id` = ? and deleted_at is null order by last_message_time DESC", m.table)
 	err = m.QueryRowsNoCacheCtx(ctx, &ids, query, id)
 	if err != nil {
 		return nil, err
@@ -171,8 +175,8 @@ func (m *defaultUserFriendModel) Update(ctx context.Context, newData *UserFriend
 	usercenterUserFriendIdKey := fmt.Sprintf("%s%v", cacheUsercenterUserFriendIdPrefix, data.Id)
 	usercenterUserFriendUserIdFriendIdKey := fmt.Sprintf("%s%v:%v", cacheUsercenterUserFriendUserIdFriendIdPrefix, data.UserId, data.FriendId)
 	_, err = m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ? and deleted_at is null", m.table, userFriendRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, newData.UserId, newData.FriendId, newData.DeletedAt, newData.Id)
+		query := fmt.Sprintf("update %s set `last_message_time` = ? where `id` = ? and deleted_at is null", m.table)
+		return conn.ExecCtx(ctx, query, newData.LastMessageTime, newData.Id)
 	}, usercenterUserFriendIdKey, usercenterUserFriendUserIdFriendIdKey)
 	return err
 }
