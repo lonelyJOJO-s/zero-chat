@@ -34,6 +34,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/history-message",
 				Handler: chat.GetHistoryMessageHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/history-message/search",
+				Handler: chat.SearchHistoryMessageHandler(serverCtx),
+			},
 		},
 		rest.WithJwt(serverCtx.Config.JwtAuth.AccessSecret),
 		rest.WithPrefix("/chat/api/v1"),

@@ -148,14 +148,14 @@ func (m *defaultUserFriendModel) Insert(ctx context.Context, data *UserFriend) (
 	if uf != nil {
 		return xerr.NewErrCodeMsg(xerr.INSERT_ALREADY_EXSIT, xerr.MapErrMsg(xerr.INSERT_ALREADY_EXSIT))
 	}
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, userFriendRowsExpectAutoSet)
 	now := time.Now()
 	uuid := uuid.NewString()
-	_, err = m.ExecNoCacheCtx(ctx, query, data.UserId, data.FriendId, uuid, now)
+	_, err = m.ExecNoCacheCtx(ctx, query, data.UserId, data.FriendId, uuid, now, now)
 	if err != nil {
 		return  err
 	}
-	_, err = m.ExecNoCacheCtx(ctx, query, data.FriendId, data.UserId , uuid, now)
+	_, err = m.ExecNoCacheCtx(ctx, query, data.FriendId, data.UserId , uuid, now, now)
 	if err != nil {
 		return  err
 	}

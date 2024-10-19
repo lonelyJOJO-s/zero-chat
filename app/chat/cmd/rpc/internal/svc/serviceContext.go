@@ -43,6 +43,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic("im load err" + err.Error())
 	}
+
 	return &ServiceContext{
 		Config:    c,
 		RdsClient: redis.MustNewRedis(c.Redis.RedisConf),

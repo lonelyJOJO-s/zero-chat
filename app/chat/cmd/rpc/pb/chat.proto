@@ -97,13 +97,18 @@ message GetHistoryMessageResp{
     int64 nextReadIndex = 2;
 }
 
-message SearchHistoryMEssageReq {
+
+message  SearchHistoryMessageReq {
     int64 groupId = 1;
     int64 userA = 2;
     int64 userB = 3; 
-    int64 nums = 4;
-    int64 fromDate = 5;
-    int64 toDate = 6;
+    int64 limit = 4;
+    int64 offset = 5;
+    string keyWord = 6;
+}
+
+message  SearchHistoryMessageResp {
+    repeated MessageWithSeq msg = 1;
 }
 
 
@@ -117,5 +122,6 @@ service TableService {
     rpc Send(SendReq) returns (SendResp);
     rpc GetSyncMessage(GetSyncMessageReq) returns (GetSyncMessageResp);
     rpc GetHistoryMessage(GetHistoryMessageReq) returns (GetHistoryMessageResp);
+    rpc SearchHistoryMEssage(SearchHistoryMessageReq) returns (SearchHistoryMessageResp);
 }
 

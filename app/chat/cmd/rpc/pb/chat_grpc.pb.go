@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TableService_StoreAddItem_FullMethodName      = "/pb.TableService/StoreAddItem"
-	TableService_SyncAddItem_FullMethodName       = "/pb.TableService/SyncAddItem"
-	TableService_Send_FullMethodName              = "/pb.TableService/Send"
-	TableService_GetSyncMessage_FullMethodName    = "/pb.TableService/GetSyncMessage"
-	TableService_GetHistoryMessage_FullMethodName = "/pb.TableService/GetHistoryMessage"
+	TableService_StoreAddItem_FullMethodName         = "/pb.TableService/StoreAddItem"
+	TableService_SyncAddItem_FullMethodName          = "/pb.TableService/SyncAddItem"
+	TableService_Send_FullMethodName                 = "/pb.TableService/Send"
+	TableService_GetSyncMessage_FullMethodName       = "/pb.TableService/GetSyncMessage"
+	TableService_GetHistoryMessage_FullMethodName    = "/pb.TableService/GetHistoryMessage"
+	TableService_SearchHistoryMEssage_FullMethodName = "/pb.TableService/SearchHistoryMEssage"
 )
 
 // TableServiceClient is the client API for TableService service.
@@ -38,6 +39,7 @@ type TableServiceClient interface {
 	Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error)
 	GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error)
 	GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error)
+	SearchHistoryMEssage(ctx context.Context, in *SearchHistoryMessageReq, opts ...grpc.CallOption) (*SearchHistoryMessageResp, error)
 }
 
 type tableServiceClient struct {
@@ -98,6 +100,16 @@ func (c *tableServiceClient) GetHistoryMessage(ctx context.Context, in *GetHisto
 	return out, nil
 }
 
+func (c *tableServiceClient) SearchHistoryMEssage(ctx context.Context, in *SearchHistoryMessageReq, opts ...grpc.CallOption) (*SearchHistoryMessageResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SearchHistoryMessageResp)
+	err := c.cc.Invoke(ctx, TableService_SearchHistoryMEssage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TableServiceServer is the server API for TableService service.
 // All implementations must embed UnimplementedTableServiceServer
 // for forward compatibility.
@@ -110,6 +122,7 @@ type TableServiceServer interface {
 	Send(context.Context, *SendReq) (*SendResp, error)
 	GetSyncMessage(context.Context, *GetSyncMessageReq) (*GetSyncMessageResp, error)
 	GetHistoryMessage(context.Context, *GetHistoryMessageReq) (*GetHistoryMessageResp, error)
+	SearchHistoryMEssage(context.Context, *SearchHistoryMessageReq) (*SearchHistoryMessageResp, error)
 	mustEmbedUnimplementedTableServiceServer()
 }
 
@@ -134,6 +147,9 @@ func (UnimplementedTableServiceServer) GetSyncMessage(context.Context, *GetSyncM
 }
 func (UnimplementedTableServiceServer) GetHistoryMessage(context.Context, *GetHistoryMessageReq) (*GetHistoryMessageResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetHistoryMessage not implemented")
+}
+func (UnimplementedTableServiceServer) SearchHistoryMEssage(context.Context, *SearchHistoryMessageReq) (*SearchHistoryMessageResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchHistoryMEssage not implemented")
 }
 func (UnimplementedTableServiceServer) mustEmbedUnimplementedTableServiceServer() {}
 func (UnimplementedTableServiceServer) testEmbeddedByValue()                      {}
@@ -246,6 +262,24 @@ func _TableService_GetHistoryMessage_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _TableService_SearchHistoryMEssage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchHistoryMessageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TableServiceServer).SearchHistoryMEssage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TableService_SearchHistoryMEssage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TableServiceServer).SearchHistoryMEssage(ctx, req.(*SearchHistoryMessageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // TableService_ServiceDesc is the grpc.ServiceDesc for TableService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -272,6 +306,10 @@ var TableService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetHistoryMessage",
 			Handler:    _TableService_GetHistoryMessage_Handler,
+		},
+		{
+			MethodName: "SearchHistoryMEssage",
+			Handler:    _TableService_SearchHistoryMEssage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -47,3 +47,8 @@ func (s *TableServiceServer) GetHistoryMessage(ctx context.Context, in *pb.GetHi
 	l := logic.NewGetHistoryMessageLogic(ctx, s.svcCtx)
 	return l.GetHistoryMessage(in)
 }
+
+func (s *TableServiceServer) SearchHistoryMEssage(ctx context.Context, in *pb.SearchHistoryMessageReq) (*pb.SearchHistoryMessageResp, error) {
+	l := logic.NewSearchHistoryMEssageLogic(ctx, s.svcCtx)
+	return l.SearchHistoryMEssage(in)
+}

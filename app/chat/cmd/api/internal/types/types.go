@@ -23,3 +23,15 @@ type GetHistoryMessageResp struct {
 	Msgs          []Message `json:"msgs"`
 	NextReadIndex int64     `json:"next_read_index"`
 }
+
+type SearchHistoryMessageReq struct {
+	ChatType int32  `query:"chat_type"`
+	Id       int32  `query:"id"`
+	Limit    int64  `query:"limit"`
+	Offset   int64  `query:"offset"`
+	Keyword  string `query:"keyword"`
+}
+
+type SearchHistoryMessageResp struct {
+	Msgs []Message `json:"msgs"`
+}

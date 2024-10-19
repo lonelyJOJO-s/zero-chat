@@ -13,21 +13,23 @@ import (
 )
 
 type (
-	GetHistoryMessageReq  = pb.GetHistoryMessageReq
-	GetHistoryMessageResp = pb.GetHistoryMessageResp
-	GetSyncMessageReq     = pb.GetSyncMessageReq
-	GetSyncMessageResp    = pb.GetSyncMessageResp
-	Message               = pb.Message
-	MessageWithSeq        = pb.MessageWithSeq
-	Null                  = pb.Null
-	SendReq               = pb.SendReq
-	SendResp              = pb.SendResp
-	StoreAddItemReq       = pb.StoreAddItemReq
-	StoreAddItemResp      = pb.StoreAddItemResp
-	StoreTableItem        = pb.StoreTableItem
-	SyncAddItemReq        = pb.SyncAddItemReq
-	SyncAddItemResp       = pb.SyncAddItemResp
-	SyncTableItem         = pb.SyncTableItem
+	GetHistoryMessageReq     = pb.GetHistoryMessageReq
+	GetHistoryMessageResp    = pb.GetHistoryMessageResp
+	GetSyncMessageReq        = pb.GetSyncMessageReq
+	GetSyncMessageResp       = pb.GetSyncMessageResp
+	Message                  = pb.Message
+	MessageWithSeq           = pb.MessageWithSeq
+	Null                     = pb.Null
+	SearchHistoryMessageReq  = pb.SearchHistoryMessageReq
+	SearchHistoryMessageResp = pb.SearchHistoryMessageResp
+	SendReq                  = pb.SendReq
+	SendResp                 = pb.SendResp
+	StoreAddItemReq          = pb.StoreAddItemReq
+	StoreAddItemResp         = pb.StoreAddItemResp
+	StoreTableItem           = pb.StoreTableItem
+	SyncAddItemReq           = pb.SyncAddItemReq
+	SyncAddItemResp          = pb.SyncAddItemResp
+	SyncTableItem            = pb.SyncTableItem
 
 	TableService interface {
 		// has been depricated
@@ -36,6 +38,7 @@ type (
 		Send(ctx context.Context, in *SendReq, opts ...grpc.CallOption) (*SendResp, error)
 		GetSyncMessage(ctx context.Context, in *GetSyncMessageReq, opts ...grpc.CallOption) (*GetSyncMessageResp, error)
 		GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error)
+		SearchHistoryMEssage(ctx context.Context, in *SearchHistoryMessageReq, opts ...grpc.CallOption) (*SearchHistoryMessageResp, error)
 	}
 
 	defaultTableService struct {
@@ -73,4 +76,9 @@ func (m *defaultTableService) GetSyncMessage(ctx context.Context, in *GetSyncMes
 func (m *defaultTableService) GetHistoryMessage(ctx context.Context, in *GetHistoryMessageReq, opts ...grpc.CallOption) (*GetHistoryMessageResp, error) {
 	client := pb.NewTableServiceClient(m.cli.Conn())
 	return client.GetHistoryMessage(ctx, in, opts...)
+}
+
+func (m *defaultTableService) SearchHistoryMEssage(ctx context.Context, in *SearchHistoryMessageReq, opts ...grpc.CallOption) (*SearchHistoryMessageResp, error) {
+	client := pb.NewTableServiceClient(m.cli.Conn())
+	return client.SearchHistoryMEssage(ctx, in, opts...)
 }

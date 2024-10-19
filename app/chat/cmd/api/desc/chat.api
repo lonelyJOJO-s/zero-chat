@@ -31,6 +31,18 @@ type GetHistoryMessageResp {
 	NextReadIndex int64     `json:"next_read_index"`
 }
 
+type SearchHistoryMessageReq {
+	ChatType int32  `query:"chat_type"`
+	Id       int32  `query:"id"`
+	Limit    int64  `query:"limit"`
+	Offset   int64  `query:"offset"`
+	Keyword  string `query:"keyword"`
+}
+
+type SearchHistoryMessageResp {
+	Msgs []Message `json:"msgs"`
+}
+
 @server (
 	prefix:     chat/api/v1
 	group:      chat
@@ -53,4 +65,7 @@ service chat {
 	@doc "get history message"
 	@handler GetHistoryMessage
 	get /history-message (GetHistoryMessageReq) returns (GetHistoryMessageResp)
+
+	@handler SearchHistoryMessage
+	get /history-message/search (SearchHistoryMessageReq) returns (SearchHistoryMessageResp)
 }
